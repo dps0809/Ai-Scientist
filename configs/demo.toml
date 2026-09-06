@@ -1,0 +1,4 @@
+# Reserved for the configurable multi-iteration runner.
+seed = 7
+max_iterations = 3
+metric = "mean_squared_error"
