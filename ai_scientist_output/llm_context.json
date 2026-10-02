@@ -1,0 +1,50 @@
+{
+    "dataset_rows": 768,
+    "dataset_columns": 9,
+    "target": "Outcome",
+    "discovered_evidence": [
+        {
+            "type": "statistical_relationship",
+            "feature": "Glucose",
+            "target": "Outcome",
+            "correlation": 0.4666,
+            "p_value": 0.0,
+            "direction": "positive"
+        },
+        {
+            "type": "feature_importance",
+            "feature": "Glucose",
+            "importance": 0.3234
+        },
+        {
+            "type": "feature_importance",
+            "feature": "BMI",
+            "importance": 0.1779
+        },
+        {
+            "type": "feature_importance",
+            "feature": "DiabetesPedigreeFunction",
+            "importance": 0.1252
+        },
+        {
+            "type": "feature_importance",
+            "feature": "Age",
+            "importance": 0.1191
+        },
+        {
+            "type": "feature_importance",
+            "feature": "BloodPressure",
+            "importance": 0.0843
+        },
+        {
+            "type": "feature_importance",
+            "feature": "Pregnancies",
+            "importance": 0.0685
+        },
+        {
+            "type": "feature_importance",
+            "feature": "Insulin",
+            "importance": 0.0522
+        }
+    ]
+}

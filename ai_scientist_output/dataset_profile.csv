@@ -1,0 +1,10 @@
+,dtype,missing,missing_%,unique_values
+Pregnancies,int64,0,0.0,17
+Glucose,int64,0,0.0,136
+BloodPressure,int64,0,0.0,47
+SkinThickness,int64,0,0.0,51
+Insulin,int64,0,0.0,186
+BMI,float64,0,0.0,248
+DiabetesPedigreeFunction,float64,0,0.0,517
+Age,int64,0,0.0,52
+Outcome,int64,0,0.0,2

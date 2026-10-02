@@ -1,1 +1,0 @@
-"""Pattern discovery components."""

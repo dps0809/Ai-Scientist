@@ -1,0 +1,45 @@
+[
+    {
+        "type": "correlation",
+        "feature": "Glucose",
+        "target": "Outcome",
+        "correlation": 0.4666,
+        "p_value": 0.0,
+        "direction": "positive"
+    },
+    {
+        "type": "ml_feature_importance",
+        "feature": "Glucose",
+        "importance": 0.3234
+    },
+    {
+        "type": "ml_feature_importance",
+        "feature": "BMI",
+        "importance": 0.1779
+    },
+    {
+        "type": "ml_feature_importance",
+        "feature": "DiabetesPedigreeFunction",
+        "importance": 0.1252
+    },
+    {
+        "type": "ml_feature_importance",
+        "feature": "Age",
+        "importance": 0.1191
+    },
+    {
+        "type": "ml_feature_importance",
+        "feature": "BloodPressure",
+        "importance": 0.0843
+    },
+    {
+        "type": "ml_feature_importance",
+        "feature": "Pregnancies",
+        "importance": 0.0685
+    },
+    {
+        "type": "ml_feature_importance",
+        "feature": "Insulin",
+        "importance": 0.0522
+    }
+]
