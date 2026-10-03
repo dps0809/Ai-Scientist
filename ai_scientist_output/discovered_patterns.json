@@ -1,45 +1,101 @@
 [
     {
         "type": "correlation",
+        "feature": "Pregnancies",
+        "target": "Outcome",
+        "correlation": 0.2219,
+        "z_score": 6.24,
+        "p_value": "< 0.0001",
+        "direction": "positive"
+    },
+    {
+        "type": "correlation",
         "feature": "Glucose",
         "target": "Outcome",
         "correlation": 0.4666,
-        "p_value": 0.0,
+        "z_score": 13.99,
+        "p_value": "< 0.0001",
+        "direction": "positive"
+    },
+    {
+        "type": "correlation",
+        "feature": "BMI",
+        "target": "Outcome",
+        "correlation": 0.2927,
+        "z_score": 8.34,
+        "p_value": "< 0.0001",
+        "direction": "positive"
+    },
+    {
+        "type": "correlation",
+        "feature": "Age",
+        "target": "Outcome",
+        "correlation": 0.2384,
+        "z_score": 6.72,
+        "p_value": "< 0.0001",
         "direction": "positive"
     },
     {
         "type": "ml_feature_importance",
         "feature": "Glucose",
-        "importance": 0.3234
+        "target": "Outcome",
+        "importance": 0.3234,
+        "correlation": null,
+        "p_value": null,
+        "direction": null
     },
     {
         "type": "ml_feature_importance",
         "feature": "BMI",
-        "importance": 0.1779
+        "target": "Outcome",
+        "importance": 0.1779,
+        "correlation": null,
+        "p_value": null,
+        "direction": null
     },
     {
         "type": "ml_feature_importance",
         "feature": "DiabetesPedigreeFunction",
-        "importance": 0.1252
+        "target": "Outcome",
+        "importance": 0.1252,
+        "correlation": null,
+        "p_value": null,
+        "direction": null
     },
     {
         "type": "ml_feature_importance",
         "feature": "Age",
-        "importance": 0.1191
+        "target": "Outcome",
+        "importance": 0.1191,
+        "correlation": null,
+        "p_value": null,
+        "direction": null
     },
     {
         "type": "ml_feature_importance",
         "feature": "BloodPressure",
-        "importance": 0.0843
+        "target": "Outcome",
+        "importance": 0.0843,
+        "correlation": null,
+        "p_value": null,
+        "direction": null
     },
     {
         "type": "ml_feature_importance",
         "feature": "Pregnancies",
-        "importance": 0.0685
+        "target": "Outcome",
+        "importance": 0.0685,
+        "correlation": null,
+        "p_value": null,
+        "direction": null
     },
     {
         "type": "ml_feature_importance",
         "feature": "Insulin",
-        "importance": 0.0522
+        "target": "Outcome",
+        "importance": 0.0522,
+        "correlation": null,
+        "p_value": null,
+        "direction": null
     }
 ]

@@ -5,10 +5,34 @@
     "discovered_evidence": [
         {
             "type": "statistical_relationship",
+            "feature": "Pregnancies",
+            "target": "Outcome",
+            "correlation": 0.2219,
+            "p_value": "< 0.0001",
+            "direction": "positive"
+        },
+        {
+            "type": "statistical_relationship",
             "feature": "Glucose",
             "target": "Outcome",
             "correlation": 0.4666,
-            "p_value": 0.0,
+            "p_value": "< 0.0001",
+            "direction": "positive"
+        },
+        {
+            "type": "statistical_relationship",
+            "feature": "BMI",
+            "target": "Outcome",
+            "correlation": 0.2927,
+            "p_value": "< 0.0001",
+            "direction": "positive"
+        },
+        {
+            "type": "statistical_relationship",
+            "feature": "Age",
+            "target": "Outcome",
+            "correlation": 0.2384,
+            "p_value": "< 0.0001",
             "direction": "positive"
         },
         {
@@ -30,21 +54,6 @@
             "type": "feature_importance",
             "feature": "Age",
             "importance": 0.1191
-        },
-        {
-            "type": "feature_importance",
-            "feature": "BloodPressure",
-            "importance": 0.0843
-        },
-        {
-            "type": "feature_importance",
-            "feature": "Pregnancies",
-            "importance": 0.0685
-        },
-        {
-            "type": "feature_importance",
-            "feature": "Insulin",
-            "importance": 0.0522
         }
     ]
 }

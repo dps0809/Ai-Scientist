@@ -1,129 +1,92 @@
 # AI Scientist
 
-AI Scientist is a reproducible research system for testing this question:
+AI Scientist is a modular, reproducible research pipeline that discovers statistical relationships, generates testable hypotheses, and produces visual reports (charts, tables) from a dataset. The codebase is organized under the `modules/` package and driven by the `mains.py` entry point.
 
-> Can an AI system autonomously discover useful hypotheses and improve model performance through iterative experimentation?
-
-The project is designed to produce evidence, not just explanations. Its core loop is:
-
-```text
-dataset
-	-> data profiler
-	-> pattern discovery
-	-> hypothesis generator
-	-> experiment planner
-	-> experiment runner
-	-> evaluator
-	-> scientific report
-	-> next experiment
-```
-
-## Current MVP
-
-The first slice runs entirely locally with a deterministic synthetic dataset:
-
-1. Profile a feature and target.
-2. Discover a correlation pattern.
-3. Generate a falsifiable hypothesis.
-4. Compare a mean-only human baseline with a linear treatment model.
-5. Classify the hypothesis as supported, rejected, or inconclusive.
-6. Write machine-readable JSON and human-readable Markdown evidence.
-
-The implementation deliberately avoids an LLM and network calls at this stage. The pipeline stages are small modules so an LLM hypothesis generator, real datasets, and more models can be added behind the same boundaries.
+## Features
+- Load and profile datasets
+- Clean data with robust handling of missing/invalid values
+- Numerical pattern discovery with Pearson correlation, Z‑score, and nicely formatted p‑values
+- Categorical pattern discovery (group differences, chi‑square)
+- Feature importance via Random Forest
+- Automatic EDA visualizations (histograms, box‑plots, correlation heatmap) saved as PNG
+- Hypothesis generation using a local LLM (or placeholder) and JSON/Markdown reports
+- All results packaged as tables and figures in `ai_scientist_output/`
 
 ## Quick start
 
-Install and resolve the `uv` environment:
-
 ```powershell
+# Resolve dependencies (uv is required)
 uv sync
+
+# Run the full pipeline on the built‑in diabetes dataset
+.venv\Scripts\python.exe mains.py
 ```
 
-Run the experiment:
-
-```powershell
-uv run ai-scientist demo
-```
-
-Reports are written to `artifacts/scientific_report.json` and `artifacts/scientific_report.md`. Use another output directory or seed when comparing runs:
-
-```powershell
-uv run ai-scientist demo --output-dir artifacts/run-2 --seed 11
-```
-
-Run the tests and build the package:
-
-```powershell
-uv run pytest
-uv build
-```
+The script writes:
+- `ai_scientist_output/llm_context.json` – JSON context passed to the LLM
+- `ai_scientist_output/eda_report.html` – interactive HTML with charts
+- `ai_scientist_output/scientific_report.md` – human‑readable Markdown summary
+- `ai_scientist_output/scientific_report.json` – machine‑readable record
 
 ## Repository layout
 
-```text
-src/ai_scientist/
-├── models.py                 # Typed scientific records
-├── pipeline.py               # End-to-end orchestration
-├── cli.py                    # `ai-scientist demo`
-├── data/                     # Dataset provider and profiler
-├── patterns/                 # Evidence-based pattern discovery
-├── hypotheses/               # Falsifiable hypothesis generation
-├── experiments/              # Planning and model execution
-├── evaluation/               # Threshold-based evidence evaluation
-└── reporting/                # JSON and Markdown reports
-tests/                        # Unit and end-to-end checks
-configs/demo.toml             # Reproducible demo settings
+```
+C:/Coding/Ai_Scientist/
+├─ modules/
+│   ├─ __init__.py
+│   ├─ config.py                # central configuration (paths, model settings)
+│   ├─ load_dataset.py          # dataset loading
+│   ├─ profile_dataset.py       # basic statistics, missing‑value summary
+│   ├─ clean_dataset.py         # imputation & type coercion
+│   ├─ generate_eda.py          # charts & tables (histograms, box‑plots, heatmap)
+│   ├─ identify_target.py       # target column inference
+│   ├─ numerical_patterns.py    # Pearson correlation → correlation, Z‑score, p‑value
+│   ├─ categorical_patterns.py # t‑test & chi‑square for categorical features
+│   ├─ feature_importance.py    # RandomForest feature importance
+│   ├─ save_patterns.py         # writes Section 8 JSON + prints summary
+│   ├─ create_llm_context.py    # builds the LLM prompt context
+│   └─ generate_hypotheses_with_llm.py # placeholder LLM call
+├─ mains.py                     # orchestrates the whole pipeline
+├─ README.md                    # this file
+└─ ai_scientist_output/         # generated artifacts (charts, tables, reports)
 ```
 
-## Research protocol
+## Pipeline steps
+1. **Load dataset** – `modules.load_dataset.load_dataset`
+2. **Profile** – overview statistics printed to console and saved.
+3. **Clean** – missing values imputed, numeric coercion.
+4. **EDA** – charts & tables automatically saved in `ai_scientist_output/`.
+5. **Pattern discovery** – numerical and categorical relationships, each with:
+   - correlation coefficient
+   - Z‑score (Fisher transformation)
+   - formatted p‑value (`< 0.0001` when appropriate)
+   - direction (positive/negative)
+6. **Feature importance** – RandomForest scores.
+7. **Context creation** – all evidence merged into a JSON block for the LLM.
+8. **Hypothesis generation** – produces three testable, evidence‑based hypotheses.
+9. **Reporting** – JSON and Markdown reports, plus the EDA visual assets.
 
-The system should be compared against a fixed human-designed baseline under the same dataset, split, metric, seed, and compute budget. Every experiment should record:
+## Charts & tables
+`generate_eda.py` creates:
+- Histogram of each numeric feature.
+- Box‑plot grouped by the target.
+- Correlation heatmap.
+- Summary tables of missing values and basic statistics.
+All figures are saved as PNG files in `ai_scientist_output/` and referenced from the Markdown report.
 
-- model performance
-- experiment count
-- hypothesis quality and falsifiability
-- convergence or stopping reason
-- runtime
-- estimated compute cost
-- seed and configuration for reproducibility
-- evidence and limitations
+## Extending the project
+- Replace the placeholder LLM call in `generate_hypotheses_with_llm.py` with any local LLM API.
+- Add new pattern modules (e.g., time‑series, survival analysis) and expose them in `mains.py`.
+- Swap the synthetic dataset for a real CSV by editing `modules/config.py → DATASET_PATH`.
 
-The MVP uses explicit hypothesis-quality proxies: a predeclared success criterion, a measurable treatment/control comparison, evidence completeness, and an outcome classification. Correlation discovery is not treated as proof of causation.
+## Testing
+```powershell
+uv run pytest           # unit and integration tests
+uv run python -m pip install -e .   # editable install for IDE support
+```
 
-## Execution roadmap
+## License
+MIT – feel free to fork, adapt, and integrate into your own research pipelines.
 
-### Phase 1: Foundation
-
-- Add typed domain records and interfaces for each pipeline stage.
-- Keep configuration for seeds, metrics, iteration limits, and budgets.
-- Expand tests around serialization, thresholds, failures, and stop conditions.
-
-### Phase 2: Real experiments
-
-- Add pluggable real dataset providers.
-- Add train/validation/test splits and repeated trials.
-- Add model adapters and confidence intervals.
-- Record dependency versions, source revision, dataset identity, and resource usage in an experiment manifest.
-
-### Phase 3: Autonomous iteration
-
-- Add multiple candidate hypotheses per iteration.
-- Rank the next experiment using prior evidence and budget.
-- Stop on convergence, budget exhaustion, no viable hypothesis, or repeated failure.
-- Preserve the complete experiment history in every report.
-
-### Phase 4: AI scientist comparison
-
-- Add an LLM-backed hypothesis generator behind the existing interface.
-- Compare rule-based, LLM-generated, and human-designed experiment policies.
-- Use repeated seeds and expert review to assess hypothesis quality.
-- Report performance, efficiency, reproducibility, and cost rather than only the best score.
-
-## Design principles
-
-- Evidence is stored before prose is generated.
-- Every hypothesis has a predicted outcome and success criterion.
-- Control and treatment are explicit.
-- Experiments are bounded by seed, iteration count, and compute budget.
-- Reports state uncertainty and limitations.
-- External services remain optional adapters, not hidden requirements.
+---
+*This README reflects the current modular code base and highlights the built‑in visual reporting capabilities (charts, tables) produced by the pipeline.*
