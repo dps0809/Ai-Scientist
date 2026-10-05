@@ -1,0 +1,27 @@
+[
+    {
+        "hypothesis_id": "H1",
+        "hypothesis": "Higher glucose levels are associated with a higher probability of diabetes.",
+        "evidence_from_data": "Glucose shows a strong positive correlation (0.4666) with Outcome (p<0.0001) and has the highest feature importance (0.3234)."
+    },
+    {
+        "hypothesis_id": "H2",
+        "hypothesis": "Higher BMI is associated with a higher probability of diabetes.",
+        "evidence_from_data": "BMI shows a positive correlation (0.2927) with Outcome (p<0.0001) and feature importance (0.1779)."
+    },
+    {
+        "hypothesis_id": "H3",
+        "hypothesis": "Older age is associated with a higher probability of diabetes.",
+        "evidence_from_data": "Age shows a positive correlation (0.2384) with Outcome (p<0.0001) and feature importance (0.1191)."
+    },
+    {
+        "hypothesis_id": "H4",
+        "hypothesis": "Glucose is a more important predictor of diabetes than BMI.",
+        "evidence_from_data": "Glucose has a higher feature importance (0.3234) than BMI (0.1779)."
+    },
+    {
+        "hypothesis_id": "H5",
+        "hypothesis": "DiabetesPedigreeFunction contributes significantly to predicting diabetes in the model.",
+        "evidence_from_data": "DiabetesPedigreeFunction has a feature importance of 0.1252."
+    }
+]

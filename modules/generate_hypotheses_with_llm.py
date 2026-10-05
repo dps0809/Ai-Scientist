@@ -4,6 +4,7 @@ import requests
 # pyrefly: ignore [missing-import]
 from .config import OLLAMA_MODEL, OLLAMA_URL, OUTPUT_DIR
 
+
 def generate_hypotheses_with_llm(context):
     print("\n" + "=" * 70)
     print("9. LOCAL LLM HYPOTHESIS GENERATION")
@@ -22,7 +23,7 @@ The system discovered the following evidence:
 
 {evidence_text}
 
-Generate exactly 3 testable hypotheses.
+Generate exactly 5 testable hypotheses.
 
 IMPORTANT RULES:
 
@@ -69,7 +70,7 @@ Return exactly this structure:
         "think": False,
         "options": {
             "temperature": 0.2,
-            "num_predict": 1500
+            "num_predict": 8192
         }
     }
 
@@ -90,8 +91,16 @@ Return exactly this structure:
         print("\nRaw LLM response:")
         print(text)
 
-        text = text.replace("```json", "").replace("```", "").strip()
-        hypotheses = json.loads(text)
+        # ----------------------------------------------------------------
+        # Extract the JSON array robustly.
+        # The model may prepend chain-of-thought reasoning before the JSON.
+        # _extract_json_array() finds the LAST complete '[...]' in the text.
+        # ----------------------------------------------------------------
+        hypotheses = _extract_json_array(text)
+
+        if hypotheses is None:
+            print("\n[ERROR] Could not extract a valid JSON array from LLM output.")
+            return []
 
         if not isinstance(hypotheses, list):
             print("\nLLM response was not a JSON list.")
@@ -111,6 +120,7 @@ Return exactly this structure:
             print("\nProposed Experiment:")
             print(hypothesis.get("proposed_experiment", "N/A"))
 
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
         output_path = os.path.join(OUTPUT_DIR, "generated_hypotheses.json")
         with open(output_path, "w") as f:
             json.dump(hypotheses, f, indent=4)
@@ -127,12 +137,50 @@ Return exactly this structure:
         print("\nCould not connect to Ollama.")
         print(f"Make sure Ollama is running and '{OLLAMA_MODEL}' is installed.")
         return []
-    except json.JSONDecodeError:
-        print("\nLLM returned invalid JSON.")
-        print("\nRaw response:")
-        print(text)
-        return []
     except Exception as e:
         print("\nLLM generation failed:")
         print(e)
         return []
+
+
+def _extract_json_array(text: str):
+    """
+    Find the LAST complete JSON array in *text* and return the parsed list.
+    Returns None if no valid array is found.
+
+    This handles models that prepend chain-of-thought reasoning before the
+    actual JSON output — we scan backwards for the final '[...]' block.
+    """
+    # Strip markdown code fences if present
+    text = text.replace("```json", "").replace("```", "")
+
+    # Work backwards: find the last ']' then walk left to its matching '['
+    last_close = text.rfind("]")
+    if last_close == -1:
+        return None
+
+    depth = 0
+    in_string = False
+    escape_next = False
+    i = last_close
+    while i >= 0:
+        ch = text[i]
+        # Handle escape sequences inside strings (scanning backwards)
+        if i > 0 and text[i - 1] == "\\" and in_string:
+            i -= 1
+            continue
+        if ch == '"':
+            in_string = not in_string
+        if not in_string:
+            if ch == "]":
+                depth += 1
+            elif ch == "[":
+                depth -= 1
+                if depth == 0:
+                    candidate = text[i:last_close + 1]
+                    try:
+                        return json.loads(candidate)
+                    except json.JSONDecodeError:
+                        return None
+        i -= 1
+    return None
