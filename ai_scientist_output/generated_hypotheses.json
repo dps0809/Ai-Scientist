@@ -1,27 +1,51 @@
 [
     {
         "hypothesis_id": "H1",
-        "hypothesis": "Higher glucose levels are associated with a higher probability of diabetes.",
-        "evidence_from_data": "Glucose shows a strong positive correlation (0.4666) with Outcome (p<0.0001) and has the highest feature importance (0.3234)."
+        "hypothesis_type": "individual_dependency",
+        "hypothesis": "Glucose has a strong positive association with Outcome, with a Pearson correlation coefficient of 0.4666 and Spearman rank correlation coefficient of 0.4758.",
+        "evidence_from_data": "pearson_r: 0.4666, pearson_p_value: < 0.0001, spearman_rho: 0.4758, spearman_p_value: < 0.0001, mutual_information: 0.1403, direction: positive, significance: significant (p < 0.05), composite_score: 0.7356, rank: 1",
+        "proposed_experiment": "Conduct a linear regression analysis with Glucose as the sole predictor to quantify its effect size on Outcome, while controlling for the dataset's baseline characteristics."
     },
     {
         "hypothesis_id": "H2",
-        "hypothesis": "Higher BMI is associated with a higher probability of diabetes.",
-        "evidence_from_data": "BMI shows a positive correlation (0.2927) with Outcome (p<0.0001) and feature importance (0.1779)."
+        "hypothesis_type": "individual_dependency",
+        "hypothesis": "BMI has a strong positive association with Outcome, with a Pearson correlation coefficient of 0.2927 and Spearman rank correlation coefficient of 0.3097.",
+        "evidence_from_data": "pearson_r: 0.2927, pearson_p_value: < 0.0001, spearman_rho: 0.3097, spearman_p_value: < 0.0001, mutual_information: 0.084, direction: positive, significance: significant (p < 0.05), composite_score: 0.45, rank: 2",
+        "proposed_experiment": "Perform a logistic regression model using BMI as the sole predictor to assess its predictive power for Outcome, with 5-fold cross-validation to estimate generalizability."
     },
     {
         "hypothesis_id": "H3",
-        "hypothesis": "Older age is associated with a higher probability of diabetes.",
-        "evidence_from_data": "Age shows a positive correlation (0.2384) with Outcome (p<0.0001) and feature importance (0.1191)."
+        "hypothesis_type": "feature_combination_synergy",
+        "hypothesis": "Combining Glucose and BMI provides greater predictive information about Outcome than either feature alone, with a combined ROC AUC score of 0.8097, a synergy gain of 0.0223, and a joint mutual information of 0.1993.",
+        "evidence_from_data": "combination: Glucose + BMI, score_a: 0.7874, score_b: 0.6881, combined_score: 0.8097, synergy_gain: 0.0223, joint_mi: 0.1993",
+        "proposed_experiment": "Train a random forest classifier using Glucose and BMI as features and evaluate the model's ROC AUC score with 10-fold cross-validation to confirm the synergy effect."
     },
     {
         "hypothesis_id": "H4",
-        "hypothesis": "Glucose is a more important predictor of diabetes than BMI.",
-        "evidence_from_data": "Glucose has a higher feature importance (0.3234) than BMI (0.1779)."
+        "hypothesis_type": "feature_combination_synergy",
+        "hypothesis": "Combining Glucose and Pregnancies provides greater predictive information about Outcome than either feature alone, with a combined ROC AUC score of 0.804, a synergy gain of 0.0007, and a joint mutual information of 0.1993.",
+        "evidence_from_data": "combination: Glucose + Pregnancies, score_a: 0.7874, score_b: 0.6471, combined_score: 0.804, synergy_gain: 0.0007, joint_mi: 0.1993",
+        "proposed_experiment": "Implement a gradient boosting model with Glucose and Pregnancies as features and measure the model's performance using the area under the ROC curve (AUC) with 5-fold cross-validation."
     },
     {
         "hypothesis_id": "H5",
-        "hypothesis": "DiabetesPedigreeFunction contributes significantly to predicting diabetes in the model.",
-        "evidence_from_data": "DiabetesPedigreeFunction has a feature importance of 0.1252."
+        "hypothesis_type": "feature_interaction_moderation",
+        "hypothesis": "The relationship between Glucose and Outcome varies significantly across levels of Age, with an interaction effect delta of 0.0002 and a p-value of 0.0026.",
+        "evidence_from_data": "combination: Glucose + Age, additive_score: 0.7968, interaction_score: 0.797, interaction_delta: 0.0002, interaction_p_value: 0.0026, status: significant interaction",
+        "proposed_experiment": "Conduct a moderated regression analysis to test whether the effect of Glucose on Outcome differs by Age groups (e.g., quartiles), using a linear model with interaction terms and assessing significance via ANOVA."
+    },
+    {
+        "hypothesis_id": "H6",
+        "hypothesis_type": "feature_interaction_moderation",
+        "hypothesis": "The relationship between Glucose and Outcome varies significantly across levels of Pregnancies, with an interaction effect delta of -0.0007 and a p-value of 0.0364.",
+        "evidence_from_data": "combination: Glucose + Pregnancies, additive_score: 0.804, interaction_score: 0.8033, interaction_delta: -0.0007, interaction_p_value: 0.0364, status: significant interaction",
+        "proposed_experiment": "Perform a stratified analysis by Pregnancies levels (e.g., low, medium, high) to evaluate the differential impact of Glucose on Outcome, using a chi-squared test for association between Glucose and Outcome within each stratum."
+    },
+    {
+        "hypothesis_id": "H7",
+        "hypothesis_type": "comparative_or_confounding_relationship",
+        "hypothesis": "Glucose and BMI are weakly correlated (r = 0.2211), suggesting potential confounding or mediation in the relationship between these predictors and Outcome.",
+        "evidence_from_data": "feature_a: Glucose, feature_b: BMI, correlation: 0.2211, strength: weak",
+        "proposed_experiment": "Run a mediation analysis to determine whether BMI mediates the relationship between Glucose and Outcome, using the causal inference framework with bootstrapping for confidence intervals."
     }
 ]

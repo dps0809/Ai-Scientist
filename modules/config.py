@@ -14,6 +14,10 @@ TARGET_COLUMN = None
 OLLAMA_MODEL = "qwen3:4b"
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
+# Feature Combination & CV parameters
+TOP_K_CANDIDATES = 6
+CV_FOLDS = 5
+
 OUTPUT_DIR = "ai_scientist_output"
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)

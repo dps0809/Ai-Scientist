@@ -1,0 +1,9 @@
+feature,pearson_r,pearson_p_value,spearman_rho,spearman_p_value,mutual_information,direction,significance,composite_score,rank
+Glucose,0.4666,< 0.0001,0.4758,< 0.0001,0.1403,positive,significant (p < 0.05),0.7356,1
+BMI,0.2927,< 0.0001,0.3097,< 0.0001,0.084,positive,significant (p < 0.05),0.45,2
+Age,0.2384,< 0.0001,0.309,< 0.0001,0.0679,positive,significant (p < 0.05),0.3788,3
+Insulin,0.1305,0.0003,0.0665,0.0656,0.0432,positive,significant (p < 0.05),0.2032,4
+Pregnancies,0.2219,< 0.0001,0.1987,< 0.0001,0.0205,positive,significant (p < 0.05),0.1782,5
+BloodPressure,0.0651,0.0715,0.1429,< 0.0001,0.0248,positive,significant (p < 0.05),0.1404,6
+DiabetesPedigreeFunction,0.1738,< 0.0001,0.1754,< 0.0001,0.0125,positive,significant (p < 0.05),0.1318,7
+SkinThickness,0.0748,0.0383,0.0897,0.0129,0.0,positive,significant (p < 0.05),0.0411,8

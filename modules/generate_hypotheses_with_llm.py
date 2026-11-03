@@ -7,70 +7,95 @@ from .config import OLLAMA_MODEL, OLLAMA_URL, OUTPUT_DIR
 
 def generate_hypotheses_with_llm(context):
     print("\n" + "=" * 70)
-    print("9. LOCAL LLM HYPOTHESIS GENERATION")
+    print("STAGE 3: LOCAL LLM HYPOTHESIS GENERATION")
     print("=" * 70)
 
-    evidence = context.get("discovered_evidence", [])
-    evidence_text = json.dumps(evidence, indent=2)
+    target = context.get("target", "Outcome")
+    all_features = context.get("all_features", [])
 
-    prompt = f"""
-You are a scientific hypothesis generation assistant.
+    stage1_deps = context.get("stage_1_individual_dependencies", [])
+    stage2_combs = context.get("stage_2_feature_combinations", [])
+    stage2_inters = context.get("stage_2_feature_interactions", [])
+    inter_corr = context.get("inter_variable_correlations", [])
+    summary_stats = context.get("summary_statistics", {})
 
-A Python analysis system has already analyzed a
-diabetes dataset.
+    stage1_text = json.dumps(stage1_deps[:8], indent=2)
+    stage2_combs_text = json.dumps(stage2_combs[:8], indent=2)
+    stage2_inters_text = json.dumps(stage2_inters[:6], indent=2)
+    inter_corr_text = json.dumps(inter_corr[:8], indent=2)
 
-The system discovered the following evidence:
+    prompt = f"""You are an elite scientific hypothesis generation assistant specializing in biomedical and tabular data discovery.
 
-{evidence_text}
+A quantitative discovery pipeline analyzed a dataset ({context.get('dataset_rows', '?')} rows, {context.get('dataset_columns', '?')} columns).
+Target variable: {target}
+Features: {', '.join(all_features)}
 
-Generate exactly 5 testable hypotheses.
+=== EVIDENCE SECTION 1: STAGE 1 INDIVIDUAL FEATURE DEPENDENCY ANALYSIS ===
+Calculated independent associations between each feature and {target} (Pearson r, Spearman rho, Mutual Information, Significance):
+{stage1_text}
 
-IMPORTANT RULES:
+=== EVIDENCE SECTION 2: STAGE 2 FEATURE COMBINATION DISCOVERY (JOINT PREDICTIVE SYNERGY) ===
+Calculated Joint Mutual Information and 5-Fold Cross-Validated Model Predictive Synergy (Single scores vs Combined score, Synergy Gain):
+{stage2_combs_text}
 
-1. Use ONLY the evidence provided above.
-2. Do NOT invent relationships.
-3. Do NOT claim causation.
-4. Each hypothesis must be specific.
-5. Each hypothesis must be testable using the dataset.
-6. Keep each hypothesis concise.
-7. Explain the evidence supporting each hypothesis.
-8. Suggest one simple experiment to test each hypothesis.
-9. Return ONLY valid JSON.
-10. Do NOT use markdown.
-11. Do NOT write anything before or after the JSON.
+=== EVIDENCE SECTION 3: STAGE 2 FEATURE INTERACTION ANALYSIS (MODERATION & PRODUCT TERMS) ===
+Evaluated whether the effect of one feature varies across levels of another feature (Additive model vs Interaction model X_A * X_B):
+{stage2_inters_text}
 
-Return exactly this structure:
+=== EVIDENCE SECTION 4: INTER-VARIABLE CORRELATIONS (POTENTIAL CONFOUNDING / MEDIATION) ===
+Correlations between predictor variables:
+{inter_corr_text}
 
+Generate exactly 7 high-quality, testable scientific hypotheses adhering to this taxonomy:
+
+1. (Primary Individual Dependency): State the directional relationship of the #1 ranked feature with {target}, citing its Pearson r, Spearman rho, and Mutual Information.
+2. (Secondary Individual Dependency): State the directional relationship of another top-ranked feature with {target}, citing its metrics.
+3. (Primary Feature Combination Synergy): Propose that combining two specific features (from Section 2) provides greater predictive information about {target} than either feature alone. Cite their individual scores, combined score, synergy gain, and Joint MI.
+4. (Secondary Feature Combination Synergy): Propose that combining two specific features (from Section 2) provides greater predictive information about {target} than either feature alone. Cite their individual scores, combined score, synergy gain, and Joint MI.
+5. (Primary Feature Interaction / Moderation): Propose that the relationship between a feature and {target} varies across levels of another feature (from Section 3). Cite the interaction delta and p-value.
+6. (Secondary Feature Interaction / Moderation): Propose that the relationship between a feature and {target} varies across levels of another feature (from Section 3). Cite the interaction delta and p-value.
+7. (Comparative or Confounding Relationship): Compare the relative importance of two correlated predictors (from Section 4) or propose a confounding/mediating mechanism affecting {target}.
+
+STRICT FORMATTING REQUIREMENTS:
+- Return ONLY valid JSON, starting immediately with '[' and ending with ']'.
+- No markdown formatting around the JSON, no commentary.
+- Every hypothesis MUST cite the exact numbers from the evidence sections above.
+- Every proposed_experiment must describe a specific statistical or machine learning test to run on the dataset.
+
+JSON Structure:
 [
   {{
     "hypothesis_id": "H1",
-    "hypothesis": "One specific testable hypothesis.",
-    "evidence_from_data": "Evidence supporting the hypothesis.",
-    "proposed_experiment": "A simple experiment that can test it."
-  }},
-  {{
-    "hypothesis_id": "H2",
-    "hypothesis": "One specific testable hypothesis.",
-    "evidence_from_data": "Evidence supporting the hypothesis.",
-    "proposed_experiment": "A simple experiment that can test it."
-  }},
-  {{
-    "hypothesis_id": "H3",
-    "hypothesis": "One specific testable hypothesis.",
-    "evidence_from_data": "Evidence supporting the hypothesis.",
-    "proposed_experiment": "A simple experiment that can test it."
+    "hypothesis_type": "individual_dependency",
+    "hypothesis": "Clear statement of the hypothesis.",
+    "evidence_from_data": "Exact statistics cited from the evidence sections.",
+    "proposed_experiment": "Specific statistical test, cross-validation, or controlled model to execute."
   }}
 ]
 """
 
+    is_qwen_reasoning = "qwen" in OLLAMA_MODEL.lower()
+
+    if is_qwen_reasoning:
+        # Pre-close the <think> block and pre-fill the opening '[' to bypass
+        # the model's lengthy chain-of-thought monologue, reducing generation
+        # time from ~3 minutes to ~20 seconds on CPU.
+        formatted_prompt = f"<|im_start|>user\n{prompt.strip()}<|im_end|>\n<|im_start|>assistant\n<think>\n</think>\n[\n"
+        prefix = "[\n"
+        use_raw = True
+    else:
+        formatted_prompt = prompt
+        prefix = ""
+        use_raw = False
+
     payload = {
         "model": OLLAMA_MODEL,
-        "prompt": prompt,
-        "stream": False,
-        "think": False,
+        "prompt": formatted_prompt,
+        "raw": use_raw,
+        "stream": True,
         "options": {
             "temperature": 0.2,
-            "num_predict": 8192
+            "num_predict": 6000
         }
     }
 
@@ -79,23 +104,34 @@ Return exactly this structure:
         print("\nSending discovered evidence to local LLM...")
         print("Waiting for LLM response...")
 
-        response = requests.post(OLLAMA_URL, json=payload, timeout=600)
+        response = requests.post(OLLAMA_URL, json=payload, stream=True, timeout=600)
         response.raise_for_status()
-        result = response.json()
-        text = result.get("response", "").strip()
+
+        if payload.get("stream", False):
+            print("\nStreaming LLM response:\n")
+            if prefix:
+                print(prefix, end="", flush=True)
+            text_chunks = [prefix] if prefix else []
+            for line in response.iter_lines():
+                if line:
+                    chunk = json.loads(line.decode("utf-8"))
+                    response_chunk = chunk.get("response", "")
+                    if response_chunk:
+                        print(response_chunk, end="", flush=True)
+                        text_chunks.append(response_chunk)
+            print()
+            text = "".join(text_chunks).strip()
+        else:
+            result = response.json()
+            text = prefix + result.get("response", "").strip()
+            print("\nRaw LLM response:")
+            print(text)
 
         if not text:
             print("\nLLM returned an empty response.")
             return []
 
-        print("\nRaw LLM response:")
-        print(text)
-
-        # ----------------------------------------------------------------
-        # Extract the JSON array robustly.
-        # The model may prepend chain-of-thought reasoning before the JSON.
-        # _extract_json_array() finds the LAST complete '[...]' in the text.
-        # ----------------------------------------------------------------
+        # Extract the JSON array robustly
         hypotheses = _extract_json_array(text)
 
         if hypotheses is None:
@@ -111,7 +147,7 @@ Return exactly this structure:
         print("=" * 70)
 
         for hypothesis in hypotheses:
-            print(f"\n{hypothesis.get('hypothesis_id', 'H?')}")
+            print(f"\n{hypothesis.get('hypothesis_id', 'H?')} [{hypothesis.get('hypothesis_type', 'Hypothesis')}]")
             print("-" * 70)
             print("Hypothesis:")
             print(hypothesis.get("hypothesis", "N/A"))
@@ -147,25 +183,17 @@ def _extract_json_array(text: str):
     """
     Find the LAST complete JSON array in *text* and return the parsed list.
     Returns None if no valid array is found.
-
-    This handles models that prepend chain-of-thought reasoning before the
-    actual JSON output — we scan backwards for the final '[...]' block.
     """
-    # Strip markdown code fences if present
     text = text.replace("```json", "").replace("```", "")
-
-    # Work backwards: find the last ']' then walk left to its matching '['
     last_close = text.rfind("]")
     if last_close == -1:
         return None
 
     depth = 0
     in_string = False
-    escape_next = False
     i = last_close
     while i >= 0:
         ch = text[i]
-        # Handle escape sequences inside strings (scanning backwards)
         if i > 0 and text[i - 1] == "\\" and in_string:
             i -= 1
             continue
