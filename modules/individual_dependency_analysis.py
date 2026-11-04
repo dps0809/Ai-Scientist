@@ -1,4 +1,5 @@
 import os
+import json
 import numpy as np
 import pandas as pd
 from typing import cast
@@ -8,7 +9,7 @@ from sklearn.preprocessing import LabelEncoder
 # pyrefly: ignore [missing-import]
 from .config import OUTPUT_DIR
 
-def individual_dependency_analysis(df: pd.DataFrame, target: str):
+def individual_dependency_analysis(df: pd.DataFrame, target: str, output_dir=None, force_recompute: bool = False):
     """
     Stage 1: Individual Feature Dependency Analysis
     Calculates the independent dependency of each feature on the target:
@@ -17,6 +18,22 @@ def individual_dependency_analysis(df: pd.DataFrame, target: str):
       - Mutual Information (linear + non-linear dependency)
       - Composite ranking of individual features
     """
+    out_dir = output_dir or OUTPUT_DIR
+    stage1_json_path = os.path.join(out_dir, "stage1_data.json")
+
+    # Seek cached processed data for this dataset
+    if os.path.exists(stage1_json_path) and not force_recompute:
+        try:
+            with open(stage1_json_path, "r") as f:
+                cached = json.load(f)
+            cached_feats = set(cached.get("ranked_features", []))
+            df_numeric_feats = set(df.select_dtypes(include=np.number).columns) - {target}
+            if cached_feats and cached_feats == df_numeric_feats:
+                print(f"[CACHE HIT] Loaded Stage 1 dependency analysis from: {stage1_json_path}")
+                return cached
+        except Exception:
+            pass
+
     print("\n" + "=" * 70)
     print("STAGE 1: INDIVIDUAL FEATURE DEPENDENCY ANALYSIS")
     print("=" * 70)
@@ -117,8 +134,9 @@ def individual_dependency_analysis(df: pd.DataFrame, target: str):
         print(f"{r['rank']:<5} {r['feature']:<25} {r['pearson_r']:<12} {r['spearman_rho']:<14} {r['mutual_information']:<10.4f} {r['significance']:<15}")
 
     # Export to CSV
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    csv_path = os.path.join(OUTPUT_DIR, "individual_dependencies.csv")
+    out_dir = output_dir or OUTPUT_DIR
+    os.makedirs(out_dir, exist_ok=True)
+    csv_path = os.path.join(out_dir, "individual_dependencies.csv")
     pd.DataFrame(results).to_csv(csv_path, index=False)
     print(f"\nStage 1 results saved to: {csv_path}")
 
@@ -139,8 +157,16 @@ def individual_dependency_analysis(df: pd.DataFrame, target: str):
 
     ranked_feature_names = [r["feature"] for r in results]
 
-    return {
+    output_dict = {
         "ranked_features": ranked_feature_names,
         "table": results,
         "patterns": patterns
     }
+
+    try:
+        with open(os.path.join(out_dir, "stage1_data.json"), "w") as f:
+            json.dump(output_dict, f, indent=4)
+    except Exception:
+        pass
+
+    return output_dict

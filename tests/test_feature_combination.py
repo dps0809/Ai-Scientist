@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from modules.feature_combination_analysis import feature_combination_analysis
 
-def test_feature_combination_analysis_synergy():
+def test_feature_combination_analysis_synergy(tmp_path):
     np.random.seed(42)
     n = 150
     x1 = np.random.normal(0, 1, n)
@@ -19,7 +19,8 @@ def test_feature_combination_analysis_synergy():
         target="target",
         top_candidates=["feat1", "feat2", "feat3"],
         max_candidates=3,
-        cv_folds=3
+        cv_folds=3,
+        output_dir=str(tmp_path)
     )
 
     assert "combinations" in results

@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from modules.individual_dependency_analysis import individual_dependency_analysis
 
-def test_individual_dependency_analysis_basic():
+def test_individual_dependency_analysis_basic(tmp_path):
     # Synthetic dataset
     np.random.seed(42)
     n = 100
@@ -14,7 +14,7 @@ def test_individual_dependency_analysis_basic():
 
     df = pd.DataFrame({"feat1": x1, "feat2": x2, "target": y})
 
-    results = individual_dependency_analysis(df, target="target")
+    results = individual_dependency_analysis(df, target="target", output_dir=str(tmp_path))
 
     assert "ranked_features" in results
     assert "table" in results

@@ -2,13 +2,20 @@ import os
 import json
 import requests
 # pyrefly: ignore [missing-import]
-from .config import OLLAMA_MODEL, OLLAMA_URL, OUTPUT_DIR
+# pyrefly: ignore [missing-import]
+from .config import OLLAMA_MODEL, OLLAMA_URL, OUTPUT_DIR, DB_HYPOTHESES
+from .schemas import HypothesisRecord
+from .hypothesis_registry import HypothesisRegistry
+from .mongo_cluster import MongoClusterManager
 
 
-def generate_hypotheses_with_llm(context):
+def generate_hypotheses_with_llm(context, iteration_no: int = 1, registry=None, output_dir=None):
     print("\n" + "=" * 70)
-    print("STAGE 3: LOCAL LLM HYPOTHESIS GENERATION")
+    print(f"STAGE 3: LOCAL LLM HYPOTHESIS GENERATION (ITERATION {iteration_no})")
     print("=" * 70)
+
+    if registry is None:
+        registry = HypothesisRegistry()
 
     target = context.get("target", "Outcome")
     all_features = context.get("all_features", [])
@@ -23,12 +30,17 @@ def generate_hypotheses_with_llm(context):
     stage2_combs_text = json.dumps(stage2_combs[:8], indent=2)
     stage2_inters_text = json.dumps(stage2_inters[:6], indent=2)
     inter_corr_text = json.dumps(inter_corr[:8], indent=2)
+    past_hypotheses_text = registry.get_past_hypotheses_prompt_summary()
 
     prompt = f"""You are an elite scientific hypothesis generation assistant specializing in biomedical and tabular data discovery.
 
 A quantitative discovery pipeline analyzed a dataset ({context.get('dataset_rows', '?')} rows, {context.get('dataset_columns', '?')} columns).
 Target variable: {target}
 Features: {', '.join(all_features)}
+
+=== AVOID DUPLICATION: PREVIOUSLY INVESTIGATED HYPOTHESES ===
+The following hypotheses have ALREADY been investigated in previous iterations. You MUST propose NOVEL, UNTESTED hypotheses and MUST NOT regenerate duplicates of these:
+{past_hypotheses_text}
 
 === EVIDENCE SECTION 1: STAGE 1 INDIVIDUAL FEATURE DEPENDENCY ANALYSIS ===
 Calculated independent associations between each feature and {target} (Pearson r, Spearman rho, Mutual Information, Significance):
@@ -46,26 +58,26 @@ Evaluated whether the effect of one feature varies across levels of another feat
 Correlations between predictor variables:
 {inter_corr_text}
 
-Generate exactly 7 high-quality, testable scientific hypotheses adhering to this taxonomy:
+Generate exactly 5-7 high-quality, testable scientific hypotheses adhering to this taxonomy:
 
 1. (Primary Individual Dependency): State the directional relationship of the #1 ranked feature with {target}, citing its Pearson r, Spearman rho, and Mutual Information.
 2. (Secondary Individual Dependency): State the directional relationship of another top-ranked feature with {target}, citing its metrics.
 3. (Primary Feature Combination Synergy): Propose that combining two specific features (from Section 2) provides greater predictive information about {target} than either feature alone. Cite their individual scores, combined score, synergy gain, and Joint MI.
 4. (Secondary Feature Combination Synergy): Propose that combining two specific features (from Section 2) provides greater predictive information about {target} than either feature alone. Cite their individual scores, combined score, synergy gain, and Joint MI.
 5. (Primary Feature Interaction / Moderation): Propose that the relationship between a feature and {target} varies across levels of another feature (from Section 3). Cite the interaction delta and p-value.
-6. (Secondary Feature Interaction / Moderation): Propose that the relationship between a feature and {target} varies across levels of another feature (from Section 3). Cite the interaction delta and p-value.
-7. (Comparative or Confounding Relationship): Compare the relative importance of two correlated predictors (from Section 4) or propose a confounding/mediating mechanism affecting {target}.
+6. (Comparative or Confounding Relationship): Compare the relative importance of two correlated predictors (from Section 4) or propose a confounding/mediating mechanism affecting {target}.
 
 STRICT FORMATTING REQUIREMENTS:
 - Return ONLY valid JSON, starting immediately with '[' and ending with ']'.
 - No markdown formatting around the JSON, no commentary.
 - Every hypothesis MUST cite the exact numbers from the evidence sections above.
 - Every proposed_experiment must describe a specific statistical or machine learning test to run on the dataset.
+- Hypothesis IDs MUST start from 1 within this iteration using the format 'iter{iteration_no}_H1', 'iter{iteration_no}_H2', 'iter{iteration_no}_H3', etc.
 
 JSON Structure:
 [
   {{
-    "hypothesis_id": "H1",
+    "hypothesis_id": "iter{iteration_no}_H1",
     "hypothesis_type": "individual_dependency",
     "hypothesis": "Clear statement of the hypothesis.",
     "evidence_from_data": "Exact statistics cited from the evidence sections.",
@@ -143,27 +155,79 @@ JSON Structure:
             return []
 
         print("\n" + "=" * 70)
-        print("GENERATED HYPOTHESES")
+        print(f"GENERATED HYPOTHESES (ITERATION {iteration_no})")
         print("=" * 70)
 
-        for hypothesis in hypotheses:
-            print(f"\n{hypothesis.get('hypothesis_id', 'H?')} [{hypothesis.get('hypothesis_type', 'Hypothesis')}]")
+        standardized_hypotheses = []
+        cluster_docs = []
+
+        for idx, hypothesis in enumerate(hypotheses, 1):
+            h_id = f"iter{iteration_no}_H{idx}"
+            h_type = hypothesis.get("hypothesis_type", "individual_dependency")
+            h_text = hypothesis.get("hypothesis", "")
+            h_ev = hypothesis.get("evidence_from_data", "")
+            h_exp = hypothesis.get("proposed_experiment", "")
+
+            # Infer features involved if not explicitly provided
+            features_involved = []
+            for feat in all_features:
+                if feat.lower() in h_text.lower() or feat.lower() in h_ev.lower():
+                    if feat not in features_involved:
+                        features_involved.append(feat)
+
+            hypothesis_record = HypothesisRecord(
+                hypothesis_id=h_id,
+                iteration_no=iteration_no,
+                hypothesis_type=h_type,
+                hypothesis=h_text,
+                features_involved=features_involved,
+                evidence_from_data=h_ev,
+                proposed_experiment=h_exp
+            )
+
+            # Register with deduplication registry
+            is_new = registry.register_hypothesis(hypothesis_record)
+            h_dict = hypothesis_record.model_dump()
+            h_dict["is_novel"] = is_new
+            standardized_hypotheses.append(h_dict)
+            cluster_docs.append(h_dict)
+
+            novelty_tag = "NOVEL" if is_new else "DUPLICATE PREVIOUS"
+            print(f"\n{h_id} [{h_type}] - {novelty_tag}")
             print("-" * 70)
             print("Hypothesis:")
-            print(hypothesis.get("hypothesis", "N/A"))
+            print(h_text)
             print("\nEvidence:")
-            print(hypothesis.get("evidence_from_data", "N/A"))
+            print(h_ev)
             print("\nProposed Experiment:")
-            print(hypothesis.get("proposed_experiment", "N/A"))
+            print(h_exp)
 
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
-        output_path = os.path.join(OUTPUT_DIR, "generated_hypotheses.json")
+        out_dir = output_dir or OUTPUT_DIR
+        os.makedirs(out_dir, exist_ok=True)
+        iter_dir = os.path.join(out_dir, "iterations", f"iter_{iteration_no}")
+        os.makedirs(iter_dir, exist_ok=True)
+
+        output_path = os.path.join(out_dir, "generated_hypotheses.json")
+        iter_path = os.path.join(iter_dir, "generated_hypotheses.json")
+
         with open(output_path, "w") as f:
-            json.dump(hypotheses, f, indent=4)
+            json.dump(standardized_hypotheses, f, indent=4)
+        with open(iter_path, "w") as f:
+            json.dump(standardized_hypotheses, f, indent=4)
+
+        cluster = MongoClusterManager()
+        cluster.save_documents(
+            db_name=DB_HYPOTHESES,
+            collection_name="hypotheses",
+            docs=cluster_docs,
+            id_key="hypothesis_id"
+        )
 
         print("\nHypotheses saved successfully:")
-        print(output_path)
-        return hypotheses
+        print(f"  - {output_path}")
+        print(f"  - {iter_path}")
+        print(f"  - MongoDB: {DB_HYPOTHESES}.hypotheses")
+        return standardized_hypotheses
 
     except requests.exceptions.Timeout:
         print("\nLLM generation timed out.")

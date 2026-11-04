@@ -7,7 +7,30 @@ from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 # pyrefly: ignore [missing-import]
 from .config import OUTPUT_DIR
 
-def feature_importance(df, target):
+def feature_importance(df, target, output_dir=None, force_recompute: bool = False):
+    out_dir = output_dir or OUTPUT_DIR
+    csv_path = os.path.join(out_dir, "feature_importance.csv")
+
+    if os.path.exists(csv_path) and not force_recompute:
+        try:
+            cached_imp = pd.read_csv(csv_path, index_col=0).squeeze()
+            patterns = []
+            for feature, importance in cached_imp.items():
+                if float(importance) >= 0.05:
+                    patterns.append({
+                        "type": "ml_feature_importance",
+                        "feature": str(feature),
+                        "target": str(target),
+                        "importance": round(float(importance), 4),
+                        "correlation": None,
+                        "p_value": None,
+                        "direction": None
+                    })
+            print(f"[CACHE HIT] Loaded feature importance patterns from: {csv_path}")
+            return patterns
+        except Exception:
+            pass
+
     print("\n" + "=" * 70)
     print("7. MACHINE LEARNING FEATURE IMPORTANCE")
     print("=" * 70)
@@ -45,14 +68,18 @@ def feature_importance(df, target):
                     "direction": None
                 })
 
-        importances.to_csv(os.path.join(OUTPUT_DIR, "feature_importance.csv"))
+        out_dir = output_dir or OUTPUT_DIR
+        plots_dir = os.path.join(out_dir, "plots")
+        os.makedirs(plots_dir, exist_ok=True)
+
+        importances.to_csv(os.path.join(out_dir, "feature_importance.csv"))
 
         plt.figure(figsize=(10, 6))
         importances.head(10).sort_values().plot(kind="barh")
         plt.title("Top Feature Importances")
         plt.xlabel("Importance")
         plt.tight_layout()
-        plt.savefig(os.path.join(OUTPUT_DIR, "plots", "feature_importance.png"))
+        plt.savefig(os.path.join(plots_dir, "feature_importance.png"))
         plt.close()
 
     except Exception as e:

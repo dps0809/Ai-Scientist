@@ -6,12 +6,23 @@ import seaborn as sns
 # pyrefly: ignore [missing-import]
 from .config import OUTPUT_DIR
 
-def generate_eda(df):
+def generate_eda(df, output_dir=None, force_recompute: bool = False):
+    out_dir = output_dir or OUTPUT_DIR
+    corr_path = os.path.join(out_dir, "correlation_matrix.csv")
+
+    if os.path.exists(corr_path) and not force_recompute:
+        print(f"[CACHE HIT] Reusing existing EDA correlation matrix & plots from: {out_dir}")
+        return
+
     print("\n" + "=" * 70)
     print("4. AUTOMATED EXPLORATORY DATA ANALYSIS")
     print("=" * 70)
 
     numerical = df.select_dtypes(include=np.number).columns.tolist()
+
+    out_dir = output_dir or OUTPUT_DIR
+    plots_dir = os.path.join(out_dir, "plots")
+    os.makedirs(plots_dir, exist_ok=True)
 
     if len(numerical) >= 2:
         corr = df[numerical].corr()
@@ -19,9 +30,9 @@ def generate_eda(df):
         sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm", center=0)
         plt.title("Feature Correlation Matrix")
         plt.tight_layout()
-        plt.savefig(os.path.join(OUTPUT_DIR, "plots", "correlation_matrix.png"))
+        plt.savefig(os.path.join(plots_dir, "correlation_matrix.png"))
         plt.close()
-        corr.to_csv(os.path.join(OUTPUT_DIR, "correlation_matrix.csv"))
+        corr.to_csv(os.path.join(out_dir, "correlation_matrix.csv"))
         print("Correlation matrix generated.")
 
     for col in numerical[:10]:
@@ -30,7 +41,7 @@ def generate_eda(df):
         plt.title(f"Distribution of {col}")
         plt.tight_layout()
         safe_name = str(col).replace("/", "_").replace(" ", "_")
-        plt.savefig(os.path.join(OUTPUT_DIR, "plots", f"{safe_name}_distribution.png"))
+        plt.savefig(os.path.join(plots_dir, f"{safe_name}_distribution.png"))
         plt.close()
 
     print("Distribution plots generated.")

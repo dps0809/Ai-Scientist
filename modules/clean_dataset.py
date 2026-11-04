@@ -4,7 +4,18 @@ import pandas as pd
 # pyrefly: ignore [missing-import]
 from .config import OUTPUT_DIR
 
-def clean_dataset(df):
+def clean_dataset(df, output_dir=None, force_recompute: bool = False):
+    out_dir = output_dir or OUTPUT_DIR
+    cleaned_path = os.path.join(out_dir, "cleaned_dataset.csv")
+    if os.path.exists(cleaned_path) and not force_recompute:
+        try:
+            cached_df = pd.read_csv(cleaned_path)
+            if set(cached_df.columns) == set(df.columns):
+                print(f"[CACHE HIT] Loaded cleaned dataset from: {cleaned_path} ({len(cached_df)} rows)")
+                return cached_df
+        except Exception:
+            pass
+
     print("\n" + "=" * 70)
     print("3. DATA CLEANING")
     print("=" * 70)
@@ -33,6 +44,8 @@ def clean_dataset(df):
             else:
                 df[col] = df[col].fillna("Unknown")
 
-    df.to_csv(os.path.join(OUTPUT_DIR, "cleaned_dataset.csv"), index=False)
+    out_dir = output_dir or OUTPUT_DIR
+    os.makedirs(out_dir, exist_ok=True)
+    df.to_csv(os.path.join(out_dir, "cleaned_dataset.csv"), index=False)
     print("\nCleaned dataset saved.")
     return df

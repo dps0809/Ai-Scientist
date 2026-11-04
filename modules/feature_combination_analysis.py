@@ -1,4 +1,5 @@
 import os
+import json
 import itertools
 import numpy as np
 import pandas as pd
@@ -56,7 +57,9 @@ def feature_combination_analysis(
     target: str,
     top_candidates: List[str],
     max_candidates: int = 6,
-    cv_folds: int = 5
+    cv_folds: int = 5,
+    output_dir: str = None,
+    force_recompute: bool = False
 ) -> Dict[str, Any]:
     """
     Stage 2: Feature Combination Analysis
@@ -66,6 +69,24 @@ def feature_combination_analysis(
     - Investigates feature interactions (Additive vs Interaction Model)
     - Ranks feature combinations by synergy and information gain
     """
+    out_dir = output_dir or OUTPUT_DIR
+    stage2_json_path = os.path.join(out_dir, "stage2_data.json")
+
+    # Seek cached processed data for this dataset
+    if os.path.exists(stage2_json_path) and not force_recompute:
+        try:
+            with open(stage2_json_path, "r") as f:
+                cached = json.load(f)
+            cached_combs = cached.get("combinations", [])
+            if cached_combs:
+                # Check candidate overlap
+                first_comb = cached_combs[0].get("combination", "")
+                if any(c in first_comb for c in top_candidates):
+                    print(f"[CACHE HIT] Loaded Stage 2 combination & interaction analysis from: {stage2_json_path}")
+                    return cached
+        except Exception:
+            pass
+
     print("\n" + "=" * 70)
     print("STAGE 2: FEATURE COMBINATION & INTERACTION DISCOVERY")
     print("=" * 70)
@@ -212,8 +233,9 @@ def feature_combination_analysis(
         print(f"{r['combination']:<30} {r['score_a']:<10.3f} {r['score_b']:<10.3f} {r['combined_score']:<10.3f} {r['synergy_delta']:<+10.3f} {r['joint_mi']:<10.3f} {r['interaction_delta']:<+18.3f}")
 
     # Export to CSV
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    out_csv = os.path.join(OUTPUT_DIR, "feature_combinations.csv")
+    out_dir = output_dir or OUTPUT_DIR
+    os.makedirs(out_dir, exist_ok=True)
+    out_csv = os.path.join(out_dir, "feature_combinations.csv")
     pd.DataFrame(results).to_csv(out_csv, index=False)
     print(f"\nStage 2 results saved to: {out_csv}")
 
@@ -237,9 +259,17 @@ def feature_combination_analysis(
             "conclusion": r["synergy_status"]
         })
 
-    return {
+    output_dict = {
         "combinations": results,
         "top_synergies": top_synergies,
         "top_interactions": top_interactions,
         "patterns": patterns
     }
+
+    try:
+        with open(os.path.join(out_dir, "stage2_data.json"), "w") as f:
+            json.dump(output_dict, f, indent=4)
+    except Exception:
+        pass
+
+    return output_dict

@@ -1,0 +1,208 @@
+{
+    "ranked_features": [
+        "Glucose",
+        "BMI",
+        "Age",
+        "Insulin",
+        "Pregnancies",
+        "BloodPressure",
+        "DiabetesPedigreeFunction",
+        "SkinThickness"
+    ],
+    "table": [
+        {
+            "feature": "Glucose",
+            "pearson_r": 0.4666,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.4758,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.1403,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.7356,
+            "rank": 1
+        },
+        {
+            "feature": "BMI",
+            "pearson_r": 0.2927,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.3097,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.084,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.45,
+            "rank": 2
+        },
+        {
+            "feature": "Age",
+            "pearson_r": 0.2384,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.309,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.0679,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.3788,
+            "rank": 3
+        },
+        {
+            "feature": "Insulin",
+            "pearson_r": 0.1305,
+            "pearson_p_value": "0.0003",
+            "spearman_rho": 0.0665,
+            "spearman_p_value": "0.0656",
+            "mutual_information": 0.0432,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.2032,
+            "rank": 4
+        },
+        {
+            "feature": "Pregnancies",
+            "pearson_r": 0.2219,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.1987,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.0205,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.1782,
+            "rank": 5
+        },
+        {
+            "feature": "BloodPressure",
+            "pearson_r": 0.0651,
+            "pearson_p_value": "0.0715",
+            "spearman_rho": 0.1429,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.0248,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.1404,
+            "rank": 6
+        },
+        {
+            "feature": "DiabetesPedigreeFunction",
+            "pearson_r": 0.1738,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.1754,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.0125,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.1318,
+            "rank": 7
+        },
+        {
+            "feature": "SkinThickness",
+            "pearson_r": 0.0748,
+            "pearson_p_value": "0.0383",
+            "spearman_rho": 0.0897,
+            "spearman_p_value": "0.0129",
+            "mutual_information": 0.0,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.0411,
+            "rank": 8
+        }
+    ],
+    "patterns": [
+        {
+            "type": "individual_dependency",
+            "feature": "Glucose",
+            "target": "Outcome",
+            "pearson_r": 0.4666,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.4758,
+            "mutual_information": 0.1403,
+            "direction": "positive",
+            "rank": 1,
+            "composite_score": 0.7356
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "BMI",
+            "target": "Outcome",
+            "pearson_r": 0.2927,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.3097,
+            "mutual_information": 0.084,
+            "direction": "positive",
+            "rank": 2,
+            "composite_score": 0.45
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "Age",
+            "target": "Outcome",
+            "pearson_r": 0.2384,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.309,
+            "mutual_information": 0.0679,
+            "direction": "positive",
+            "rank": 3,
+            "composite_score": 0.3788
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "Insulin",
+            "target": "Outcome",
+            "pearson_r": 0.1305,
+            "pearson_p_value": "0.0003",
+            "spearman_rho": 0.0665,
+            "mutual_information": 0.0432,
+            "direction": "positive",
+            "rank": 4,
+            "composite_score": 0.2032
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "Pregnancies",
+            "target": "Outcome",
+            "pearson_r": 0.2219,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.1987,
+            "mutual_information": 0.0205,
+            "direction": "positive",
+            "rank": 5,
+            "composite_score": 0.1782
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "BloodPressure",
+            "target": "Outcome",
+            "pearson_r": 0.0651,
+            "pearson_p_value": "0.0715",
+            "spearman_rho": 0.1429,
+            "mutual_information": 0.0248,
+            "direction": "positive",
+            "rank": 6,
+            "composite_score": 0.1404
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "DiabetesPedigreeFunction",
+            "target": "Outcome",
+            "pearson_r": 0.1738,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.1754,
+            "mutual_information": 0.0125,
+            "direction": "positive",
+            "rank": 7,
+            "composite_score": 0.1318
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "SkinThickness",
+            "target": "Outcome",
+            "pearson_r": 0.0748,
+            "pearson_p_value": "0.0383",
+            "spearman_rho": 0.0897,
+            "mutual_information": 0.0,
+            "direction": "positive",
+            "rank": 8,
+            "composite_score": 0.0411
+        }
+    ]
+}

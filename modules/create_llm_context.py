@@ -11,7 +11,8 @@ def create_llm_context(
     target: str,
     patterns: List[Dict[str, Any]],
     stage1_data: Optional[Dict[str, Any]] = None,
-    stage2_data: Optional[Dict[str, Any]] = None
+    stage2_data: Optional[Dict[str, Any]] = None,
+    output_dir: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Constructs structured scientific context for the LLM containing:
@@ -159,8 +160,9 @@ def create_llm_context(
         "discovered_evidence": evidence,
     }
 
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(os.path.join(OUTPUT_DIR, "llm_context.json"), "w") as f:
+    out_dir = output_dir or OUTPUT_DIR
+    os.makedirs(out_dir, exist_ok=True)
+    with open(os.path.join(out_dir, "llm_context.json"), "w") as f:
         json.dump(context, f, indent=4)
 
     return context
