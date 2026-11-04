@@ -17,7 +17,7 @@
             ],
             "reconciled_evidence": {},
             "reasons": [],
-            "timestamp": "2026-11-04T07:30:39.190857+00:00"
+            "timestamp": "2026-11-04T08:06:41.048816+00:00"
         },
         {
             "validation_id": "VAL-iter1_H2",
@@ -30,7 +30,7 @@
             ],
             "reconciled_evidence": {},
             "reasons": [],
-            "timestamp": "2026-11-04T07:30:39.191080+00:00"
+            "timestamp": "2026-11-04T08:06:41.049179+00:00"
         },
         {
             "validation_id": "VAL-iter1_H3",
@@ -39,12 +39,12 @@
             "hypothesis_type": "feature_combination_synergy",
             "status": "VALIDATED",
             "features_involved": [
-                "Pregnancies",
-                "Glucose"
+                "Glucose",
+                "BMI"
             ],
             "reconciled_evidence": {},
             "reasons": [],
-            "timestamp": "2026-11-04T07:30:39.191297+00:00"
+            "timestamp": "2026-11-04T08:06:41.049477+00:00"
         },
         {
             "validation_id": "VAL-iter1_H4",
@@ -54,11 +54,11 @@
             "status": "VALIDATED",
             "features_involved": [
                 "Pregnancies",
-                "BMI"
+                "Glucose"
             ],
             "reconciled_evidence": {},
             "reasons": [],
-            "timestamp": "2026-11-04T07:30:39.191494+00:00"
+            "timestamp": "2026-11-04T08:06:41.049745+00:00"
         },
         {
             "validation_id": "VAL-iter1_H5",
@@ -72,7 +72,7 @@
             ],
             "reconciled_evidence": {},
             "reasons": [],
-            "timestamp": "2026-11-04T07:30:39.192041+00:00"
+            "timestamp": "2026-11-04T08:06:41.050613+00:00"
         },
         {
             "validation_id": "VAL-iter1_H6",
@@ -81,17 +81,17 @@
             "hypothesis_type": "comparative_or_confounding_relationship",
             "status": "NEEDS_REVIEW",
             "features_involved": [
-                "Pregnancies",
-                "Age"
+                "Glucose",
+                "BMI"
             ],
             "reconciled_evidence": {
-                "correlation": 0.5443
+                "correlation": 0.2211
             },
             "reasons": [
                 "Hypothesis suggests confounding/mediation; routed to adjusted regression verification."
             ],
-            "timestamp": "2026-11-04T07:30:39.192348+00:00"
+            "timestamp": "2026-11-04T08:06:41.051110+00:00"
         }
     ],
-    "timestamp": "2026-11-04T07:30:39.192503+00:00"
+    "timestamp": "2026-11-04T08:06:41.051183+00:00"
 }

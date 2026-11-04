@@ -8,9 +8,9 @@
             "Glucose"
         ],
         "evidence_from_data": "Pearson r: 0.4666, Pearson p_value: < 0.0001, Spearman rho: 0.4758, Spearman p_value: < 0.0001, Mutual Information: 0.1403, direction: positive, significance: significant (p < 0.05), rank: 1",
-        "proposed_experiment": "Conduct a linear regression analysis with Glucose as the sole predictor to confirm the strength and direction of its association with Outcome, while controlling for potential confounders.",
+        "proposed_experiment": "Conduct a linear regression analysis with Glucose as the sole predictor to quantify its effect size on Outcome, while controlling for potential confounders such as BMI and Age.",
         "fingerprint": "('Glucose',)-individual_dependency",
-        "timestamp": "2026-11-04T07:29:37.349310+00:00"
+        "timestamp": "2026-11-04T08:00:21.572014+00:00"
     },
     {
         "hypothesis_id": "iter1_H2",
@@ -21,92 +21,78 @@
             "BMI"
         ],
         "evidence_from_data": "Pearson r: 0.2927, Pearson p_value: < 0.0001, Spearman rho: 0.3097, Spearman p_value: < 0.0001, Mutual Information: 0.084, direction: positive, significance: significant (p < 0.05), rank: 2",
-        "proposed_experiment": "Perform a logistic regression with BMI as the sole predictor to quantify its predictive power for Outcome, using 5-fold cross-validation to assess generalizability.",
+        "proposed_experiment": "Perform a logistic regression analysis using BMI as the sole predictor to assess its predictive power for Outcome, with 5-fold cross-validation to estimate generalizability.",
         "fingerprint": "('BMI',)-individual_dependency",
-        "timestamp": "2026-11-04T07:29:37.352966+00:00"
+        "timestamp": "2026-11-04T08:00:21.597584+00:00"
     },
     {
         "hypothesis_id": "iter1_H3",
         "iteration_no": 1,
         "hypothesis_type": "feature_combination_synergy",
-        "hypothesis": "Combining Glucose and BMI provides greater predictive power for Outcome than either feature alone, with a combined ROC AUC score of 0.8097, a synergy gain of 0.0223, and a joint mutual information of 0.1993.",
+        "hypothesis": "Combining Glucose and BMI provides greater predictive information about Outcome than either feature alone, with a synergy gain of 0.0223 in ROC_AUC and a joint mutual information of 0.1993.",
         "features_involved": [
             "Glucose",
             "BMI"
         ],
-        "evidence_from_data": "Glucose: score_a: 0.7874, BMI: score_b: 0.6881, combined score: 0.8097, synergy gain: 0.0223, joint MI: 0.1993",
-        "proposed_experiment": "Train a random forest classifier using Glucose and BMI as features and evaluate the model's performance using 5-fold cross-validation to confirm the synergy effect.",
+        "evidence_from_data": "Glucose score: 0.7874, BMI score: 0.6881, combined_score: 0.8097, synergy_gain: 0.0223, joint_mi: 0.1993",
+        "proposed_experiment": "Train a random forest classifier using Glucose and BMI as features and evaluate the model's ROC_AUC score with 10-fold cross-validation to confirm the synergy effect.",
         "fingerprint": "('BMI', 'Glucose')-feature_combination_synergy",
-        "timestamp": "2026-11-04T07:29:37.354659+00:00"
-    },
-    {
-        "hypothesis_id": "iter1_H5",
-        "iteration_no": 1,
-        "hypothesis_type": "feature_interaction_moderation",
-        "hypothesis": "The relationship between Glucose and Outcome varies significantly across levels of Age, with an interaction effect delta of -0.0007 and a p-value of 0.0364.",
-        "features_involved": [
-            "Glucose",
-            "Age"
-        ],
-        "evidence_from_data": "Additive score: 0.804, interaction score: 0.8033, interaction_delta: -0.0007, interaction_p_value: 0.0364",
-        "proposed_experiment": "Conduct a moderated regression analysis to test whether the effect of Glucose on Outcome differs by Age, using a stepwise regression approach with interaction terms.",
-        "fingerprint": "('Age', 'Glucose')-feature_interaction_moderation",
-        "timestamp": "2026-11-04T07:29:37.356036+00:00"
-    },
-    {
-        "hypothesis_id": "iter1_H6",
-        "iteration_no": 1,
-        "hypothesis_type": "comparative_or_confounding_relationship",
-        "hypothesis": "Glucose and BMI are moderately correlated (r = 0.2211), suggesting potential confounding or mediation in the relationship between these predictors and Outcome.",
-        "features_involved": [
-            "Glucose",
-            "BMI"
-        ],
-        "evidence_from_data": "Glucose and BMI correlation: 0.2211, strength: weak",
-        "proposed_experiment": "Perform a mediation analysis using the Baron and Kenny method to determine if BMI mediates the relationship between Glucose and Outcome.",
-        "fingerprint": "('BMI', 'Glucose')-comparative_or_confounding_relationship",
-        "timestamp": "2026-11-04T07:29:37.357859+00:00"
-    },
-    {
-        "hypothesis_id": "iter1_H3",
-        "iteration_no": 1,
-        "hypothesis_type": "feature_combination_synergy",
-        "hypothesis": "Combining Glucose and Pregnancies provides greater predictive information about Outcome than either feature alone, with a combined score of 0.804, synergy gain of 0.0166, and Joint MI of 0.1763.",
-        "features_involved": [
-            "Pregnancies",
-            "Glucose"
-        ],
-        "evidence_from_data": "Glucose + Pregnancies: Individual scores = 0.7874 and 0.62, Combined score = 0.804, Synergy gain = 0.0166, Joint MI = 0.1763",
-        "proposed_experiment": "Train a gradient boosting model using Glucose and Pregnancies as features, then evaluate its performance via 10-fold cross-validation and compare against models using each feature individually.",
-        "fingerprint": "('Glucose', 'Pregnancies')-feature_combination_synergy",
-        "timestamp": "2026-11-04T07:30:39.179550+00:00"
+        "timestamp": "2026-11-04T08:00:21.604050+00:00"
     },
     {
         "hypothesis_id": "iter1_H4",
         "iteration_no": 1,
         "hypothesis_type": "feature_combination_synergy",
-        "hypothesis": "Combining BMI and Pregnancies provides greater predictive information about Outcome than either feature alone, with a combined score of 0.7215, synergy gain of 0.0034, and Joint MI of 0.1164.",
+        "hypothesis": "Combining Glucose and Pregnancies provides greater predictive information about Outcome than either feature alone, with a synergy gain of 0.0007 in ROC_AUC and a joint mutual information of 0.1403.",
         "features_involved": [
             "Pregnancies",
+            "Glucose"
+        ],
+        "evidence_from_data": "Glucose score: 0.7874, Pregnancies score: 0.5364, combined_score: 0.804, synergy_gain: 0.0007, joint_mi: 0.1403",
+        "proposed_experiment": "Implement a gradient boosting model with Glucose and Pregnancies as features and measure the improvement in ROC_AUC compared to individual feature models using 5-fold cross-validation.",
+        "fingerprint": "('Glucose', 'Pregnancies')-feature_combination_synergy",
+        "timestamp": "2026-11-04T08:00:21.610384+00:00"
+    },
+    {
+        "hypothesis_id": "iter1_H5",
+        "iteration_no": 1,
+        "hypothesis_type": "feature_interaction_moderation",
+        "hypothesis": "The relationship between Glucose and Outcome varies significantly across levels of Age, with an interaction delta of -0.0007 and a p-value of 0.0364 in ROC_AUC.",
+        "features_involved": [
+            "Glucose",
+            "Age"
+        ],
+        "evidence_from_data": "Additive_score: 0.804, interaction_score: 0.8033, interaction_delta: -0.0007, interaction_p_value: 0.0364, status: significant interaction",
+        "proposed_experiment": "Fit a logistic regression model with interaction terms between Glucose and Age and test the significance of the interaction term using a likelihood ratio test with 1000 bootstrap samples.",
+        "fingerprint": "('Age', 'Glucose')-feature_interaction_moderation",
+        "timestamp": "2026-11-04T08:00:21.616893+00:00"
+    },
+    {
+        "hypothesis_id": "iter1_H6",
+        "iteration_no": 1,
+        "hypothesis_type": "comparative_or_confounding_relationship",
+        "hypothesis": "Glucose and BMI are moderately correlated (r = 0.2211), suggesting that BMI may act as a confounding variable in the relationship between Glucose and Outcome.",
+        "features_involved": [
+            "Glucose",
             "BMI"
         ],
-        "evidence_from_data": "BMI + Pregnancies: Individual scores = 0.6881 and 0.62, Combined score = 0.7215, Synergy gain = 0.0034, Joint MI = 0.1164",
-        "proposed_experiment": "Implement a support vector machine (SVM) classifier with BMI and Pregnancies as features, then compute the area under the ROC curve (AUC) for the combined model versus individual models using stratified k-fold cross-validation.",
-        "fingerprint": "('BMI', 'Pregnancies')-feature_combination_synergy",
-        "timestamp": "2026-11-04T07:30:39.181563+00:00"
+        "evidence_from_data": "Glucose and BMI correlation: 0.2211, strength: weak",
+        "proposed_experiment": "Run a multivariate regression analysis with Glucose, BMI, and Outcome to determine the partial correlation coefficient between Glucose and Outcome after controlling for BMI.",
+        "fingerprint": "('BMI', 'Glucose')-comparative_or_confounding_relationship",
+        "timestamp": "2026-11-04T08:00:21.624076+00:00"
     },
     {
         "hypothesis_id": "iter1_H6",
         "iteration_no": 1,
         "hypothesis_type": "comparative_confounding_relationship",
-        "hypothesis": "Pregnancies and Age are strongly correlated (r = 0.5443), suggesting that Age may confound the relationship between Pregnancies and Outcome.",
+        "hypothesis": "Glucose and BMI are moderately correlated (r = 0.2211), and BMI may confound the relationship between Glucose and Outcome due to their shared association with metabolic health.",
         "features_involved": [
-            "Pregnancies",
-            "Age"
+            "Glucose",
+            "BMI"
         ],
-        "evidence_from_data": "Pregnancies and Age: Correlation = 0.5443, strength = strong",
-        "proposed_experiment": "Conduct a partial correlation analysis to isolate the direct relationship between Pregnancies and Outcome while controlling for Age, then compare with the unadjusted correlation.",
-        "fingerprint": "('Age', 'Pregnancies')-comparative_confounding_relationship",
-        "timestamp": "2026-11-04T07:30:39.184174+00:00"
+        "evidence_from_data": "Correlation between Glucose and BMI: 0.2211, Mutual Information: 0.1993, Composite Score: 0.8097",
+        "proposed_experiment": "Conduct a mediation analysis to test whether BMI mediates the relationship between Glucose and Outcome, using the causal mediation framework with bootstrapped confidence intervals.",
+        "fingerprint": "('BMI', 'Glucose')-comparative_confounding_relationship",
+        "timestamp": "2026-11-04T08:06:40.969682+00:00"
     }
 ]

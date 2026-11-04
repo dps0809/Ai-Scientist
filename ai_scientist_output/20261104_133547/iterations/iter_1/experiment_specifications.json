@@ -24,7 +24,7 @@
             "permutation_iterations": 1000
         },
         "routing_notes": "Standard individual dependency statistical testing.",
-        "timestamp": "2026-11-04T07:30:39.196036+00:00"
+        "timestamp": "2026-11-04T08:06:41.090681+00:00"
     },
     {
         "experiment_id": "iter1_E2",
@@ -51,11 +51,47 @@
             "permutation_iterations": 1000
         },
         "routing_notes": "Standard individual dependency statistical testing.",
-        "timestamp": "2026-11-04T07:30:39.196200+00:00"
+        "timestamp": "2026-11-04T08:06:41.090736+00:00"
     },
     {
         "experiment_id": "iter1_E3",
         "hypothesis_id": "iter1_H3",
+        "iteration_no": 1,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "Glucose",
+            "BMI"
+        ],
+        "target": "Outcome",
+        "comparison": [
+            [
+                "Glucose"
+            ],
+            [
+                "BMI"
+            ],
+            [
+                "Glucose",
+                "BMI"
+            ]
+        ],
+        "parameters": {
+            "solver": "lbfgs",
+            "max_iter": 500
+        },
+        "evaluation": {
+            "metric": "roc_auc",
+            "cross_validation": "StratifiedKFold",
+            "folds": 5
+        },
+        "routing_notes": "Multi-feature paired comparative predictive cross-validation.",
+        "timestamp": "2026-11-04T08:06:41.090769+00:00"
+    },
+    {
+        "experiment_id": "iter1_E4",
+        "hypothesis_id": "iter1_H4",
         "iteration_no": 1,
         "experiment_type": "feature_combination_synergy",
         "method": "paired_model_comparison",
@@ -87,43 +123,7 @@
             "folds": 5
         },
         "routing_notes": "Multi-feature paired comparative predictive cross-validation.",
-        "timestamp": "2026-11-04T07:30:39.196322+00:00"
-    },
-    {
-        "experiment_id": "iter1_E4",
-        "hypothesis_id": "iter1_H4",
-        "iteration_no": 1,
-        "experiment_type": "feature_combination_synergy",
-        "method": "paired_model_comparison",
-        "model_type": "sklearn.linear_model.LogisticRegression",
-        "features": [
-            "Pregnancies",
-            "BMI"
-        ],
-        "target": "Outcome",
-        "comparison": [
-            [
-                "Pregnancies"
-            ],
-            [
-                "BMI"
-            ],
-            [
-                "Pregnancies",
-                "BMI"
-            ]
-        ],
-        "parameters": {
-            "solver": "lbfgs",
-            "max_iter": 500
-        },
-        "evaluation": {
-            "metric": "roc_auc",
-            "cross_validation": "StratifiedKFold",
-            "folds": 5
-        },
-        "routing_notes": "Multi-feature paired comparative predictive cross-validation.",
-        "timestamp": "2026-11-04T07:30:39.196448+00:00"
+        "timestamp": "2026-11-04T08:06:41.090800+00:00"
     },
     {
         "experiment_id": "iter1_E5",
@@ -149,7 +149,7 @@
             "bootstrap_samples": 500
         },
         "routing_notes": "Interaction logistic regression with product term and bootstrap.",
-        "timestamp": "2026-11-04T07:30:39.196605+00:00"
+        "timestamp": "2026-11-04T08:06:41.090824+00:00"
     },
     {
         "experiment_id": "iter1_E6",
@@ -159,8 +159,8 @@
         "method": "adjusted_regression",
         "model_type": "statsmodels.Logit",
         "features": [
-            "Pregnancies",
-            "Age"
+            "Glucose",
+            "BMI"
         ],
         "target": "Outcome",
         "comparison": null,
@@ -176,6 +176,6 @@
             "p_value": true
         },
         "routing_notes": "Routed H5 initially to adjusted regression baseline to determine direct vs indirect association before attempting formal causal mediation.",
-        "timestamp": "2026-11-04T07:30:39.196763+00:00"
+        "timestamp": "2026-11-04T08:06:41.090844+00:00"
     }
 ]

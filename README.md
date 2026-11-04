@@ -49,7 +49,8 @@ C:/Coding/Ai_Scientist/
 │   ├─ create_llm_context.py    # builds the LLM prompt context
 │   ├─ generate_hypotheses_with_llm.py # LLM hypothesis generation (iter<N>_H<M>)
 │   ├─ hypothesis_validator.py  # Batch 1 validation & evidence reconciliation
-│   └─ experiment_planner.py    # Batch 2 experiment registry & specification (iter<N>_E<M>)
+│   ├─ experiment_planner.py    # Batch 2 experiment registry & specification (iter<N>_E<M>)
+│   └─ experiment_executor.py   # Batch 3 statistical experiment execution engine (E1-E5)
 ├─ mains.py                     # orchestrates two-tier pipeline (cached dataset -> run hypotheses)
 ├─ README.md                    # this file
 └─ ai_scientist_output/
@@ -69,6 +70,7 @@ C:/Coding/Ai_Scientist/
         ├─ generated_hypotheses.json
         ├─ validated_hypotheses.json
         ├─ experiment_specifications.json
+        ├─ experiment_results.json
         └─ iterations/iter_<N>/
 ```
 
@@ -79,6 +81,7 @@ The pipeline connects to the active MongoDB port (`localhost:27017`) and segrega
 - `ai_scientist_hypotheses` – LLM contexts, generated hypotheses with `iteration_no`, and deduplication index.
 - `ai_scientist_validation` – Batch 1 validation reports, discrepancy checks, and reconciled evidence.
 - `ai_scientist_experiments` – Batch 2 structured experiment specifications.
+- `ai_scientist_results` – Batch 3 statistical experiment results, odds ratios, CIs, p-values, synergy gains, interaction tests, bootstrap intervals, and verdicts.
 
 If MongoDB is offline or unavailable, `modules.mongo_cluster.MongoClusterManager` gracefully logs a notice and allows the system to continue operating in standalone file-based mode.
 
@@ -97,18 +100,19 @@ If MongoDB is offline or unavailable, `modules.mongo_cluster.MongoClusterManager
 8. **Hypothesis generation & de-duplication** – `modules.generate_hypotheses_with_llm.generate_hypotheses_with_llm` uses `modules.hypothesis_registry.HypothesisRegistry` to track iterations (`iteration_no`), inject historical fingerprints into prompts, avoid redundant hypotheses, and synchronize results to `ai_scientist_hypotheses.hypotheses`. Hypotheses strictly use iteration-prefixed IDs numbered 1..N within their iteration (`iter1_H1`, `iter1_H2`, `iter1_H3`... in iteration 1; `iter2_H1`, `iter2_H2`... in iteration 2).
 9. **Batch 1 — Hypothesis validation & reconciliation** – `modules.hypothesis_validator.validate_hypotheses` validates schema compliance, target binary criteria, feature numeric checks, reconciles numerical discrepancies (e.g., H4 interaction delta contradiction), assigns statuses (`VALIDATED`, `NEEDS_REVIEW`, `REJECTED`), tags validation records with `VAL-iter<N>_H<M>`, and records audit trails to `ai_scientist_validation.validations`.
 10. **Batch 2 — Experiment planning** – `modules.experiment_planner.plan_experiments` maps validated hypotheses to executable statistical experiment specifications with `iter<N>_E<M>` IDs, routing H5 to adjusted regression.
-11. **Two-Tier Storage & Run Archival** –
+11. **Batch 3 — Statistical experiment execution** – `modules.experiment_executor.execute_all_experiments` prepares data by handling physiological invalid zeros (`Glucose`, `BMI`, `BloodPressure`, `Insulin`, `SkinThickness` -> `np.nan`), applies within-fold median imputation during 5-fold Stratified CV, computes inferential odds ratios with 95% CIs and permutation tests (1000 iter), tests feature synergy gains over best individuals using paired fold comparisons, performs Likelihood Ratio Tests with 500-sample bootstrap CIs for interaction terms, and computes unadjusted vs adjusted regression diagnostics for confounding. Saves records to `experiment_results.json` and syncs to `ai_scientist_results.results`.
+12. **Two-Tier Storage & Run Archival** –
     - **Dataset Processing Layer (`ai_scientist_output/dataset_processed/`)**: Contains all dataset-specific artifacts (`cleaned_dataset.csv`, `dataset_profile.csv`, `correlation_matrix.csv`, `individual_dependencies.csv`, `stage1_data.json`, `feature_combinations.csv`, `stage2_data.json`, `feature_importance.csv`, `discovered_patterns.json`, and `plots/`). On startup, `mains.py` seeks these files first. If found, it reuses them immediately (`[CACHE HIT]`), bypassing expensive recomputation. If not found, it computes, profiles, and caches them for all future runs.
-    - **Run-Specific Hypothesis & Experiment Output (`ai_scientist_output/<YYYYMMDD_HHMMSS>/`)**: Isolates hypothesis-cycle artifacts (`llm_context.json`, `generated_hypotheses.json`, `validated_hypotheses.json`, `experiment_specifications.json`, and `iterations/iter_<N>/`) for each execution without polluting the root output directory.
+    - **Run-Specific Hypothesis & Experiment Output (`ai_scientist_output/<YYYYMMDD_HHMMSS>/`)**: Isolates hypothesis-cycle artifacts (`llm_context.json`, `generated_hypotheses.json`, `validated_hypotheses.json`, `experiment_specifications.json`, `experiment_results.json`, and `iterations/iter_<N>/`) for each execution without polluting the root output directory.
 
 ## Predefined Experiment Registry
 Supported hypothesis categories and their statistical execution mappings:
 | Hypothesis Type | Experiment Method | Statistical Model | Key Evaluation Outputs |
 |---|---|---|---|
-| `individual_dependency` | `logistic_regression` | `statsmodels.Logit` | Odds ratios, 95% CI, p-values, permutation tests (1000 iter) |
-| `feature_combination_synergy` | `paired_model_comparison` | `sklearn.linear_model.LogisticRegression` | 5-fold Stratified CV ROC-AUC comparison ($X_A$ vs $X_B$ vs $X_A+X_B$) |
-| `feature_interaction_moderation` | `interaction_regression` | `statsmodels.Logit` | Interaction term product $X_A \times X_B$, likelihood ratio test, 500 bootstrap samples |
-| `comparative_or_confounding_relationship` | `adjusted_regression` | `statsmodels.Logit` | Adjusted vs unadjusted odds ratios, confounding coefficient deltas |
+| `individual_dependency` | `logistic_regression` | `statsmodels.Logit` & `sklearn.linear_model.LogisticRegression` | Odds ratios per SD, 95% CI, p-values, permutation tests (1000 iter), 5-fold Stratified CV ROC-AUC |
+| `feature_combination_synergy` | `paired_model_comparison` | `sklearn.linear_model.LogisticRegression` | 5-fold Stratified CV ROC-AUC ($X_A$ vs $X_B$ vs $X_A+X_B$), synergy gain over best individual, paired t-test p-value |
+| `feature_interaction_moderation` | `interaction_regression` | `statsmodels.Logit` | Mean-centered main effects + product term ($G \times A$), Likelihood Ratio Test $\chi^2$ and p-value, 500-sample bootstrap 95% CI |
+| `comparative_or_confounding_relationship` | `adjusted_regression` | `statsmodels.Logit` | Unadjusted vs adjusted standardized coefficients, percentage shift $\Delta\%$, confounding diagnosis |
 
 ## Charts & tables
 `generate_eda.py` creates:
@@ -134,6 +138,7 @@ This executes the full automated research lifecycle:
 4. Stage 3 LLM Hypothesis Generation & Novelty De-duplication (saved to `ai_scientist_hypotheses.hypotheses`)
 5. Stage 4 Batch 1 Hypothesis Validation & Evidence Reconciliation (saved to `ai_scientist_validation.validations`)
 6. Stage 5 Batch 2 Experiment Registry Specifications (saved to `ai_scientist_experiments.specifications`)
+7. Stage 6 Batch 3 Statistical Experiment Execution Engine (saved to `ai_scientist_results.results`)
 
 ## Testing
 Run the complete unit and integration test suite:

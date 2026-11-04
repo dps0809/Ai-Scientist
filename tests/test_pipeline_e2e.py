@@ -113,11 +113,30 @@ def test_pipeline_e2e_integration(tmp_path):
     assert adj_spec is not None, "Should have an adjusted_regression experiment specification"
     assert adj_spec.model_type == "statsmodels.Logit"
         
+    # Run Batch 3 Experiment Execution
+    from modules.experiment_executor import execute_all_experiments
+    from modules.config import DB_RESULTS
+    
+    results = execute_all_experiments(
+        specs=specs,
+        df=df,
+        iteration_no=1,
+        output_dir=out_dir,
+        n_permutations=20,
+        n_bootstrap=20
+    )
+    assert len(results) == len(specs)
+    assert os.path.exists(os.path.join(out_dir, "experiment_results.json"))
+    assert os.path.exists(os.path.join(out_dir, "iterations", "iter_1", "experiment_results.json"))
+        
     # Verify MongoDB cluster persistence if server is available
     cluster = MongoClusterManager()
     if cluster.is_available():
         val_docs = cluster.query_documents(DB_VALIDATION, "validations")
         spec_docs = cluster.query_documents(DB_EXPERIMENTS, "specifications")
+        res_docs = cluster.query_documents(DB_RESULTS, "results")
         assert len(val_docs) >= len(hypotheses)
         assert len(spec_docs) >= len(hypotheses)
+        assert len(res_docs) >= len(hypotheses)
+
 

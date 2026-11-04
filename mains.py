@@ -17,7 +17,8 @@ from modules.config import (
     DB_PATTERNS,
     DB_HYPOTHESES,
     DB_VALIDATION,
-    DB_EXPERIMENTS
+    DB_EXPERIMENTS,
+    DB_RESULTS
 )
 # pyrefly: ignore [missing-import]
 from modules.load_dataset import load_dataset_with_id
@@ -47,6 +48,8 @@ from modules.generate_hypotheses_with_llm import generate_hypotheses_with_llm
 from modules.hypothesis_validator import validate_hypotheses
 # pyrefly: ignore [missing-import]
 from modules.experiment_planner import plan_experiments
+# pyrefly: ignore [missing-import]
+from modules.experiment_executor import execute_all_experiments
 # pyrefly: ignore [missing-import]
 from modules.mongo_cluster import MongoClusterManager
 
@@ -182,6 +185,16 @@ def main():
         output_dir=run_output_dir
     )
 
+    # Stage 6: Batch 3 — Experiment Execution Engine
+    experiment_results = execute_all_experiments(
+        specs=experiment_specs,
+        df=df,
+        iteration_no=iteration_no,
+        output_dir=run_output_dir,
+        n_permutations=1000,
+        n_bootstrap=500
+    )
+
     # Check MongoDB cluster sync status
     cluster = MongoClusterManager()
     cluster_status = "CONNECTED (Port 27017)" if cluster.is_available() else "STANDALONE FILE-BASED (Offline)"
@@ -190,7 +203,7 @@ def main():
     print("PIPELINE COMPLETE")
     print("=" * 70)
     print("\nCurrent implemented flow:")
-    print("Processed Dataset (Cache-First) -> Stage 3 (Local LLM & De-duplication) -> Stage 4 (Batch 1 Validation & Discrepancy Reconciliation) -> Stage 5 (Batch 2 Experiment Specifications)")
+    print("Processed Dataset (Cache-First) -> Stage 3 (Local LLM & De-duplication) -> Stage 4 (Batch 1 Validation) -> Stage 5 (Batch 2 Planning) -> Stage 6 (Batch 3 Execution)")
     print(f"\nMongoDB Cluster Status: {cluster_status}")
     if cluster.is_available():
         print(f"  - Inputs DB       : {DB_INPUTS}.inputs")
@@ -198,6 +211,7 @@ def main():
         print(f"  - Hypotheses DB   : {DB_HYPOTHESES}.hypotheses")
         print(f"  - Validation DB   : {DB_VALIDATION}.validations")
         print(f"  - Experiments DB  : {DB_EXPERIMENTS}.specifications")
+        print(f"  - Results DB      : {DB_RESULTS}.results")
     print(f"\nDataset-level processed artifacts (reused across runs):")
     print(f"  {DATASET_PROCESSED_DIR}/")
     print(f"  - {DATASET_PROCESSED_DIR}/cleaned_dataset.csv")
@@ -214,6 +228,7 @@ def main():
     print(f"  - {run_output_dir}/generated_hypotheses.json")
     print(f"  - {run_output_dir}/validated_hypotheses.json")
     print(f"  - {run_output_dir}/experiment_specifications.json")
+    print(f"  - {run_output_dir}/experiment_results.json")
     print(f"  - {run_output_dir}/iterations/iter_{iteration_no}/")
 
 

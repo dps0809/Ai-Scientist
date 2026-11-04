@@ -78,3 +78,20 @@ class ExperimentSpecRecord(BaseModel):
     evaluation: Dict[str, Any] = Field(default_factory=dict)
     routing_notes: Optional[str] = None
     timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class ExperimentResultRecord(BaseModel):
+    result_id: str
+    experiment_id: str
+    hypothesis_id: str
+    iteration_no: int = 1
+    experiment_type: str
+    method: str
+    model_type: str
+    features: List[str]
+    target: str
+    metrics: Dict[str, Any] = Field(default_factory=dict)
+    details: Dict[str, Any] = Field(default_factory=dict)
+    verdict: Optional[str] = None  # SUPPORTED, REFUTED, INCONCLUSIVE
+    summary: str = ""
+    timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+

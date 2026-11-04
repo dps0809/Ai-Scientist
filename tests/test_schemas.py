@@ -90,3 +90,27 @@ def test_experiment_spec_schema():
     dump = spec.model_dump()
     assert dump["experiment_id"] == "E1"
     assert dump["model_type"] == "statsmodels.Logit"
+
+def test_experiment_result_schema():
+    from modules.schemas import ExperimentResultRecord
+    record = ExperimentResultRecord(
+        result_id="RES-iter1_E1",
+        experiment_id="iter1_E1",
+        hypothesis_id="iter1_H1",
+        iteration_no=1,
+        experiment_type="individual_dependency",
+        method="logistic_regression",
+        model_type="statsmodels.Logit",
+        features=["Glucose"],
+        target="Outcome",
+        metrics={"odds_ratio": 1.78, "p_value": 0.0001, "permutation_p_value": 0.001},
+        details={"fold_auc": [0.75, 0.78, 0.74, 0.81, 0.76], "mean_auc": 0.768},
+        verdict="SUPPORTED",
+        summary="Glucose is significantly associated with diabetes odds."
+    )
+    dump = record.model_dump()
+    assert dump["result_id"] == "RES-iter1_E1"
+    assert dump["metrics"]["odds_ratio"] == 1.78
+    assert dump["verdict"] == "SUPPORTED"
+    assert "timestamp" in dump
+
