@@ -1,0 +1,136 @@
+[
+  {
+    "hypothesis_id": "iter2_H1",
+    "parent_hypothesis_id": "iter1_H1",
+    "iteration_no": 2,
+    "hypothesis": "Glucose has a stronger positive association with the outcome when combined with other metabolic markers such as insulin resistance (HOMA-IR) and HbA1c.",
+    "rationale": "Derived from iter1_E1 (iter1_H1) outcome: Glucose shows a statistically significant positive association with the outcome, with an odds ratio of 3.46 (95% CI [2.82, 4.23]) indicating that high",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "HOMA-IR",
+        "HbA1c"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "HOMA-IR",
+      "HbA1c"
+    ],
+    "timestamp": "2026-11-04T20:02:19.400867+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H2",
+    "parent_hypothesis_id": "iter1_H2",
+    "iteration_no": 2,
+    "hypothesis": "The relationship between Pregnancies and Outcome is stronger when adjusted for maternal age, as indicated by a higher odds ratio and narrower confidence interval.",
+    "rationale": "Derived from iter1_E2 (iter1_H2) outcome: The experimental results confirm a statistically significant positive association between Pregnancies and Outcome, with an odds ratio of 1.587 (95% CI",
+    "proposed_experiment": {
+      "features": [
+        "Pregnancies",
+        "Age"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Pregnancies",
+      "Age"
+    ],
+    "timestamp": "2026-11-04T20:02:19.439010+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H3",
+    "parent_hypothesis_id": "iter1_H3",
+    "iteration_no": 2,
+    "hypothesis": "The interaction between Glucose and Pregnancies (e.g., glucose levels at different pregnancy stages) provides greater predictive power than their simple combination, with a synergy gain exceeding 0.0183.",
+    "rationale": "Derived from iter1_E3 (iter1_H3) outcome: The combination of Pregnancies and Glucose features provides a statistically significant improvement in predictive performance (AUC=0.8088) over the b",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "Pregnancies",
+        "Pregnancy_Stage"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "auc"
+    },
+    "features_involved": [
+      "Glucose",
+      "Pregnancies",
+      "Pregnancy_Stage"
+    ],
+    "timestamp": "2026-11-04T20:02:19.469092+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H4",
+    "parent_hypothesis_id": "iter1_H4",
+    "iteration_no": 2,
+    "hypothesis": "Testing whether the interaction between Glucose and BMI (e.g., Glucose^2 or BMI^2) provides additional predictive power beyond linear combination, using a quadratic model to capture non-linear effects.",
+    "rationale": "Derived from iter1_E4 (iter1_H4) outcome: The combination of Glucose and BMI provides statistically significant predictive improvement over individual features, with a combined AUC of 0.8178 (",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BMI",
+        "Glucose^2",
+        "BMI^2",
+        "Glucose*BMI"
+      ],
+      "model": "sklearn.linear_model.RidgeCV",
+      "metric": "auc"
+    },
+    "features_involved": [
+      "Glucose",
+      "BMI",
+      "Glucose^2",
+      "BMI^2",
+      "Glucose*BMI"
+    ],
+    "timestamp": "2026-11-04T20:02:19.497059+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H5",
+    "parent_hypothesis_id": "iter1_H5",
+    "iteration_no": 2,
+    "hypothesis": "The effect of Glucose on the outcome is stronger in younger individuals (Age < 40) compared to older individuals (Age >= 40).",
+    "rationale": "Derived from iter1_E5 (iter1_H5) outcome: The interaction between Glucose and Age has a statistically significant negative effect on the outcome, with a coefficient of -0.00075 (95% bootstrap ",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "Age",
+        "Age_group (categorical: <40, >=40)"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "Age",
+      "Age_group (categorical: <40, >=40)"
+    ],
+    "timestamp": "2026-11-04T20:02:19.531488+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H6",
+    "parent_hypothesis_id": "iter1_H6",
+    "iteration_no": 2,
+    "hypothesis": "Age does not significantly confound the relationship between Pregnancies and the outcome when accounting for other potential covariates such as BMI or socioeconomic status.",
+    "rationale": "Derived from iter1_E6 (iter1_H6) outcome: The hypothesis that Age acts as a confounding variable for the relationship between Pregnancies and the outcome is not supported by the current eviden",
+    "proposed_experiment": {
+      "features": [
+        "Pregnancies",
+        "BMI",
+        "Socioeconomic status"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "adjusted_or"
+    },
+    "features_involved": [
+      "Pregnancies",
+      "BMI",
+      "Socioeconomic status"
+    ],
+    "timestamp": "2026-11-04T20:02:19.558913+00:00"
+  }
+]

@@ -139,4 +139,83 @@ def test_pipeline_e2e_integration(tmp_path):
         assert len(spec_docs) >= len(hypotheses)
         assert len(res_docs) >= len(hypotheses)
 
+    # Run Batch 4 Result Evaluation Engine
+    from modules.result_evaluator import evaluate_all_results
+    from modules.config import DB_EVALUATIONS, DB_REFINEMENTS
+
+    eval_results, comp_record = evaluate_all_results(
+        results=results,
+        iteration_no=1,
+        output_dir=out_dir
+    )
+    assert len(eval_results) == len(results)
+    assert comp_record is not None
+    assert os.path.exists(os.path.join(out_dir, "experiment_evaluations.json"))
+    assert os.path.exists(os.path.join(out_dir, "cross_experiment_comparison.json"))
+    assert os.path.exists(os.path.join(out_dir, "iterations", "iter_1", "experiment_evaluations.json"))
+
+    # Run Batch 5 LLM Interpretation & Hypothesis Refinement
+    import requests
+    from modules.hypothesis_registry import HypothesisRegistry
+    from modules.llm_interpreter import interpret_and_refine_all
+    from modules.schemas import HypothesisRecord
+
+    class MockResponse:
+        def raise_for_status(self): pass
+        def json(self):
+            return {
+                "response": '{"hypothesis_status": "supported_by_current_evidence", "interpretation": "Strong confirmation under cross-validation.", "observations": ["Evidence holds firmly"], "limitations": ["Need more clinical samples"], "next_hypothesis": "Combining Glucose, BMI, and Insulin will further improve risk prediction.", "proposed_experiment": {"features": ["Glucose", "BMI", "Insulin"], "model": "LogisticRegression", "metric": "ROC_AUC"}}'
+            }
+
+    monkeypatch_post = lambda url, json, **kwargs: MockResponse()
+    monkeypatch = pytest.MonkeyPatch()
+    monkeypatch.setattr(requests, "post", monkeypatch_post)
+
+    hypo_records = [
+        HypothesisRecord(
+            hypothesis_id=h.get("hypothesis_id", f"iter1_H{i+1}"),
+            iteration_no=1,
+            hypothesis_type=h.get("hypothesis_type", "individual_dependency"),
+            hypothesis=h.get("statement", h.get("hypothesis", "")),
+            features_involved=h.get("features_involved", []),
+            evidence_from_data=str(h.get("evidence", h.get("evidence_from_data", ""))),
+            proposed_experiment=h.get("proposed_experiment", "")
+        )
+        for i, h in enumerate(hypotheses)
+    ]
+
+    registry = HypothesisRegistry(registry_path=os.path.join(out_dir, "hypothesis_registry.json"))
+    for h in hypo_records:
+        registry.register_hypothesis(h)
+
+    try:
+        interps, next_hyps = interpret_and_refine_all(
+            eval_results=eval_results,
+            hypotheses=hypo_records,
+            iteration_no=1,
+            output_dir=out_dir,
+            registry=registry
+        )
+    finally:
+        monkeypatch.undo()
+
+    assert len(interps) == len(eval_results)
+    assert len(next_hyps) > 0
+    assert os.path.exists(os.path.join(out_dir, "llm_interpretations.json"))
+    assert os.path.exists(os.path.join(out_dir, "refined_next_hypotheses.json"))
+    assert os.path.exists(os.path.join(out_dir, "iterations", "iter_1", "llm_interpretations.json"))
+    assert os.path.exists(os.path.join(out_dir, "iterations", "iter_1", "refined_next_hypotheses.json"))
+
+    # Verify Cluster persistence for evaluations and refinements
+    if cluster.is_available():
+        eval_docs = cluster.query_documents(DB_EVALUATIONS, "evaluations")
+        comp_docs = cluster.query_documents(DB_EVALUATIONS, "comparisons")
+        interp_docs = cluster.query_documents(DB_REFINEMENTS, "interpretations")
+        ref_docs = cluster.query_documents(DB_REFINEMENTS, "refined_hypotheses")
+        assert len(eval_docs) >= len(eval_results)
+        assert len(comp_docs) >= 1
+        assert len(interp_docs) >= len(interps)
+        assert len(ref_docs) >= len(next_hyps)
+
+
 

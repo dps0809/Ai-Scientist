@@ -1,8 +1,20 @@
 import os
+import sys
 import json
 import warnings
 from datetime import datetime
 import pandas as pd
+
+if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+if sys.stderr and hasattr(sys.stderr, "reconfigure"):
+    try:
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 # pyrefly: ignore [missing-import]
 from modules.config import (
@@ -18,7 +30,9 @@ from modules.config import (
     DB_HYPOTHESES,
     DB_VALIDATION,
     DB_EXPERIMENTS,
-    DB_RESULTS
+    DB_RESULTS,
+    DB_EVALUATIONS,
+    DB_REFINEMENTS
 )
 # pyrefly: ignore [missing-import]
 from modules.load_dataset import load_dataset_with_id
@@ -50,6 +64,12 @@ from modules.hypothesis_validator import validate_hypotheses
 from modules.experiment_planner import plan_experiments
 # pyrefly: ignore [missing-import]
 from modules.experiment_executor import execute_all_experiments
+# pyrefly: ignore [missing-import]
+from modules.result_evaluator import evaluate_all_results
+# pyrefly: ignore [missing-import]
+from modules.llm_interpreter import interpret_and_refine_all
+# pyrefly: ignore [missing-import]
+from modules.hypothesis_registry import HypothesisRegistry
 # pyrefly: ignore [missing-import]
 from modules.mongo_cluster import MongoClusterManager
 
@@ -144,6 +164,7 @@ def main():
     run_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_output_dir = os.path.join(OUTPUT_DIR, run_timestamp)
     os.makedirs(run_output_dir, exist_ok=True)
+    registry = HypothesisRegistry()
 
     print("\n" + "=" * 70)
     print(f"RUN HYPOTHESIS & EXPERIMENT CYCLE")
@@ -195,6 +216,22 @@ def main():
         n_bootstrap=500
     )
 
+    # Stage 7: Batch 4 — Result Evaluation & Cross-Experiment Comparison
+    eval_results, cross_comparison = evaluate_all_results(
+        results=experiment_results,
+        iteration_no=iteration_no,
+        output_dir=run_output_dir
+    )
+
+    # Stage 8: Batch 5 — LLM Interpretation & Hypothesis Refinement Engine
+    interpretations, refined_hypotheses = interpret_and_refine_all(
+        eval_results=eval_results,
+        hypotheses=hypotheses,
+        iteration_no=iteration_no,
+        output_dir=run_output_dir,
+        registry=registry
+    )
+
     # Check MongoDB cluster sync status
     cluster = MongoClusterManager()
     cluster_status = "CONNECTED (Port 27017)" if cluster.is_available() else "STANDALONE FILE-BASED (Offline)"
@@ -203,7 +240,7 @@ def main():
     print("PIPELINE COMPLETE")
     print("=" * 70)
     print("\nCurrent implemented flow:")
-    print("Processed Dataset (Cache-First) -> Stage 3 (Local LLM & De-duplication) -> Stage 4 (Batch 1 Validation) -> Stage 5 (Batch 2 Planning) -> Stage 6 (Batch 3 Execution)")
+    print("Processed Dataset (Cache-First) -> Stage 3 (LLM Hypotheses) -> Stage 4 (Batch 1 Validation) -> Stage 5 (Batch 2 Planning) -> Stage 6 (Batch 3 Execution) -> Stage 7 (Batch 4 Evaluation) -> Stage 8 (Batch 5 Refinement)")
     print(f"\nMongoDB Cluster Status: {cluster_status}")
     if cluster.is_available():
         print(f"  - Inputs DB       : {DB_INPUTS}.inputs")
@@ -212,6 +249,8 @@ def main():
         print(f"  - Validation DB   : {DB_VALIDATION}.validations")
         print(f"  - Experiments DB  : {DB_EXPERIMENTS}.specifications")
         print(f"  - Results DB      : {DB_RESULTS}.results")
+        print(f"  - Evaluations DB  : {DB_EVALUATIONS}.evaluations")
+        print(f"  - Refinements DB  : {DB_REFINEMENTS}.interpretations & refined_hypotheses")
     print(f"\nDataset-level processed artifacts (reused across runs):")
     print(f"  {DATASET_PROCESSED_DIR}/")
     print(f"  - {DATASET_PROCESSED_DIR}/cleaned_dataset.csv")
@@ -229,8 +268,13 @@ def main():
     print(f"  - {run_output_dir}/validated_hypotheses.json")
     print(f"  - {run_output_dir}/experiment_specifications.json")
     print(f"  - {run_output_dir}/experiment_results.json")
+    print(f"  - {run_output_dir}/experiment_evaluations.json")
+    print(f"  - {run_output_dir}/cross_experiment_comparison.json")
+    print(f"  - {run_output_dir}/llm_interpretations.json")
+    print(f"  - {run_output_dir}/refined_next_hypotheses.json")
     print(f"  - {run_output_dir}/iterations/iter_{iteration_no}/")
 
 
 if __name__ == "__main__":
     main()
+

@@ -94,5 +94,137 @@
         "proposed_experiment": "Conduct a mediation analysis to test whether BMI mediates the relationship between Glucose and Outcome, using the causal mediation framework with bootstrapped confidence intervals.",
         "fingerprint": "('BMI', 'Glucose')-comparative_confounding_relationship",
         "timestamp": "2026-11-04T08:06:40.969682+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H1",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Add Age to Glucose + BMI.",
+        "features_involved": [
+            "Glucose",
+            "BMI",
+            "Age"
+        ],
+        "evidence_from_data": "Combined model outperforms baselines.",
+        "proposed_experiment": "{\"features\": [\"Glucose\", \"BMI\", \"Age\"], \"model\": \"LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('Age', 'BMI', 'Glucose')-refined_follow_up",
+        "timestamp": "2026-11-04T19:42:32.325614+00:00"
+    },
+    {
+        "hypothesis_id": "iter1_H6",
+        "iteration_no": 1,
+        "hypothesis_type": "comparative_confounding_relationship",
+        "hypothesis": "Pregnancies and Age are strongly correlated (r = 0.5443), suggesting that Age may act as a confounding variable when assessing the relationship between Pregnancies and Outcome, or that Pregnancies may mediate the effect of Age on Outcome.",
+        "features_involved": [
+            "Pregnancies",
+            "Age"
+        ],
+        "evidence_from_data": "Correlation between Pregnancies and Age: 0.5443",
+        "proposed_experiment": "Perform a stratified analysis by Age groups to evaluate whether the association between Pregnancies and Outcome is consistent across different age strata, and test for mediation using the causal mediation framework.",
+        "fingerprint": "('Age', 'Pregnancies')-comparative_confounding_relationship",
+        "timestamp": "2026-11-04T19:48:57.752472+00:00"
+    },
+    {
+        "hypothesis_id": "iter1_H2",
+        "iteration_no": 1,
+        "hypothesis_type": "individual_dependency",
+        "hypothesis": "Pregnancies has a strong positive association with the outcome, as measured by a Pearson correlation coefficient of 0.5443 and a mutual information score of 0.62.",
+        "features_involved": [
+            "Pregnancies"
+        ],
+        "evidence_from_data": "Pearson r: 0.5443, Spearman rho: N/A, Mutual Information: 0.62",
+        "proposed_experiment": "Perform a Spearman rank correlation test between Pregnancies and the outcome to confirm the monotonic relationship and assess statistical significance.",
+        "fingerprint": "('Pregnancies',)-individual_dependency",
+        "timestamp": "2026-11-04T19:51:33.690152+00:00"
+    },
+    {
+        "hypothesis_id": "iter1_H6",
+        "iteration_no": 1,
+        "hypothesis_type": "comparative_or_confounding_relationship",
+        "hypothesis": "Pregnancies and Age are strongly correlated (r = 0.5443), suggesting that Age may act as a confounding variable in the relationship between Pregnancies and the outcome.",
+        "features_involved": [
+            "Pregnancies",
+            "Age"
+        ],
+        "evidence_from_data": "Correlation: 0.5443, Strength: strong",
+        "proposed_experiment": "Run a multiple regression analysis including both Pregnancies and Age as predictors to determine if Age remains a significant confounder after adjusting for Pregnancies.",
+        "fingerprint": "('Age', 'Pregnancies')-comparative_or_confounding_relationship",
+        "timestamp": "2026-11-04T19:51:33.744766+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H2",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "BMI has a stronger positive association with the outcome when adjusted for age and gender, as measured by the change in odds ratio and confidence interval after including these covariates.",
+        "features_involved": [
+            "BMI",
+            "Age",
+            "Gender"
+        ],
+        "evidence_from_data": "The hypothesis that BMI has a strong positive association with the outcome is supported by the logistic regression analysis, which shows a statistically significant odds ratio of 2.03 (95% CI [1.66, 2.48]) with p=0.0001. The model demonstrates meaningful practical significance with a consistent positive effect across multiple validation folds.",
+        "proposed_experiment": "{\"features\": [\"BMI\", \"Age\", \"Gender\"], \"model\": \"statsmodels.Logit\", \"metric\": \"odds_ratio\"}",
+        "fingerprint": "('Age', 'BMI', 'Gender')-refined_follow_up",
+        "timestamp": "2026-11-04T20:02:51.899088+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H3",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Combining BMI with additional clinical features (e.g., age, hypertension status) will provide further predictive improvement beyond Glucose and BMI alone, with a synergistic gain of at least 0.015 in AUC.",
+        "features_involved": [
+            "Glucose",
+            "BMI",
+            "Age",
+            "Hypertension"
+        ],
+        "evidence_from_data": "The combination of Glucose and BMI provides statistically significant predictive improvement over individual features, with a combined AUC of 0.8178 (vs. best individual feature Glucose AUC of 0.7905) and a gain of 0.0274. This synergy is statistically significant (p=0.0026) and represents meaningful predictive gain distinct from multiplicative interaction.",
+        "proposed_experiment": "{\"features\": [\"Glucose\", \"BMI\", \"Age\", \"Hypertension\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"AUC\"}",
+        "fingerprint": "('Age', 'BMI', 'Glucose', 'Hypertension')-refined_follow_up",
+        "timestamp": "2026-11-04T20:02:51.900258+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H4",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "The combination of Glucose and Pregnancies provides clinically meaningful predictive power for diabetes outcomes beyond baseline risk factors, with a synergistic effect that improves early detection rates by at least 10%.",
+        "features_involved": [
+            "Glucose",
+            "Pregnancies"
+        ],
+        "evidence_from_data": "The combination of Pregnancies and Glucose features demonstrates statistically significant predictive synergy over individual features, with a combined AUC of 0.8088 (vs. best individual feature Glucose AUC of 0.7905) and a gain of 0.0183. This synergy is confirmed by a paired t-test (p=0.029) and shows moderate practical significance.",
+        "proposed_experiment": "{\"features\": [\"Glucose\", \"Pregnancies\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"AUC\"}",
+        "fingerprint": "('Glucose', 'Pregnancies')-refined_follow_up",
+        "timestamp": "2026-11-04T20:02:51.901291+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H5",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "The interaction between Glucose and Age has a stronger effect on Outcome in individuals with Age > 60 compared to Age \u2264 60, with a delta in interaction effect of 0.0005 and p-value < 0.05.",
+        "features_involved": [
+            "Glucose",
+            "Age"
+        ],
+        "evidence_from_data": "The interaction between Glucose and Age significantly moderates the relationship with Outcome, with a negative interaction coefficient of -0.00075 (95% bootstrap CI [-0.00129, -0.00019]). This indicates that the effect of Glucose on Outcome varies by Age level, and the interaction is statistically significant (LRT chi2=7.632, p=0.0057).",
+        "proposed_experiment": "{\"features\": [\"Glucose\", \"Age\"], \"model\": \"statsmodels.Logit\", \"metric\": \"interaction_effect_size\"}",
+        "fingerprint": "('Age', 'Glucose')-refined_follow_up",
+        "timestamp": "2026-11-04T20:02:51.902285+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H6",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Age does not mediate the effect of Pregnancies on the outcome when controlling for other potential confounders such as Income, Education, and Health Status.",
+        "features_involved": [
+            "Pregnancies",
+            "Age",
+            "Income",
+            "Education",
+            "Health Status"
+        ],
+        "evidence_from_data": "The original hypothesis that Pregnancies and Age are strongly correlated (r = 0.5443) suggests Age may confound the relationship between Pregnancies and the outcome. However, the adjusted analysis shows a significant reduction in the effect size (delta = -40.0%) when accounting for Age, with the covariate p-value of 1.0 indicating no statistical significance for Age as a confounder. This indicates the correlation does not support Age as a confounding variable in this context.",
+        "proposed_experiment": "{\"features\": [\"Pregnancies\", \"Age\", \"Income\", \"Education\", \"Health Status\"], \"model\": \"statsmodels.Logit\", \"metric\": \"adjusted_or\"}",
+        "fingerprint": "('Age', 'Education', 'Health Status', 'Income', 'Pregnancies')-refined_follow_up",
+        "timestamp": "2026-11-04T20:02:51.903270+00:00"
     }
 ]

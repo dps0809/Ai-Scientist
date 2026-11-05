@@ -31,12 +31,19 @@ DB_HYPOTHESES = "ai_scientist_hypotheses"
 DB_VALIDATION = "ai_scientist_validation"
 DB_EXPERIMENTS = "ai_scientist_experiments"
 DB_RESULTS = "ai_scientist_results"
+DB_EVALUATIONS = "ai_scientist_evaluations"
+DB_REFINEMENTS = "ai_scientist_refinements"
 
 VALIDATED_HYPOTHESES_PATH = os.path.join(OUTPUT_DIR, "validated_hypotheses.json")
 EXPERIMENT_SPECS_PATH = os.path.join(OUTPUT_DIR, "experiment_specifications.json")
 EXPERIMENT_RESULTS_PATH = os.path.join(OUTPUT_DIR, "experiment_results.json")
+EXPERIMENT_EVALUATIONS_PATH = os.path.join(OUTPUT_DIR, "experiment_evaluations.json")
+CROSS_EXPERIMENT_COMPARISON_PATH = os.path.join(OUTPUT_DIR, "cross_experiment_comparison.json")
+LLM_INTERPRETATIONS_PATH = os.path.join(OUTPUT_DIR, "llm_interpretations.json")
+REFINED_HYPOTHESES_PATH = os.path.join(OUTPUT_DIR, "refined_next_hypotheses.json")
 HYPOTHESIS_REGISTRY_PATH = os.path.join(OUTPUT_DIR, "hypothesis_registry.json")
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(DATASET_PROCESSED_DIR, exist_ok=True)
 os.makedirs(os.path.join(DATASET_PROCESSED_DIR, "plots"), exist_ok=True)
+

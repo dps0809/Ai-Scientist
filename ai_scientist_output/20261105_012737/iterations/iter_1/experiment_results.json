@@ -36,7 +36,7 @@
         },
         "verdict": "SUPPORTED",
         "summary": "Experiment iter1_E1 testing dependency of 'Glucose' on 'Outcome' is strongly supported (OR=3.46, 95% CI [2.82, 4.23], p=0.0000, mean CV AUC=0.790).",
-        "timestamp": "2026-11-04T08:06:41.762659+00:00"
+        "timestamp": "2026-11-04T19:58:34.141592+00:00"
     },
     {
         "result_id": "RES-iter1_E2",
@@ -47,94 +47,40 @@
         "method": "logistic_regression",
         "model_type": "statsmodels.Logit",
         "features": [
-            "BMI"
+            "Pregnancies"
         ],
         "target": "Outcome",
         "metrics": {
-            "coefficient": 0.7093,
-            "odds_ratio": 2.0326,
+            "coefficient": 0.4619,
+            "odds_ratio": 1.587,
             "confidence_interval": [
-                1.7131,
-                2.4118
+                1.3643,
+                1.8461
             ],
             "p_value": 0.0,
             "permutation_p_value": 0.0
         },
         "details": {
             "fold_auc": [
-                0.6727,
-                0.7438,
-                0.679,
-                0.6782,
-                0.6582
+                0.6009,
+                0.6124,
+                0.5656,
+                0.645,
+                0.676
             ],
-            "mean_auc": 0.6864,
-            "std_auc": 0.0297,
-            "sample_size": 757,
+            "mean_auc": 0.62,
+            "std_auc": 0.0378,
+            "sample_size": 768,
             "null_permutations_evaluated": 1000
         },
         "verdict": "SUPPORTED",
-        "summary": "Experiment iter1_E2 testing dependency of 'BMI' on 'Outcome' is strongly supported (OR=2.03, 95% CI [1.71, 2.41], p=0.0000, mean CV AUC=0.686).",
-        "timestamp": "2026-11-04T08:06:42.300682+00:00"
+        "summary": "Experiment iter1_E2 testing dependency of 'Pregnancies' on 'Outcome' is strongly supported (OR=1.59, 95% CI [1.36, 1.85], p=0.0000, mean CV AUC=0.620).",
+        "timestamp": "2026-11-04T19:58:34.822555+00:00"
     },
     {
         "result_id": "RES-iter1_E3",
         "experiment_id": "iter1_E3",
         "hypothesis_id": "iter1_H3",
-        "iteration_no": 1,
-        "experiment_type": "feature_combination_synergy",
-        "method": "paired_model_comparison",
-        "model_type": "sklearn.linear_model.LogisticRegression",
-        "features": [
-            "Glucose",
-            "BMI"
-        ],
-        "target": "Outcome",
-        "metrics": {
-            "combined_mean_auc": 0.8178,
-            "best_individual_mean_auc": 0.7905,
-            "gain_over_best_individual": 0.0274,
-            "paired_test_stat": 6.6738,
-            "paired_test_p_value": 0.0026
-        },
-        "details": {
-            "individual_scores": {
-                "Glucose": 0.7905,
-                "BMI": 0.6864
-            },
-            "best_individual_feature": "Glucose",
-            "fold_scores": {
-                "Glucose": [
-                    0.7865,
-                    0.8068,
-                    0.829,
-                    0.7635,
-                    0.7666
-                ],
-                "BMI": [
-                    0.6727,
-                    0.7438,
-                    0.679,
-                    0.6782,
-                    0.6582
-                ],
-                "Glucose_BMI": [
-                    0.8183,
-                    0.8461,
-                    0.8584,
-                    0.7815,
-                    0.7849
-                ]
-            }
-        },
-        "verdict": "SUPPORTED",
-        "summary": "Synergy experiment iter1_E3 testing [Glucose + BMI] is strongly supported: combining Glucose and BMI yields significant synergy (gain=+0.0274 AUC, paired t p=0.0026).",
-        "timestamp": "2026-11-04T08:06:42.416260+00:00"
-    },
-    {
-        "result_id": "RES-iter1_E4",
-        "experiment_id": "iter1_E4",
-        "hypothesis_id": "iter1_H4",
         "iteration_no": 1,
         "experiment_type": "feature_combination_synergy",
         "method": "paired_model_comparison",
@@ -182,8 +128,62 @@
             }
         },
         "verdict": "SUPPORTED",
-        "summary": "Synergy experiment iter1_E4 testing [Pregnancies + Glucose] is strongly supported: combining Pregnancies and Glucose yields significant synergy (gain=+0.0183 AUC, paired t p=0.0290).",
-        "timestamp": "2026-11-04T08:06:42.510716+00:00"
+        "summary": "Synergy experiment iter1_E3 testing [Pregnancies + Glucose] is strongly supported: combining Pregnancies and Glucose yields significant synergy (gain=+0.0183 AUC, paired t p=0.0290).",
+        "timestamp": "2026-11-04T19:58:34.947258+00:00"
+    },
+    {
+        "result_id": "RES-iter1_E4",
+        "experiment_id": "iter1_E4",
+        "hypothesis_id": "iter1_H4",
+        "iteration_no": 1,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "Glucose",
+            "BMI"
+        ],
+        "target": "Outcome",
+        "metrics": {
+            "combined_mean_auc": 0.8178,
+            "best_individual_mean_auc": 0.7905,
+            "gain_over_best_individual": 0.0274,
+            "paired_test_stat": 6.6738,
+            "paired_test_p_value": 0.0026
+        },
+        "details": {
+            "individual_scores": {
+                "Glucose": 0.7905,
+                "BMI": 0.6864
+            },
+            "best_individual_feature": "Glucose",
+            "fold_scores": {
+                "Glucose": [
+                    0.7865,
+                    0.8068,
+                    0.829,
+                    0.7635,
+                    0.7666
+                ],
+                "BMI": [
+                    0.6727,
+                    0.7438,
+                    0.679,
+                    0.6782,
+                    0.6582
+                ],
+                "Glucose_BMI": [
+                    0.8183,
+                    0.8461,
+                    0.8584,
+                    0.7815,
+                    0.7849
+                ]
+            }
+        },
+        "verdict": "SUPPORTED",
+        "summary": "Synergy experiment iter1_E4 testing [Glucose + BMI] is strongly supported: combining Glucose and BMI yields significant synergy (gain=+0.0274 AUC, paired t p=0.0026).",
+        "timestamp": "2026-11-04T19:58:35.077982+00:00"
     },
     {
         "result_id": "RES-iter1_E5",
@@ -219,7 +219,7 @@
         },
         "verdict": "SUPPORTED",
         "summary": "Interaction experiment iter1_E5 testing [Glucose * Age] is supported: significant moderation detected (LRT chi2=7.632, p=0.0057; interaction beta=-0.00075, p=0.0044, 95% bootstrap CI [-0.00129, -0.00019]).",
-        "timestamp": "2026-11-04T08:06:43.746633+00:00"
+        "timestamp": "2026-11-04T19:58:36.525187+00:00"
     },
     {
         "result_id": "RES-iter1_E6",
@@ -230,39 +230,39 @@
         "method": "adjusted_regression",
         "model_type": "statsmodels.Logit",
         "features": [
-            "Glucose",
-            "BMI"
+            "Pregnancies",
+            "Age"
         ],
         "target": "Outcome",
         "metrics": {
-            "unadjusted_coefficient": 1.238,
-            "adjusted_coefficient": 1.1656,
-            "delta_coefficient": -0.0724,
-            "percent_change": -5.85,
-            "unadjusted_or": 3.4488,
-            "adjusted_or": 3.2078,
+            "unadjusted_coefficient": 0.4622,
+            "adjusted_coefficient": 0.2775,
+            "delta_coefficient": -0.1847,
+            "percent_change": -39.96,
+            "unadjusted_or": 1.5875,
+            "adjusted_or": 1.3198,
             "unadjusted_ci": [
-                2.8142,
-                4.2266
+                1.3646,
+                1.8468
             ],
             "adjusted_ci": [
-                2.6097,
-                3.943
+                1.1067,
+                1.5739
             ],
             "unadjusted_p_value": 0.0,
-            "adjusted_p_value": 0.0,
-            "covariate_coefficient": 0.5874,
-            "covariate_or": 1.7993,
-            "covariate_p_value": 0.0
+            "adjusted_p_value": 0.00201,
+            "covariate_coefficient": 0.3487,
+            "covariate_or": 1.4172,
+            "covariate_p_value": 0.0001
         },
         "details": {
             "confounding_threshold_percent": 10.0,
-            "confounding_detected": false,
+            "confounding_detected": true,
             "causal_note": "Observational confounding assessment; requires temporality and no unmeasured confounders for formal causal claim.",
-            "sample_size": 752
+            "sample_size": 768
         },
-        "verdict": "REFUTED",
-        "summary": "Adjusted regression experiment iter1_E6 testing [Glucose adjusted for BMI] is refuted: adjustment for BMI does not meaningfully alter Glucose's effect (coefficient change of -5.9% is below the 10% confounding threshold).",
-        "timestamp": "2026-11-04T08:06:43.751448+00:00"
+        "verdict": "SUPPORTED",
+        "summary": "Adjusted regression experiment iter1_E6 testing [Pregnancies adjusted for Age] is supported: adjustment for Age substantially alters Pregnancies's effect (unadjusted OR=1.59 -> adjusted OR=1.32, delta=-40.0%, covariate p=0.0001).",
+        "timestamp": "2026-11-04T19:58:36.530767+00:00"
     }
 ]

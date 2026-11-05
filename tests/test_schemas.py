@@ -114,3 +114,82 @@ def test_experiment_result_schema():
     assert dump["verdict"] == "SUPPORTED"
     assert "timestamp" in dump
 
+
+def test_evaluation_and_refinement_schemas():
+    from modules.schemas import (
+        StandardExperimentResult,
+        CrossExperimentComparisonRecord,
+        LLMInterpretationRecord,
+        RefinedHypothesisRecord
+    )
+    eval_rec = StandardExperimentResult(
+        experiment_id="iter1_E3",
+        hypothesis_id="iter1_H3",
+        iteration_no=1,
+        status="completed",
+        experiment_type="feature_combination_synergy",
+        configuration={
+            "features": ["Glucose", "BMI"],
+            "model": "LogisticRegression"
+        },
+        results={
+            "individual_auc": {"Glucose": 0.79, "BMI": 0.686},
+            "combined_auc": 0.817,
+            "gain": 0.0274
+        },
+        statistical_validation={
+            "comparison_method": "paired_cross_validation",
+            "confidence_interval": [0.012, 0.043],
+            "p_value": 0.0026
+        },
+        evaluation={
+            "verdict": "supported_by_current_evidence",
+            "is_statistically_significant": True,
+            "practical_significance": "meaningful",
+            "uncertainty_level": "low",
+            "summary": "Combining Glucose and BMI significantly improved ROC-AUC by 0.0274."
+        }
+    )
+    assert eval_rec.experiment_id == "iter1_E3"
+    assert eval_rec.results["gain"] == 0.0274
+    assert eval_rec.evaluation["is_statistically_significant"] is True
+
+    comp_rec = CrossExperimentComparisonRecord(
+        comparison_id="COMP-iter1",
+        iteration_no=1,
+        individual_baselines={"Glucose": 0.79, "BMI": 0.686},
+        combination_scores={"Glucose + BMI": 0.817},
+        synergy_gains={"Glucose + BMI": 0.0274},
+        ranking=[{"rank": 1, "name": "Glucose + BMI", "score": 0.817}],
+        summary_findings=["Glucose + BMI achieves top score"]
+    )
+    assert comp_rec.comparison_id == "COMP-iter1"
+    assert comp_rec.ranking[0]["score"] == 0.817
+
+    interp_rec = LLMInterpretationRecord(
+        interpretation_id="INT-iter1_E3",
+        experiment_id="iter1_E3",
+        hypothesis_id="iter1_H3",
+        iteration_no=1,
+        hypothesis_status="supported_by_current_evidence",
+        interpretation="The combined feature model outperformed individual feature models.",
+        observations=["Glucose was the strongest predictor.", "BMI added complementary information."],
+        limitations=["Causal mediation between Glucose and BMI has not been established."],
+        next_hypothesis="Adding Age to Glucose and BMI will further improve diabetes prediction.",
+        proposed_experiment={"features": ["Glucose", "BMI", "Age"], "model": "LogisticRegression", "metric": "ROC_AUC"}
+    )
+    assert interp_rec.hypothesis_status == "supported_by_current_evidence"
+    assert "Glucose" in interp_rec.proposed_experiment["features"]
+
+    refined_rec = RefinedHypothesisRecord(
+        hypothesis_id="iter2_H1",
+        parent_hypothesis_id="iter1_H3",
+        iteration_no=2,
+        hypothesis="Adding Age to Glucose and BMI will further improve diabetes prediction.",
+        rationale="Synergy observed in iter1_E3 warrants testing third predictor.",
+        proposed_experiment={"features": ["Glucose", "BMI", "Age"], "model": "LogisticRegression", "metric": "ROC_AUC"},
+        features_involved=["Glucose", "BMI", "Age"]
+    )
+    assert refined_rec.hypothesis_id == "iter2_H1"
+    assert refined_rec.parent_hypothesis_id == "iter1_H3"
+
