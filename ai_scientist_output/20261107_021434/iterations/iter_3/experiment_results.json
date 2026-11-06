@@ -1,0 +1,39 @@
+[
+    {
+        "result_id": "RES-iter3_E2",
+        "experiment_id": "iter3_E2",
+        "hypothesis_id": "iter3_H2",
+        "iteration_no": 3,
+        "experiment_type": "feature_interaction_moderation",
+        "method": "interaction_regression",
+        "model_type": "statsmodels.Logit",
+        "features": [
+            "Pregnancies",
+            "Glucose",
+            "BMI"
+        ],
+        "target": "Outcome",
+        "metrics": {
+            "interaction_coefficient": -0.00177,
+            "interaction_p_value": 0.0687,
+            "lrt_statistic": 3.2468,
+            "lrt_p_value": 0.07156,
+            "bootstrap_ci": [
+                -0.00357,
+                0.0
+            ],
+            "main_effect_a_coef": 0.1304,
+            "main_effect_b_coef": 0.0406
+        },
+        "details": {
+            "log_likelihood_additive": -381.9424,
+            "log_likelihood_interaction": -380.319,
+            "degrees_of_freedom": 1,
+            "bootstrap_samples_collected": 500,
+            "sample_size": 763
+        },
+        "verdict": "REFUTED",
+        "summary": "Interaction experiment iter3_E2 testing [Pregnancies * Glucose] is refuted: interaction between Pregnancies and Glucose is statistically indistinguishable from zero (LRT chi2=3.247, p=0.0716, Wald p=0.0687).",
+        "timestamp": "2026-11-06T20:47:27.063011+00:00"
+    }
+]

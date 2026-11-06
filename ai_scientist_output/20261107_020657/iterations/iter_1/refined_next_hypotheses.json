@@ -1,0 +1,108 @@
+[
+  {
+    "hypothesis_id": "iter2_H1",
+    "parent_hypothesis_id": "iter1_H3",
+    "iteration_no": 2,
+    "hypothesis": "Combining Glucose, BMI, and Age provides greater predictive power for Outcome than the Glucose-BMI combination, with a synergy gain of at least 0.015",
+    "rationale": "Derived from iter1_E1 (iter1_H3) outcome: The combination of Glucose and BMI significantly improves predictive power for Outcome compared to either feature alone, with a combined AUC of 0.8178",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BMI",
+        "Age"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "BMI",
+      "Age"
+    ],
+    "timestamp": "2026-11-06T20:39:18.886946+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H2",
+    "parent_hypothesis_id": "iter1_H4",
+    "iteration_no": 2,
+    "hypothesis": "Does the addition of BMI as a feature to the Pregnancies-Glucose combination provide further predictive improvement for Outcome?",
+    "rationale": "Derived from iter1_E2 (iter1_H4) outcome: The combination of Pregnancies and Glucose features provides statistically significant predictive improvement over individual features, with a combine",
+    "proposed_experiment": {
+      "features": [
+        "Pregnancies",
+        "Glucose",
+        "BMI"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Pregnancies",
+      "Glucose",
+      "BMI"
+    ],
+    "timestamp": "2026-11-06T20:39:18.935633+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H3",
+    "parent_hypothesis_id": "iter1_H5",
+    "iteration_no": 2,
+    "hypothesis": "The effect of Glucose on Outcome is stronger for younger individuals than older individuals, with a positive interaction effect of Glucose * Age (i.e., higher Glucose has a larger positive impact on Outcome at younger ages).",
+    "rationale": "Derived from iter1_E3 (iter1_H5) outcome: The interaction between Glucose and Age significantly moderates the relationship with Outcome, with a negative interaction coefficient of -0.00075 (95",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "Age"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "interaction_effect_significance"
+    },
+    "features_involved": [
+      "Glucose",
+      "Age"
+    ],
+    "timestamp": "2026-11-06T20:39:18.963840+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H4",
+    "parent_hypothesis_id": "iter1_H6",
+    "iteration_no": 2,
+    "hypothesis": "Age has a direct causal effect on Outcome independent of Pregnancies, which can be tested by stratifying the analysis by Age groups and examining the relationship between Age and Outcome while controlling for Pregnancies.",
+    "rationale": "Derived from iter1_E4 (iter1_H6) outcome: The original hypothesis that Pregnancies and Age are strongly correlated (r = 0.5443) suggests potential confounding or mediation, but the adjusted an",
+    "proposed_experiment": {
+      "features": [
+        "Age",
+        "Pregnancies"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "adjusted_or"
+    },
+    "features_involved": [
+      "Age",
+      "Pregnancies"
+    ],
+    "timestamp": "2026-11-06T20:39:18.999549+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H5",
+    "parent_hypothesis_id": "iter1_H1",
+    "iteration_no": 2,
+    "hypothesis": "Glucose concentration has a stronger positive association with Outcome when adjusted for age and BMI.",
+    "rationale": "Derived from iter1_E5 (iter1_H1) outcome: Glucose concentration shows a strong positive association with Outcome, with an odds ratio of 3.46 (95% CI [2.82, 4.23]) indicating that higher glucos",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "Age",
+        "BMI"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "Age",
+      "BMI"
+    ],
+    "timestamp": "2026-11-06T20:39:19.049379+00:00"
+  }
+]

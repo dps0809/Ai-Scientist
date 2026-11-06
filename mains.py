@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import warnings
+import argparse
 from datetime import datetime
 import pandas as pd
 
@@ -32,7 +33,11 @@ from modules.config import (
     DB_EXPERIMENTS,
     DB_RESULTS,
     DB_EVALUATIONS,
-    DB_REFINEMENTS
+    DB_REFINEMENTS,
+    DB_MEMORY,
+    MAX_AUTONOMOUS_EXPERIMENTS,
+    MAX_AUTONOMOUS_ITERATIONS,
+    MAX_RUNTIME_MINUTES
 )
 # pyrefly: ignore [missing-import]
 from modules.load_dataset import load_dataset_with_id
@@ -71,16 +76,84 @@ from modules.llm_interpreter import interpret_and_refine_all
 # pyrefly: ignore [missing-import]
 from modules.hypothesis_registry import HypothesisRegistry
 # pyrefly: ignore [missing-import]
+from modules.experiment_controller import run_autonomous_scientist
+# pyrefly: ignore [missing-import]
+from modules.schemas import StoppingConditionConfig
+# pyrefly: ignore [missing-import]
 from modules.mongo_cluster import MongoClusterManager
 
 warnings.filterwarnings("ignore")
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Autonomous AI Scientist: Closed-Loop Data-Driven Hypothesis & Experiment Engine"
+    )
+    parser.add_argument(
+        "--autonomous",
+        action="store_true",
+        help="Run in closed-loop autonomous multi-iteration mode (Batches 6 & 7)"
+    )
+    parser.add_argument(
+        "--max-experiments",
+        type=int,
+        default=MAX_AUTONOMOUS_EXPERIMENTS,
+        help=f"Maximum total experiments budget (default: {MAX_AUTONOMOUS_EXPERIMENTS})"
+    )
+    parser.add_argument(
+        "--max-iterations",
+        type=int,
+        default=MAX_AUTONOMOUS_ITERATIONS,
+        help=f"Maximum autonomous iterations (default: {MAX_AUTONOMOUS_ITERATIONS})"
+    )
+    parser.add_argument(
+        "--max-runtime-minutes",
+        type=int,
+        default=MAX_RUNTIME_MINUTES,
+        help=f"Maximum allowed runtime in minutes (default: {MAX_RUNTIME_MINUTES})"
+    )
+    parser.add_argument(
+        "--target-auc",
+        type=float,
+        default=0.85,
+        help="Target ROC-AUC stopping threshold (default: 0.85)"
+    )
+    parser.add_argument(
+        "--no-improvement-tolerance",
+        type=int,
+        default=3,
+        help="Consecutive iterations without gain tolerance (default: 3)"
+    )
+    parser.add_argument(
+        "--n-permutations",
+        type=int,
+        default=1000,
+        help="Number of permutation test iterations (default: 1000)"
+    )
+    parser.add_argument(
+        "--n-bootstrap",
+        type=int,
+        default=500,
+        help="Number of bootstrap iterations for CI (default: 500)"
+    )
+    parser.add_argument(
+        "--no-mongo",
+        action="store_true",
+        help="Disable MongoDB synchronization (run purely file-based)"
+    )
+    return parser.parse_args()
+
+
 def main():
+    args = parse_args()
     print("\n")
     print("=" * 70)
     print("              LIGHTWEIGHT AI SCIENTIST")
     print("    ITERATIVE DATA-DRIVEN HYPOTHESIS & EXPERIMENT ENGINE")
+    if args.autonomous:
+        print("          [MODE: AUTONOMOUS CLOSED-LOOP SCIENTIST]")
+    else:
+        print("              [MODE: STANDARD SINGLE-RUN]")
     print("=" * 70)
 
     # =========================================================================
@@ -186,63 +259,122 @@ def main():
     iteration_no = 1
     hypotheses = generate_hypotheses_with_llm(context, iteration_no=iteration_no, output_dir=run_output_dir)
 
-    # Stage 4: Batch 1 — Hypothesis Validation & Evidence Reconciliation
-    validation_report = validate_hypotheses(
-        hypotheses=hypotheses,
-        df=df,
-        target=target,
-        stage1_data=stage1,
-        stage2_data=stage2,
-        iteration_no=iteration_no,
-        output_dir=run_output_dir
-    )
-
-    # Stage 5: Batch 2 — Experiment Registry Planning & Specifications
-    experiment_specs = plan_experiments(
-        validation_report=validation_report,
-        target=target,
-        df=df,
-        iteration_no=iteration_no,
-        output_dir=run_output_dir
-    )
-
-    # Stage 6: Batch 3 — Experiment Execution Engine
-    experiment_results = execute_all_experiments(
-        specs=experiment_specs,
-        df=df,
-        iteration_no=iteration_no,
-        output_dir=run_output_dir,
-        n_permutations=1000,
-        n_bootstrap=500
-    )
-
-    # Stage 7: Batch 4 — Result Evaluation & Cross-Experiment Comparison
-    eval_results, cross_comparison = evaluate_all_results(
-        results=experiment_results,
-        iteration_no=iteration_no,
-        output_dir=run_output_dir
-    )
-
-    # Stage 8: Batch 5 — LLM Interpretation & Hypothesis Refinement Engine
-    interpretations, refined_hypotheses = interpret_and_refine_all(
-        eval_results=eval_results,
-        hypotheses=hypotheses,
-        iteration_no=iteration_no,
-        output_dir=run_output_dir,
-        registry=registry
-    )
-
     # Check MongoDB cluster sync status
     cluster = MongoClusterManager()
-    cluster_status = "CONNECTED (Port 27017)" if cluster.is_available() else "STANDALONE FILE-BASED (Offline)"
+    cluster_status = "CONNECTED (Port 27017)" if cluster.is_available() and not args.no_mongo else "STANDALONE FILE-BASED (Offline)"
 
-    print("\n" + "=" * 70)
-    print("PIPELINE COMPLETE")
-    print("=" * 70)
-    print("\nCurrent implemented flow:")
-    print("Processed Dataset (Cache-First) -> Stage 3 (LLM Hypotheses) -> Stage 4 (Batch 1 Validation) -> Stage 5 (Batch 2 Planning) -> Stage 6 (Batch 3 Execution) -> Stage 7 (Batch 4 Evaluation) -> Stage 8 (Batch 5 Refinement)")
+    if args.autonomous:
+        # =====================================================================
+        # BATCH 6 & 7: AUTONOMOUS CLOSED-LOOP EXECUTION
+        # =====================================================================
+        stopping_cfg = StoppingConditionConfig(
+            max_experiments=args.max_experiments,
+            max_iterations=args.max_iterations,
+            max_runtime_minutes=args.max_runtime_minutes,
+            no_improvement_tolerance=args.no_improvement_tolerance,
+            target_roc_auc=args.target_auc
+        )
+        print("\n" + "=" * 70)
+        print("LAUNCHING BATCH 6 & 7: AUTONOMOUS DISCOVERY CONTROLLER")
+        print("=" * 70)
+        report_md, report_data = run_autonomous_scientist(
+            initial_hypotheses=hypotheses,
+            df=df,
+            target=target,
+            config=stopping_cfg,
+            output_dir=run_output_dir,
+            stage1_data=stage1,
+            stage2_data=stage2,
+            n_permutations=args.n_permutations,
+            n_bootstrap=args.n_bootstrap,
+            sync_mongo=not args.no_mongo
+        )
+
+        print("\n" + "=" * 70)
+        print("AUTONOMOUS DISCOVERY CYCLE COMPLETE")
+        print("=" * 70)
+        print(f"Total Iterations Completed : {report_data.get('total_iterations')}")
+        print(f"Total Experiments Executed : {report_data.get('total_experiments')}")
+        print(f"Best ROC-AUC Achieved      : {report_data.get('best_roc_auc', 0.0):.4f}")
+        print(f"Best Model Architecture    : {report_data.get('best_model')}")
+        print(f"Best Feature Combination   : {report_data.get('best_features') or report_data.get('best_feature_combination')}")
+        print(f"\nFinal Scientific Report Generated:")
+        print(f"  Markdown: {os.path.join(run_output_dir, 'final_scientific_report.md')}")
+        print(f"  JSON    : {os.path.join(run_output_dir, 'final_scientific_report.json')}")
+        print(f"  Memory  : {os.path.join(run_output_dir, 'experiment_memory.json')}")
+        print(f"  State   : {os.path.join(run_output_dir, 'autonomous_state.json')}")
+
+    else:
+        # =====================================================================
+        # STANDARD SINGLE-RUN (ITERATION 1) EXECUTION (Batches 1 - 5)
+        # =====================================================================
+        # Stage 4: Batch 1 — Hypothesis Validation & Evidence Reconciliation
+        validation_report = validate_hypotheses(
+            hypotheses=hypotheses,
+            df=df,
+            target=target,
+            stage1_data=stage1,
+            stage2_data=stage2,
+            iteration_no=iteration_no,
+            output_dir=run_output_dir
+        )
+
+        # Stage 5: Batch 2 — Experiment Registry Planning & Specifications
+        experiment_specs = plan_experiments(
+            validation_report=validation_report,
+            target=target,
+            df=df,
+            iteration_no=iteration_no,
+            output_dir=run_output_dir
+        )
+
+        # Stage 6: Batch 3 — Experiment Execution Engine
+        experiment_results = execute_all_experiments(
+            specs=experiment_specs,
+            df=df,
+            iteration_no=iteration_no,
+            output_dir=run_output_dir,
+            n_permutations=args.n_permutations,
+            n_bootstrap=args.n_bootstrap
+        )
+
+        # Stage 7: Batch 4 — Result Evaluation & Cross-Experiment Comparison
+        eval_results, cross_comparison = evaluate_all_results(
+            results=experiment_results,
+            iteration_no=iteration_no,
+            output_dir=run_output_dir
+        )
+
+        # Stage 8: Batch 5 — LLM Interpretation & Hypothesis Refinement Engine
+        interpretations, refined_hypotheses = interpret_and_refine_all(
+            eval_results=eval_results,
+            hypotheses=hypotheses,
+            iteration_no=iteration_no,
+            output_dir=run_output_dir,
+            registry=registry,
+            available_features=[c for c in df.columns if c != target]
+        )
+
+        print("\n" + "=" * 70)
+        print("PIPELINE COMPLETE")
+        print("=" * 70)
+        print("\nCurrent implemented flow:")
+        print("Processed Dataset (Cache-First) -> Stage 3 (LLM Hypotheses) -> Stage 4 (Batch 1 Validation) -> Stage 5 (Batch 2 Planning) -> Stage 6 (Batch 3 Execution) -> Stage 7 (Batch 4 Evaluation) -> Stage 8 (Batch 5 Refinement)")
+        print(f"\nRun-specific hypothesis & experiment outputs:")
+        print(f"  {run_output_dir}/")
+        print(f"  - {run_output_dir}/llm_context.json")
+        print(f"  - {run_output_dir}/generated_hypotheses.json")
+        print(f"  - {run_output_dir}/validated_hypotheses.json")
+        print(f"  - {run_output_dir}/experiment_specifications.json")
+        print(f"  - {run_output_dir}/experiment_results.json")
+        print(f"  - {run_output_dir}/experiment_evaluations.json")
+        print(f"  - {run_output_dir}/cross_experiment_comparison.json")
+        print(f"  - {run_output_dir}/llm_interpretations.json")
+        print(f"  - {run_output_dir}/refined_next_hypotheses.json")
+        print(f"  - {run_output_dir}/iterations/iter_{iteration_no}/")
+
     print(f"\nMongoDB Cluster Status: {cluster_status}")
-    if cluster.is_available():
+    if cluster.is_available() and not args.no_mongo:
         print(f"  - Inputs DB       : {DB_INPUTS}.inputs")
         print(f"  - Patterns DB     : {DB_PATTERNS}.patterns")
         print(f"  - Hypotheses DB   : {DB_HYPOTHESES}.hypotheses")
@@ -251,6 +383,8 @@ def main():
         print(f"  - Results DB      : {DB_RESULTS}.results")
         print(f"  - Evaluations DB  : {DB_EVALUATIONS}.evaluations")
         print(f"  - Refinements DB  : {DB_REFINEMENTS}.interpretations & refined_hypotheses")
+        print(f"  - Memory DB       : {DB_MEMORY}.experiments & fingerprints")
+
     print(f"\nDataset-level processed artifacts (reused across runs):")
     print(f"  {DATASET_PROCESSED_DIR}/")
     print(f"  - {DATASET_PROCESSED_DIR}/cleaned_dataset.csv")
@@ -261,18 +395,6 @@ def main():
     print(f"  - {DATASET_PROCESSED_DIR}/feature_importance.csv")
     print(f"  - {DATASET_PROCESSED_DIR}/discovered_patterns.json")
     print(f"  - {DATASET_PROCESSED_DIR}/plots/")
-    print(f"\nRun-specific hypothesis & experiment outputs:")
-    print(f"  {run_output_dir}/")
-    print(f"  - {run_output_dir}/llm_context.json")
-    print(f"  - {run_output_dir}/generated_hypotheses.json")
-    print(f"  - {run_output_dir}/validated_hypotheses.json")
-    print(f"  - {run_output_dir}/experiment_specifications.json")
-    print(f"  - {run_output_dir}/experiment_results.json")
-    print(f"  - {run_output_dir}/experiment_evaluations.json")
-    print(f"  - {run_output_dir}/cross_experiment_comparison.json")
-    print(f"  - {run_output_dir}/llm_interpretations.json")
-    print(f"  - {run_output_dir}/refined_next_hypotheses.json")
-    print(f"  - {run_output_dir}/iterations/iter_{iteration_no}/")
 
 
 if __name__ == "__main__":

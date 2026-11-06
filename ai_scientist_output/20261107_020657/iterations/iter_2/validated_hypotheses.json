@@ -1,0 +1,86 @@
+{
+    "report_id": "REP-iter2",
+    "iteration_no": 2,
+    "total": 5,
+    "validated_count": 4,
+    "needs_review_count": 1,
+    "rejected_count": 0,
+    "results": [
+        {
+            "validation_id": "VAL-iter2_H1",
+            "hypothesis_id": "iter2_H1",
+            "iteration_no": 2,
+            "hypothesis_type": "feature_combination_synergy",
+            "status": "VALIDATED",
+            "features_involved": [
+                "Glucose",
+                "BMI",
+                "Age"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-06T20:39:19.106190+00:00"
+        },
+        {
+            "validation_id": "VAL-iter2_H2",
+            "hypothesis_id": "iter2_H2",
+            "iteration_no": 2,
+            "hypothesis_type": "feature_combination_synergy",
+            "status": "VALIDATED",
+            "features_involved": [
+                "Pregnancies",
+                "Glucose",
+                "BMI"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-06T20:39:19.106752+00:00"
+        },
+        {
+            "validation_id": "VAL-iter2_H5",
+            "hypothesis_id": "iter2_H5",
+            "iteration_no": 2,
+            "hypothesis_type": "comparative_or_confounding_relationship",
+            "status": "NEEDS_REVIEW",
+            "features_involved": [
+                "Glucose",
+                "Age",
+                "BMI"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [
+                "Hypothesis suggests confounding/mediation; routed to adjusted regression verification."
+            ],
+            "timestamp": "2026-11-06T20:39:19.107180+00:00"
+        },
+        {
+            "validation_id": "VAL-iter2_H3",
+            "hypothesis_id": "iter2_H3",
+            "iteration_no": 2,
+            "hypothesis_type": "feature_interaction_moderation",
+            "status": "VALIDATED",
+            "features_involved": [
+                "Glucose",
+                "Age"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-06T20:39:19.107605+00:00"
+        },
+        {
+            "validation_id": "VAL-iter2_H4",
+            "hypothesis_id": "iter2_H4",
+            "iteration_no": 2,
+            "hypothesis_type": "feature_combination_synergy",
+            "status": "VALIDATED",
+            "features_involved": [
+                "Age",
+                "Pregnancies"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-06T20:39:19.108029+00:00"
+        }
+    ],
+    "timestamp": "2026-11-06T20:39:19.108137+00:00"
+}

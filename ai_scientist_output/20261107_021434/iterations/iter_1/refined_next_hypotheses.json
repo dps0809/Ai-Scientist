@@ -1,0 +1,110 @@
+[
+  {
+    "hypothesis_id": "iter2_H1",
+    "parent_hypothesis_id": "iter1_H3",
+    "iteration_no": 2,
+    "hypothesis": "Does adding age as a feature to the Glucose-BMI combination provide additional predictive power for Outcome?",
+    "rationale": "Derived from iter1_E1 (iter1_H3) outcome: The combination of Glucose and BMI significantly improves predictive performance for Outcome compared to either feature alone, with a combined AUC of ",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BMI",
+        "Age"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "BMI",
+      "Age"
+    ],
+    "timestamp": "2026-11-06T20:46:50.383752+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H2",
+    "parent_hypothesis_id": "iter1_H4",
+    "iteration_no": 2,
+    "hypothesis": "Does adding BMI to the Pregnancies-Glucose combination provide additional predictive power for Outcome?",
+    "rationale": "Derived from iter1_E2 (iter1_H4) outcome: The combination of Pregnancies and Glucose features provides a statistically significant improvement in predictive performance (AUC=0.8088) over the b",
+    "proposed_experiment": {
+      "features": [
+        "Pregnancies",
+        "Glucose",
+        "BMI"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Pregnancies",
+      "Glucose",
+      "BMI"
+    ],
+    "timestamp": "2026-11-06T20:46:50.408843+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H3",
+    "parent_hypothesis_id": "iter1_H5",
+    "iteration_no": 2,
+    "hypothesis": "The effect of Glucose on Outcome is stronger in younger individuals (Age < 40) compared to older individuals (Age \u2265 40, with a difference in odds ratio of at least 1.1).",
+    "rationale": "Derived from iter1_E3 (iter1_H5) outcome: The interaction between Glucose and Age significantly moderates the relationship with Outcome, with a negative interaction coefficient of -0.00075 (95",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "Age",
+        "Age_group"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "odds_ratio"
+    },
+    "features_involved": [
+      "Glucose",
+      "Age",
+      "Age_group"
+    ],
+    "timestamp": "2026-11-06T20:46:50.439835+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H4",
+    "parent_hypothesis_id": "iter1_H6",
+    "iteration_no": 2,
+    "hypothesis": "Age does not significantly confound the relationship between Pregnancies and Outcome when controlling for other potential confounders such as BMI, Blood Pressure, and Gestational Diabetes Status.",
+    "rationale": "Derived from iter1_E4 (iter1_H6) outcome: The hypothesis that Age confounds the relationship between Pregnancies and Outcome is not supported by the adjusted regression results. Adjusting for ",
+    "proposed_experiment": {
+      "features": [
+        "Pregnancies",
+        "BMI",
+        "Blood Pressure",
+        "Gestational Diabetes Status"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "adjusted_or"
+    },
+    "features_involved": [
+      "Pregnancies",
+      "BMI",
+      "Blood Pressure",
+      "Gestational Diabetes Status"
+    ],
+    "timestamp": "2026-11-06T20:46:50.446816+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H5",
+    "parent_hypothesis_id": "iter1_H1",
+    "iteration_no": 2,
+    "hypothesis": "A strong positive association exists between Hemoglobin concentration and Outcome, as indicated by a Pearson correlation coefficient of 0.65 and Spearman rank correlation of 0.63.",
+    "rationale": "Derived from iter1_E5 (iter1_H1) outcome: Glucose concentration shows a strong positive association with Outcome, with an odds ratio of 3.46 (95% CI [2.82, 4.23]) indicating that for each unit",
+    "proposed_experiment": {
+      "features": [
+        "Hemoglobin"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Hemoglobin"
+    ],
+    "timestamp": "2026-11-06T20:46:50.470915+00:00"
+  }
+]

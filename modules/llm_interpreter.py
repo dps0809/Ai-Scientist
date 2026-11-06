@@ -2,7 +2,7 @@ import os
 import sys
 import json
 import logging
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Any, Optional, Tuple, Union
 import requests
 
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):
@@ -45,7 +45,8 @@ logger = logging.getLogger(__name__)
 
 def build_interpretation_prompt(
     result: StandardExperimentResult,
-    hypothesis: Optional[HypothesisRecord] = None
+    hypothesis: Optional[HypothesisRecord] = None,
+    available_features: Optional[List[str]] = None
 ) -> str:
     """
     Builds a role-driven, evidence-based interpretation prompt for the local LLM (Batch 5.2).
@@ -63,6 +64,7 @@ def build_interpretation_prompt(
     results_str = json.dumps(result.results, indent=2)
     stat_val_str = json.dumps(result.statistical_validation, indent=2)
     eval_str = json.dumps(result.evaluation, indent=2)
+    avail_str = f"- Available Dataset Features: {', '.join(available_features)}\n" if available_features else ""
 
     prompt = f"""Role
 You are the interpretation component of an autonomous AI Scientist.
@@ -76,7 +78,7 @@ Experiment Configuration
 - Model: {model_name}
 - Features tested: {features_tested}
 - Target: {result.configuration.get('target', 'Outcome')}
-
+{avail_str}
 Experimental Results
 {results_str}
 
@@ -92,7 +94,7 @@ Instructions
 3. Identify the strongest observations.
 4. Do not invent statistical significance or causal relationships.
 5. Suggest one or more testable follow-up hypotheses.
-6. Propose a suitable next experiment.
+6. Propose a suitable next experiment using ONLY features from the Available Dataset Features. DO NOT invent or assume unmeasured features (such as Physical Activity, Diet, or HOMA-IR).
 
 Return a structured JSON response containing:
 - hypothesis_status: (must be one of 'supported_by_current_evidence', 'not_supported', 'inconclusive')
@@ -139,9 +141,66 @@ def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
     return None
 
 
+def _build_empirical_fallback(
+    result: StandardExperimentResult,
+    hypothesis: Optional[HypothesisRecord] = None,
+    available_features: Optional[List[str]] = None
+) -> LLMInterpretationRecord:
+    eval_verdict = result.evaluation.get("verdict", "inconclusive")
+    status = eval_verdict if eval_verdict in ("supported_by_current_evidence", "not_supported", "inconclusive") else "inconclusive"
+
+    interpretation = result.evaluation.get("summary", "")
+    observations = [result.evaluation.get("summary", "")]
+    limitations = [
+        "Observational retrospective dataset requires external cohort validation.",
+        "Statistical significance in sample does not guarantee out-of-cohort generalization."
+    ]
+    if result.evaluation.get("distinction_note") and result.evaluation.get("distinction_note") not in limitations:
+        limitations.append(result.evaluation["distinction_note"])
+
+    feats = result.configuration.get("features", [])
+    if result.experiment_type == "individual_dependency" and feats:
+        other = "BMI" if feats[0] == "Glucose" else "Glucose"
+        next_hypo = f"Combining {feats[0]} with {other} will provide superior predictive discrimination for {result.configuration.get('target', 'Outcome')} than {feats[0]} alone."
+        proposed_exp = {
+            "features": [feats[0], other],
+            "model": "sklearn.linear_model.LogisticRegression",
+            "metric": "ROC_AUC"
+        }
+    elif result.experiment_type == "feature_combination_synergy" and feats:
+        third = "Age" if "Age" not in feats else "Pregnancies"
+        next_hypo = f"Extending the combination [{', '.join(feats)}] with {third} will further enhance cross-validated classification performance."
+        proposed_exp = {
+            "features": feats + [third],
+            "model": "sklearn.linear_model.LogisticRegression",
+            "metric": "ROC_AUC"
+        }
+    else:
+        next_hypo = f"Multivariate model testing joint effects of {feats} controlling for physiological covariates."
+        proposed_exp = {
+            "features": feats,
+            "model": "sklearn.linear_model.LogisticRegression",
+            "metric": "ROC_AUC"
+        }
+
+    return LLMInterpretationRecord(
+        interpretation_id=f"INT-{result.experiment_id}",
+        experiment_id=result.experiment_id,
+        hypothesis_id=result.hypothesis_id,
+        iteration_no=result.iteration_no,
+        hypothesis_status=status,
+        interpretation=interpretation,
+        observations=observations,
+        limitations=limitations,
+        next_hypothesis=next_hypo,
+        proposed_experiment=proposed_exp
+    )
+
+
 def interpret_single_experiment(
     result: StandardExperimentResult,
     hypothesis: Optional[HypothesisRecord] = None,
+    available_features: Optional[List[str]] = None,
     model: str = OLLAMA_MODEL,
     url: str = OLLAMA_URL
 ) -> LLMInterpretationRecord:
@@ -150,7 +209,7 @@ def interpret_single_experiment(
     limitations, and next-hypothesis recommendation for a single experiment (Batch 5.1 & 5.2).
     Fails with ConnectionError if Ollama is unreachable.
     """
-    prompt = build_interpretation_prompt(result, hypothesis)
+    prompt = build_interpretation_prompt(result, hypothesis, available_features=available_features)
 
     is_qwen = "qwen" in model.lower()
     if is_qwen:
@@ -183,9 +242,10 @@ def interpret_single_experiment(
         else:
             raw_text = resp_str
     except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
-        raise ConnectionError(f"Could not connect to Ollama at {url}: {e}")
+        raise ConnectionError(f"Could not connect to Ollama: {e}") from e
     except Exception as e:
-        raise RuntimeError(f"Ollama interpretation request failed: {e}")
+        logger.warning(f"Ollama interpretation request failed: {e}. Proceeding with automated empirical interpretation.")
+        raw_text = ""
 
 
     parsed = _extract_json_object(raw_text)
@@ -201,9 +261,41 @@ def interpret_single_experiment(
 
     interpretation = parsed.get("interpretation") or result.evaluation.get("summary", "")
     observations = parsed.get("observations") or [result.evaluation.get("summary", "")]
-    limitations = parsed.get("limitations") or ["Requires external cohort validation."]
+    limitations = parsed.get("limitations") or [
+        "Observational retrospective dataset requires external cohort validation.",
+        "Statistical significance in sample does not guarantee out-of-cohort generalization."
+    ]
+    if result.evaluation.get("distinction_note") and result.evaluation.get("distinction_note") not in limitations:
+        limitations.append(result.evaluation["distinction_note"])
+
     next_hypo = parsed.get("next_hypothesis") or ""
     proposed_exp = parsed.get("proposed_experiment") or {}
+
+    if not next_hypo:
+        feats = result.configuration.get("features", [])
+        if result.experiment_type == "individual_dependency" and feats:
+            other = "BMI" if feats[0] == "Glucose" else "Glucose"
+            next_hypo = f"Combining {feats[0]} with {other} will provide superior predictive discrimination for {result.configuration.get('target', 'Outcome')} than {feats[0]} alone."
+            proposed_exp = {
+                "features": [feats[0], other],
+                "model": "sklearn.linear_model.LogisticRegression",
+                "metric": "ROC_AUC"
+            }
+        elif result.experiment_type == "feature_combination_synergy" and feats:
+            third = "Age" if "Age" not in feats else "Pregnancies"
+            next_hypo = f"Extending the combination [{', '.join(feats)}] with {third} will further enhance cross-validated classification performance."
+            proposed_exp = {
+                "features": feats + [third],
+                "model": "sklearn.linear_model.LogisticRegression",
+                "metric": "ROC_AUC"
+            }
+        else:
+            next_hypo = f"Multivariate model testing joint effects of {feats} controlling for physiological covariates."
+            proposed_exp = {
+                "features": feats,
+                "model": "sklearn.linear_model.LogisticRegression",
+                "metric": "ROC_AUC"
+            }
 
     interp_id = f"INT-{result.experiment_id}"
 
@@ -283,10 +375,11 @@ def register_refined_hypotheses(
 
 def interpret_and_refine_all(
     eval_results: List[StandardExperimentResult],
-    hypotheses: List[HypothesisRecord],
+    hypotheses: Union[List[HypothesisRecord], List[Dict[str, Any]], List[Any]],
     iteration_no: int = 1,
     output_dir: Optional[str] = None,
     registry: Optional[HypothesisRegistry] = None,
+    available_features: Optional[List[str]] = None,
     model: str = OLLAMA_MODEL,
     url: str = OLLAMA_URL
 ) -> Tuple[List[LLMInterpretationRecord], List[RefinedHypothesisRecord]]:
@@ -324,7 +417,21 @@ def interpret_and_refine_all(
     for r in eval_results:
         matching_h = hypo_map.get(r.hypothesis_id)
         print(f"\nPrompting LLM to interpret {r.experiment_id} ({r.hypothesis_id})...")
-        interp = interpret_single_experiment(result=r, hypothesis=matching_h, model=model, url=url)
+        try:
+            interp = interpret_single_experiment(
+                result=r,
+                hypothesis=matching_h,
+                available_features=available_features,
+                model=model,
+                url=url
+            )
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout, ConnectionError) as e:
+            logger.info(f"Ollama offline at {url}. Proceeding with automated empirical interpretation.")
+            interp = _build_empirical_fallback(
+                result=r,
+                hypothesis=matching_h,
+                available_features=available_features
+            )
         interpretations.append(interp)
         cluster_interp_docs.append(interp.model_dump())
 

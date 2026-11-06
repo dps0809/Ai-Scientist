@@ -1,0 +1,47 @@
+[
+  {
+    "experiment_id": "iter3_E2",
+    "hypothesis_id": "iter3_H2",
+    "iteration_no": 3,
+    "status": "completed",
+    "experiment_type": "feature_interaction_moderation",
+    "configuration": {
+      "features": [
+        "Pregnancies",
+        "Glucose",
+        "BMI"
+      ],
+      "target": "Outcome",
+      "model": "statsmodels.Logit",
+      "method": "interaction_regression"
+    },
+    "results": {
+      "interaction_coefficient": -0.00177,
+      "main_effects": {
+        "feat_a": 0.1304,
+        "feat_b": 0.0406
+      },
+      "bootstrap_ci": [
+        -0.00357,
+        0.0
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "likelihood_ratio_test",
+      "chi2_statistic": 3.2468,
+      "p_value": 0.07156,
+      "bootstrap_confidence_interval": [
+        -0.00357,
+        0.0
+      ]
+    },
+    "evaluation": {
+      "verdict": "not_supported",
+      "is_statistically_significant": false,
+      "practical_significance": "negligible_or_negative",
+      "uncertainty_level": "moderate",
+      "summary": "Interaction experiment iter3_E2 testing [Pregnancies * Glucose * BMI] is not_supported: LRT chi2=3.247 (p=0.0716), interaction beta=-0.00177 (Wald p=0.0687), 95% bootstrap CI [-0.00357, 0.00000]."
+    },
+    "timestamp": "2026-11-06T20:40:28.837841+00:00"
+  }
+]

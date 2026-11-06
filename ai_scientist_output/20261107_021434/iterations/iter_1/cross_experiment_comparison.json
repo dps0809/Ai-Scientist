@@ -1,0 +1,48 @@
+{
+  "comparison_id": "COMP-iter1",
+  "iteration_no": 1,
+  "individual_baselines": {
+    "Glucose": 0.7905
+  },
+  "combination_scores": {
+    "Glucose + BMI": 0.8178,
+    "Pregnancies + Glucose": 0.8088
+  },
+  "synergy_gains": {
+    "Glucose + BMI": 0.0274,
+    "Pregnancies + Glucose": 0.0183
+  },
+  "ranking": [
+    {
+      "experiment_id": "iter1_E1",
+      "name": "Glucose + BMI",
+      "type": "feature_combination",
+      "score": 0.8178,
+      "gain": 0.0274,
+      "p_value": 0.0026,
+      "rank": 1
+    },
+    {
+      "experiment_id": "iter1_E2",
+      "name": "Pregnancies + Glucose",
+      "type": "feature_combination",
+      "score": 0.8088,
+      "gain": 0.0183,
+      "p_value": 0.029,
+      "rank": 2
+    },
+    {
+      "experiment_id": "iter1_E5",
+      "name": "Glucose",
+      "type": "individual_baseline",
+      "score": 0.7905,
+      "rank": 3
+    }
+  ],
+  "summary_findings": [
+    "Top individual predictive baseline: Glucose (ROC-AUC=0.7905).",
+    "Top combination model: Glucose + BMI (ROC-AUC=0.8178, gain=+0.0274).",
+    "Feature combination 'Glucose + BMI' outperforms all individual predictor baselines."
+  ],
+  "timestamp": "2026-11-06T20:45:23.273345+00:00"
+}

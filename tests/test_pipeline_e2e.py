@@ -15,27 +15,16 @@ from modules.mongo_cluster import MongoClusterManager
 from modules.schemas import ValidationStatus
 
 def test_pipeline_e2e_integration(tmp_path):
-    hypotheses_path = os.path.join(OUTPUT_DIR, "generated_hypotheses.json")
-    if os.path.exists(hypotheses_path):
-        with open(hypotheses_path, "r") as f:
-            hypotheses = json.load(f)
-    else:
-        # Fallback to MongoDB if cluster has saved hypotheses, or standard fixture
-        cluster = MongoClusterManager()
-        db_hyps = cluster.query_documents("ai_scientist_hypotheses", "hypotheses") if cluster.is_available() else []
-        if len(db_hyps) >= 5:
-            hypotheses = db_hyps
-        else:
-            hypotheses = [
-                {
-                    "hypothesis_id": "iter1_H1",
-                    "hypothesis_type": "individual_dependency",
-                    "features_involved": ["Glucose"],
-                    "statement": "Higher glucose leads to higher outcome.",
-                    "rationale": "High Pearson correlation with Outcome.",
-                    "evidence": {"correlation": 0.4665},
-                    "proposed_experiment": "Logistic regression on Glucose."
-                },
+    hypotheses = [
+        {
+            "hypothesis_id": "iter1_H1",
+            "hypothesis_type": "individual_dependency",
+            "features_involved": ["Glucose"],
+            "statement": "Higher glucose leads to higher outcome.",
+            "rationale": "High Pearson correlation with Outcome.",
+            "evidence": {"correlation": 0.4665},
+            "proposed_experiment": "Logistic regression on Glucose."
+        },
                 {
                     "hypothesis_id": "iter1_H2",
                     "hypothesis_type": "individual_dependency",
@@ -216,6 +205,33 @@ def test_pipeline_e2e_integration(tmp_path):
         assert len(comp_docs) >= 1
         assert len(interp_docs) >= len(interps)
         assert len(ref_docs) >= len(next_hyps)
+
+    # Test Batch 6 Autonomous Loop & Batch 7 Experiment Memory Orchestration
+    from modules.experiment_controller import run_autonomous_scientist
+    from modules.schemas import StoppingConditionConfig
+    from modules.config import DB_MEMORY
+
+    monkeypatch.setattr(requests, "post", monkeypatch_post)
+    try:
+        report_md, report_data = run_autonomous_scientist(
+            initial_hypotheses=hypotheses[:2],
+            df=df,
+            target="Outcome",
+            config=StoppingConditionConfig(max_experiments=2, max_iterations=1),
+            output_dir=out_dir,
+            n_permutations=10,
+            n_bootstrap=10,
+            sync_mongo=False
+        )
+    finally:
+        monkeypatch.undo()
+
+    assert os.path.exists(os.path.join(out_dir, "final_scientific_report.md"))
+    assert os.path.exists(os.path.join(out_dir, "final_scientific_report.json"))
+    assert os.path.exists(os.path.join(out_dir, "experiment_memory.json"))
+    assert report_data["total_experiments"] >= 1
+    assert "Autonomous AI Scientist" in report_md
+
 
 
 

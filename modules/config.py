@@ -33,6 +33,7 @@ DB_EXPERIMENTS = "ai_scientist_experiments"
 DB_RESULTS = "ai_scientist_results"
 DB_EVALUATIONS = "ai_scientist_evaluations"
 DB_REFINEMENTS = "ai_scientist_refinements"
+DB_MEMORY = "ai_scientist_memory"
 
 VALIDATED_HYPOTHESES_PATH = os.path.join(OUTPUT_DIR, "validated_hypotheses.json")
 EXPERIMENT_SPECS_PATH = os.path.join(OUTPUT_DIR, "experiment_specifications.json")
@@ -42,6 +43,14 @@ CROSS_EXPERIMENT_COMPARISON_PATH = os.path.join(OUTPUT_DIR, "cross_experiment_co
 LLM_INTERPRETATIONS_PATH = os.path.join(OUTPUT_DIR, "llm_interpretations.json")
 REFINED_HYPOTHESES_PATH = os.path.join(OUTPUT_DIR, "refined_next_hypotheses.json")
 HYPOTHESIS_REGISTRY_PATH = os.path.join(OUTPUT_DIR, "hypothesis_registry.json")
+AUTONOMOUS_STATE_PATH = os.path.join(OUTPUT_DIR, "autonomous_state.json")
+FINAL_REPORT_MD_PATH = os.path.join(OUTPUT_DIR, "final_scientific_report.md")
+FINAL_REPORT_JSON_PATH = os.path.join(OUTPUT_DIR, "final_scientific_report.json")
+
+# Autonomous Loop Budgets (Batch 6.4)
+MAX_AUTONOMOUS_EXPERIMENTS = 15
+MAX_AUTONOMOUS_ITERATIONS = 3
+MAX_RUNTIME_MINUTES = 20
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(DATASET_PROCESSED_DIR, exist_ok=True)

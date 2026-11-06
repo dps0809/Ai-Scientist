@@ -47,8 +47,9 @@ def _evaluate_individual_dependency(result: ExperimentResultRecord) -> StandardE
     ci = metrics.get("confidence_interval", [1.0, 1.0])
     p_val = metrics.get("p_value", 1.0)
     perm_p = metrics.get("permutation_p_value", p_val)
-    mean_auc = metrics.get("mean_auc", 0.5)
-    std_auc = metrics.get("std_auc", 0.0)
+    details = result.details
+    mean_auc = metrics.get("mean_auc") if metrics.get("mean_auc") is not None else details.get("mean_auc", 0.5)
+    std_auc = metrics.get("std_auc") if metrics.get("std_auc") is not None else details.get("std_auc", 0.0)
 
     # Check whether confidence interval strictly excludes 1.0
     ci_excludes_null = (ci[0] > 1.0 or ci[1] < 1.0)

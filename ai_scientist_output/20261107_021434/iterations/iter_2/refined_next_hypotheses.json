@@ -1,0 +1,46 @@
+[
+  {
+    "hypothesis_id": "iter3_H1",
+    "parent_hypothesis_id": "iter2_H1",
+    "iteration_no": 3,
+    "hypothesis": "Does adding age as a feature to the Glucose-BMI combination improve predictive performance when using a non-linear model (e.g., Random Forest) for Outcome?",
+    "rationale": "Derived from iter2_E1 (iter2_H1) outcome: Adding age to the Glucose-BMI combination provides statistically significant predictive gain for Outcome, as evidenced by a combined AUC of 0.8178 (vs",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BMI",
+        "Age"
+      ],
+      "model": "sklearn.ensemble.RandomForestClassifier",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "BMI",
+      "Age"
+    ],
+    "timestamp": "2026-11-06T20:47:25.729816+00:00"
+  },
+  {
+    "hypothesis_id": "iter3_H2",
+    "parent_hypothesis_id": "iter2_H2",
+    "iteration_no": 3,
+    "hypothesis": "Does BMI interact with Glucose to provide additional predictive power beyond Pregnancies in the context of diabetes risk stratification?",
+    "rationale": "Derived from iter2_E2 (iter2_H2) outcome: Adding BMI to the Pregnancies-Glucose combination provides a statistically significant predictive gain (AUC increase of 0.0183) for Outcome, with the ",
+    "proposed_experiment": {
+      "features": [
+        "Pregnancies",
+        "Glucose",
+        "BMI"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Pregnancies",
+      "Glucose",
+      "BMI"
+    ],
+    "timestamp": "2026-11-06T20:47:25.729859+00:00"
+  }
+]

@@ -1,0 +1,26 @@
+{
+    "report_id": "REP-iter4",
+    "iteration_no": 4,
+    "total": 1,
+    "validated_count": 1,
+    "needs_review_count": 0,
+    "rejected_count": 0,
+    "results": [
+        {
+            "validation_id": "VAL-iter4_H1",
+            "hypothesis_id": "iter4_H1",
+            "iteration_no": 4,
+            "hypothesis_type": "feature_interaction_moderation",
+            "status": "VALIDATED",
+            "features_involved": [
+                "Pregnancies",
+                "Age",
+                "BMI"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-06T20:47:43.452941+00:00"
+        }
+    ],
+    "timestamp": "2026-11-06T20:47:43.453136+00:00"
+}

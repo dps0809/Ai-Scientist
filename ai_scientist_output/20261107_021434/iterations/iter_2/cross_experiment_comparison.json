@@ -1,0 +1,38 @@
+{
+  "comparison_id": "COMP-iter2",
+  "iteration_no": 2,
+  "individual_baselines": {},
+  "combination_scores": {
+    "Glucose + BMI + Age": 0.8178,
+    "Pregnancies + Glucose + BMI": 0.8088
+  },
+  "synergy_gains": {
+    "Glucose + BMI + Age": 0.0274,
+    "Pregnancies + Glucose + BMI": 0.0183
+  },
+  "ranking": [
+    {
+      "experiment_id": "iter2_E1",
+      "name": "Glucose + BMI + Age",
+      "type": "feature_combination",
+      "score": 0.8178,
+      "gain": 0.0274,
+      "p_value": 0.0026,
+      "rank": 1
+    },
+    {
+      "experiment_id": "iter2_E2",
+      "name": "Pregnancies + Glucose + BMI",
+      "type": "feature_combination",
+      "score": 0.8088,
+      "gain": 0.0183,
+      "p_value": 0.029,
+      "rank": 2
+    }
+  ],
+  "summary_findings": [
+    "Top combination model: Glucose + BMI + Age (ROC-AUC=0.8178, gain=+0.0274).",
+    "Feature combination 'Glucose + BMI + Age' outperforms all individual predictor baselines."
+  ],
+  "timestamp": "2026-11-06T20:46:50.819030+00:00"
+}

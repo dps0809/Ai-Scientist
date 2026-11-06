@@ -1,0 +1,24 @@
+[
+  {
+    "hypothesis_id": "iter4_H1",
+    "parent_hypothesis_id": "iter3_H2",
+    "iteration_no": 4,
+    "hypothesis": "Does BMI interact with Age to provide additional predictive power beyond Pregnancies in the context of diabetes risk stratification?",
+    "rationale": "Derived from iter3_E2 (iter3_H2) outcome: The interaction between BMI and Glucose does not provide statistically significant additional predictive power for diabetes risk stratification beyond",
+    "proposed_experiment": {
+      "features": [
+        "Pregnancies",
+        "Age",
+        "BMI"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Pregnancies",
+      "Age",
+      "BMI"
+    ],
+    "timestamp": "2026-11-06T20:47:43.398734+00:00"
+  }
+]

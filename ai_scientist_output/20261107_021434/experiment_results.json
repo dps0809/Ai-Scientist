@@ -1,0 +1,39 @@
+[
+    {
+        "result_id": "RES-iter4_E1",
+        "experiment_id": "iter4_E1",
+        "hypothesis_id": "iter4_H1",
+        "iteration_no": 4,
+        "experiment_type": "feature_interaction_moderation",
+        "method": "interaction_regression",
+        "model_type": "statsmodels.Logit",
+        "features": [
+            "Pregnancies",
+            "Age",
+            "BMI"
+        ],
+        "target": "Outcome",
+        "metrics": {
+            "interaction_coefficient": -0.0068,
+            "interaction_p_value": 0.00322,
+            "lrt_statistic": 8.7631,
+            "lrt_p_value": 0.00307,
+            "bootstrap_ci": [
+                -0.01187,
+                -0.00226
+            ],
+            "main_effect_a_coef": 0.1192,
+            "main_effect_b_coef": 0.0304
+        },
+        "details": {
+            "log_likelihood_additive": -470.5491,
+            "log_likelihood_interaction": -466.1675,
+            "degrees_of_freedom": 1,
+            "bootstrap_samples_collected": 500,
+            "sample_size": 768
+        },
+        "verdict": "SUPPORTED",
+        "summary": "Interaction experiment iter4_E1 testing [Pregnancies * Age] is supported: significant moderation detected (LRT chi2=8.763, p=0.0031; interaction beta=-0.00680, p=0.0032, 95% bootstrap CI [-0.01187, -0.00226]).",
+        "timestamp": "2026-11-06T20:47:44.695093+00:00"
+    }
+]

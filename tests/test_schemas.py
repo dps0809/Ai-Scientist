@@ -193,3 +193,57 @@ def test_evaluation_and_refinement_schemas():
     assert refined_rec.hypothesis_id == "iter2_H1"
     assert refined_rec.parent_hypothesis_id == "iter1_H3"
 
+
+def test_autonomous_loop_and_memory_schemas():
+    from modules.schemas import (
+        StoppingConditionConfig,
+        AutonomousStateRecord,
+        NormalizedExperimentFingerprint,
+        FinalScientificReportRecord,
+        RefinedHypothesisRecord,
+        HypothesisRecord
+    )
+    stop_cfg = StoppingConditionConfig(
+        max_experiments=15,
+        max_iterations=3,
+        max_runtime_minutes=20,
+        no_improvement_tolerance=3,
+        target_roc_auc=0.85
+    )
+    assert stop_cfg.max_experiments == 15
+
+    fp = NormalizedExperimentFingerprint(
+        features=["Glucose", "BMI"],
+        model="LogisticRegression",
+        target="Outcome",
+        metric="ROC_AUC"
+    )
+    assert fp.fingerprint == "BMI,Glucose|LogisticRegression|Outcome|ROC_AUC"
+
+    state = AutonomousStateRecord(
+        run_id="RUN-20261106-001",
+        experiments_completed=4,
+        iterations_completed=1,
+        best_score=0.8178,
+        best_features=["Glucose", "BMI"],
+        best_model="LogisticRegression",
+        status="RUNNING"
+    )
+    assert state.experiments_completed == 4
+
+    refined = RefinedHypothesisRecord(
+        hypothesis_id="iter2_H1",
+        parent_hypothesis_id="iter1_H1",
+        iteration_no=2,
+        hypothesis="Glucose + Age interact non-linearly.",
+        rationale="Strong interaction seen in iter1.",
+        proposed_experiment={"features": ["Glucose", "Age"], "model": "statsmodels.Logit", "metric": "AUC"},
+        features_involved=["Glucose", "Age"]
+    )
+    parent_adapted = refined.to_hypothesis_record()
+    assert isinstance(parent_adapted, HypothesisRecord)
+    assert parent_adapted.hypothesis_id == "iter2_H1"
+    assert parent_adapted.features_involved == ["Glucose", "Age"]
+    assert parent_adapted.iteration_no == 2
+
+

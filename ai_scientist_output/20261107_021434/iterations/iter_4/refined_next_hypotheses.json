@@ -1,0 +1,26 @@
+[
+  {
+    "hypothesis_id": "iter5_H1",
+    "parent_hypothesis_id": "iter4_H1",
+    "iteration_no": 5,
+    "hypothesis": "Does BMI interact with Physical Activity Level to provide additional predictive power beyond Pregnancies in the context of diabetes risk stratification?",
+    "rationale": "Derived from iter4_E1 (iter4_H1) outcome: The interaction between BMI and Age provides statistically significant additional predictive power for diabetes risk stratification beyond Pregnancies",
+    "proposed_experiment": {
+      "features": [
+        "Pregnancies",
+        "Age",
+        "BMI",
+        "Physical Activity Level"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Pregnancies",
+      "Age",
+      "BMI",
+      "Physical Activity Level"
+    ],
+    "timestamp": "2026-11-06T20:48:01.366560+00:00"
+  }
+]

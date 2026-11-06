@@ -1,0 +1,41 @@
+{
+    "report_id": "REP-iter3",
+    "iteration_no": 3,
+    "total": 2,
+    "validated_count": 2,
+    "needs_review_count": 0,
+    "rejected_count": 0,
+    "results": [
+        {
+            "validation_id": "VAL-iter3_H1",
+            "hypothesis_id": "iter3_H1",
+            "iteration_no": 3,
+            "hypothesis_type": "feature_combination_synergy",
+            "status": "VALIDATED",
+            "features_involved": [
+                "Glucose",
+                "BMI",
+                "Age"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-06T20:40:27.506486+00:00"
+        },
+        {
+            "validation_id": "VAL-iter3_H2",
+            "hypothesis_id": "iter3_H2",
+            "iteration_no": 3,
+            "hypothesis_type": "feature_interaction_moderation",
+            "status": "VALIDATED",
+            "features_involved": [
+                "Pregnancies",
+                "Glucose",
+                "BMI"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-06T20:40:27.507048+00:00"
+        }
+    ],
+    "timestamp": "2026-11-06T20:40:27.507240+00:00"
+}

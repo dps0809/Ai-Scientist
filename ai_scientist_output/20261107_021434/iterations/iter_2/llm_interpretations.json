@@ -1,0 +1,68 @@
+[
+  {
+    "interpretation_id": "INT-iter2_E1",
+    "experiment_id": "iter2_E1",
+    "hypothesis_id": "iter2_H1",
+    "iteration_no": 2,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "Adding age to the Glucose-BMI combination provides statistically significant predictive gain for Outcome, as evidenced by a combined AUC of 0.8178 (vs. best individual feature Glucose AUC of 0.7905, gain=+0.0274). This gain is statistically significant (p=0.0026) and represents feature combination synergy rather than multiplicative interaction.",
+    "observations": [
+      "Combined AUC for Glucose, BMI, and Age is 0.8178",
+      "Best individual feature AUC is Glucose at 0.7905",
+      "Predictive gain from adding Age is +0.0274",
+      "Paired t-test p-value=0.0026 (statistically significant)",
+      "95% confidence interval for gain: [0.0124, 0.0424]"
+    ],
+    "limitations": [
+      "Results are based on paired cross-validation (5 folds) without adjustment for multiple comparisons",
+      "Does not establish causal relationship between features and Outcome",
+      "Limited to logistic regression model (linear assumptions may not capture complex relationships)",
+      "No information on dataset size or feature distributions",
+      "Feature combination synergy represents predictive gain, distinct from multiplicative interaction."
+    ],
+    "next_hypothesis": "Does adding age as a feature to the Glucose-BMI combination improve predictive performance when using a non-linear model (e.g., Random Forest) for Outcome?",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BMI",
+        "Age"
+      ],
+      "model": "sklearn.ensemble.RandomForestClassifier",
+      "metric": "AUC"
+    },
+    "timestamp": "2026-11-06T20:47:08.391788+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter2_E2",
+    "experiment_id": "iter2_E2",
+    "hypothesis_id": "iter2_H2",
+    "iteration_no": 2,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "Adding BMI to the Pregnancies-Glucose combination provides a statistically significant predictive gain (AUC increase of 0.0183) for Outcome, with the combined model achieving an AUC of 0.8088 versus the best individual feature (Glucose) at 0.7905. This synergy effect is distinct from multiplicative interaction and is statistically significant (p=0.029) with moderate uncertainty.",
+    "observations": [
+      "Combined AUC for Pregnancies-Glucose-BMI: 0.8088",
+      "Best individual feature AUC: Glucose (0.7905)",
+      "Predictive gain: +0.0183",
+      "Paired t-test p-value: 0.029",
+      "95% confidence interval for gain: [0.0033, 0.0333]"
+    ],
+    "limitations": [
+      "The experiment uses paired cross-validation but does not account for feature interactions beyond linear combination",
+      "No causal relationship established between BMI, Pregnancies, Glucose, and Outcome",
+      "Dataset may have limited representativeness for general populations",
+      "AUC is a probabilistic metric that does not directly indicate clinical impact",
+      "Feature combination synergy represents predictive gain, distinct from multiplicative interaction."
+    ],
+    "next_hypothesis": "Does BMI interact with Glucose to provide additional predictive power beyond Pregnancies in the context of diabetes risk stratification?",
+    "proposed_experiment": {
+      "features": [
+        "Pregnancies",
+        "Glucose",
+        "BMI"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "AUC"
+    },
+    "timestamp": "2026-11-06T20:47:25.728636+00:00"
+  }
+]

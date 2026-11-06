@@ -1,3 +1,4 @@
+import json
 from enum import Enum
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timezone
@@ -155,5 +156,102 @@ class RefinedHypothesisRecord(BaseModel):
     proposed_experiment: Dict[str, Any] = Field(default_factory=dict)
     features_involved: List[str] = Field(default_factory=list)
     timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+    def to_hypothesis_record(self) -> HypothesisRecord:
+        """
+        Adapts a refined child hypothesis into a standard HypothesisRecord for multi-iteration loops.
+        """
+        if len(self.features_involved) <= 1:
+            h_type = "individual_dependency"
+        elif any("*" in f or "interact" in self.hypothesis.lower() for f in self.features_involved):
+            h_type = "feature_interaction_moderation"
+        elif "adjust" in self.hypothesis.lower() or "confound" in self.hypothesis.lower():
+            h_type = "comparative_or_confounding_relationship"
+        else:
+            h_type = "feature_combination_synergy"
+
+        exp_str = json.dumps(self.proposed_experiment) if isinstance(self.proposed_experiment, dict) else str(self.proposed_experiment)
+
+        return HypothesisRecord(
+            hypothesis_id=self.hypothesis_id,
+            iteration_no=self.iteration_no,
+            hypothesis_type=h_type,
+            hypothesis=self.hypothesis,
+            features_involved=self.features_involved,
+            evidence_from_data=self.rationale,
+            proposed_experiment=exp_str
+        )
+
+    @property
+    def features(self) -> List[str]:
+        return self.features_involved
+
+
+class StoppingConditionConfig(BaseModel):
+    """
+    Configuration for autonomous loop budget limits and termination criteria (Batch 6.4).
+    """
+    max_experiments: int = 15
+    max_iterations: int = 3
+    max_runtime_minutes: int = 20
+    no_improvement_tolerance: int = 3
+    target_roc_auc: float = 0.85
+    min_meaningful_gain: float = 0.005
+
+
+class NormalizedExperimentFingerprint(BaseModel):
+    """
+    Normalized experiment signature used to strictly prevent duplicate executions (Batch 6.3).
+    """
+    features: List[str]
+    model: str
+    target: str = "Outcome"
+    metric: str = "ROC_AUC"
+    fingerprint: Optional[str] = None
+
+    def model_post_init(self, __context: Any) -> None:
+        if self.fingerprint is None:
+            sorted_feats = ",".join(sorted(f.strip() for f in self.features))
+            self.fingerprint = f"{sorted_feats}|{self.model.strip()}|{self.target.strip()}|{self.metric.strip()}"
+
+
+class AutonomousStateRecord(BaseModel):
+    """
+    Persistent research state tracking progress across the autonomous loop.
+    """
+    run_id: str
+    experiments_completed: int = 0
+    iterations_completed: int = 0
+    consecutive_no_improvement: int = 0
+    best_score: float = 0.0
+    best_features: List[str] = Field(default_factory=list)
+    best_model: str = ""
+    history: List[Dict[str, Any]] = Field(default_factory=list)
+    status: str = "INITIALIZED"  # RUNNING, STOPPED, COMPLETED, FAILED
+    stopping_reason: Optional[str] = None
+    start_time: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    last_updated: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+
+class FinalScientificReportRecord(BaseModel):
+    """
+    Publication-grade final scientific research report (Batch 6 / Section 8).
+    """
+    report_id: str
+    title: str = "Autonomous AI Scientist Final Research Report"
+    dataset_name: str = "diabetes.csv"
+    total_experiments: int = 0
+    total_iterations: int = 0
+    best_roc_auc: float = 0.0
+    best_feature_combination: List[str] = Field(default_factory=list)
+    best_model: str = ""
+    confirmed_hypotheses: List[Dict[str, Any]] = Field(default_factory=list)
+    refuted_hypotheses: List[Dict[str, Any]] = Field(default_factory=list)
+    lineage_tree: List[Dict[str, Any]] = Field(default_factory=list)
+    cross_baseline_rankings: List[Dict[str, Any]] = Field(default_factory=list)
+    limitations: List[str] = Field(default_factory=list)
+    conclusions: List[str] = Field(default_factory=list)
+    timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
 
 

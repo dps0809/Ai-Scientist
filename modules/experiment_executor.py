@@ -185,6 +185,8 @@ def run_individual_dependency_experiment(
             "confidence_interval": [round(ci_lower, 4), round(ci_upper, 4)],
             "p_value": round(p_value, 5),
             "permutation_p_value": round(perm_p_value, 5),
+            "mean_auc": round(mean_auc, 4),
+            "std_auc": round(std_auc, 4),
         },
         details={
             "fold_auc": fold_aucs,

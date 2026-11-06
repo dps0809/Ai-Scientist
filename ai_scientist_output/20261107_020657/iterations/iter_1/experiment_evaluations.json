@@ -1,0 +1,266 @@
+[
+  {
+    "experiment_id": "iter1_E1",
+    "hypothesis_id": "iter1_H3",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "feature_combination_synergy",
+    "configuration": {
+      "features": [
+        "Glucose",
+        "BMI"
+      ],
+      "target": "Outcome",
+      "model": "sklearn.linear_model.LogisticRegression",
+      "method": "paired_model_comparison"
+    },
+    "results": {
+      "individual_auc": {
+        "Glucose": 0.7905,
+        "BMI": 0.6864
+      },
+      "combined_auc": 0.8178,
+      "gain": 0.0274,
+      "best_individual_feature": "Glucose",
+      "fold_scores": {
+        "Glucose": [
+          0.7865,
+          0.8068,
+          0.829,
+          0.7635,
+          0.7666
+        ],
+        "BMI": [
+          0.6727,
+          0.7438,
+          0.679,
+          0.6782,
+          0.6582
+        ],
+        "Glucose_BMI": [
+          0.8183,
+          0.8461,
+          0.8584,
+          0.7815,
+          0.7849
+        ]
+      }
+    },
+    "statistical_validation": {
+      "comparison_method": "paired_cross_validation",
+      "confidence_interval": [
+        0.0124,
+        0.0424
+      ],
+      "p_value": 0.0026,
+      "paired_t_stat": 6.6738
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "meaningful",
+      "uncertainty_level": "low",
+      "distinction_note": "Feature combination synergy represents predictive gain, distinct from multiplicative interaction.",
+      "summary": "Synergy experiment iter1_E1 testing [Glucose + BMI] is supported_by_current_evidence: combined AUC=0.8178 vs best individual (Glucose) AUC=0.7905 (gain=+0.0274, paired t p=0.0026). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction."
+    },
+    "timestamp": "2026-11-06T20:37:51.686886+00:00"
+  },
+  {
+    "experiment_id": "iter1_E2",
+    "hypothesis_id": "iter1_H4",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "feature_combination_synergy",
+    "configuration": {
+      "features": [
+        "Pregnancies",
+        "Glucose"
+      ],
+      "target": "Outcome",
+      "model": "sklearn.linear_model.LogisticRegression",
+      "method": "paired_model_comparison"
+    },
+    "results": {
+      "individual_auc": {
+        "Pregnancies": 0.62,
+        "Glucose": 0.7905
+      },
+      "combined_auc": 0.8088,
+      "gain": 0.0183,
+      "best_individual_feature": "Glucose",
+      "fold_scores": {
+        "Pregnancies": [
+          0.6009,
+          0.6124,
+          0.5656,
+          0.645,
+          0.676
+        ],
+        "Glucose": [
+          0.7865,
+          0.8068,
+          0.829,
+          0.7635,
+          0.7666
+        ],
+        "Pregnancies_Glucose": [
+          0.7965,
+          0.817,
+          0.8429,
+          0.803,
+          0.7846
+        ]
+      }
+    },
+    "statistical_validation": {
+      "comparison_method": "paired_cross_validation",
+      "confidence_interval": [
+        0.0033,
+        0.0333
+      ],
+      "p_value": 0.029,
+      "paired_t_stat": 3.3354
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "marginal",
+      "uncertainty_level": "moderate",
+      "distinction_note": "Feature combination synergy represents predictive gain, distinct from multiplicative interaction.",
+      "summary": "Synergy experiment iter1_E2 testing [Pregnancies + Glucose] is supported_by_current_evidence: combined AUC=0.8088 vs best individual (Glucose) AUC=0.7905 (gain=+0.0183, paired t p=0.0290). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction."
+    },
+    "timestamp": "2026-11-06T20:37:51.687166+00:00"
+  },
+  {
+    "experiment_id": "iter1_E3",
+    "hypothesis_id": "iter1_H5",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "feature_interaction_moderation",
+    "configuration": {
+      "features": [
+        "Glucose",
+        "Age"
+      ],
+      "target": "Outcome",
+      "model": "statsmodels.Logit",
+      "method": "interaction_regression"
+    },
+    "results": {
+      "interaction_coefficient": -0.00075,
+      "main_effects": {
+        "feat_a": 0.0403,
+        "feat_b": 0.0289
+      },
+      "bootstrap_ci": [
+        -0.00129,
+        -0.00019
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "likelihood_ratio_test",
+      "chi2_statistic": 7.6316,
+      "p_value": 0.00574,
+      "bootstrap_confidence_interval": [
+        -0.00129,
+        -0.00019
+      ]
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "meaningful",
+      "uncertainty_level": "low",
+      "summary": "Interaction experiment iter1_E3 testing [Glucose * Age] is supported_by_current_evidence: LRT chi2=7.632 (p=0.0057), interaction beta=-0.00075 (Wald p=0.0044), 95% bootstrap CI [-0.00129, -0.00019]."
+    },
+    "timestamp": "2026-11-06T20:37:51.687451+00:00"
+  },
+  {
+    "experiment_id": "iter1_E4",
+    "hypothesis_id": "iter1_H6",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "comparative_or_confounding_relationship",
+    "configuration": {
+      "features": [
+        "Pregnancies",
+        "Age"
+      ],
+      "target": "Outcome",
+      "model": "statsmodels.Logit",
+      "method": "adjusted_regression"
+    },
+    "results": {
+      "unadjusted_coefficient": 0.4622,
+      "adjusted_coefficient": 0.2775,
+      "delta_coefficient": -0.1847,
+      "percent_change": -39.96,
+      "unadjusted_or": 1.5875,
+      "adjusted_or": 1.3198,
+      "covariate_or": 1.4172
+    },
+    "statistical_validation": {
+      "comparison_method": "adjusted_logistic_regression",
+      "delta_threshold_percent": 10.0,
+      "covariate_p_value": 1.0
+    },
+    "evaluation": {
+      "verdict": "not_supported",
+      "is_statistically_significant": false,
+      "practical_significance": "negligible_or_negative",
+      "uncertainty_level": "moderate",
+      "causal_limitations": "Observational regression adjustment identifies statistical coefficient shifts only. It does not establish causal mediation or directionality without formal temporality and unmeasured confounding assumptions.",
+      "summary": "Adjusted regression experiment iter1_E4 testing [Pregnancies adjusted for Age] is not_supported: unadjusted OR=1.59 -> adjusted OR=1.32 (delta=-40.0%, covariate p=1.0000)."
+    },
+    "timestamp": "2026-11-06T20:37:51.687645+00:00"
+  },
+  {
+    "experiment_id": "iter1_E5",
+    "hypothesis_id": "iter1_H1",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "individual_dependency",
+    "configuration": {
+      "features": [
+        "Glucose"
+      ],
+      "target": "Outcome",
+      "model": "statsmodels.Logit",
+      "method": "logistic_regression"
+    },
+    "results": {
+      "coefficient": 1.24,
+      "odds_ratio": 3.4555,
+      "confidence_interval": [
+        2.8227,
+        4.2302
+      ],
+      "mean_auc": 0.7905,
+      "std_auc": 0.0248,
+      "fold_auc": [
+        0.7865,
+        0.8068,
+        0.829,
+        0.7635,
+        0.7666
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "inferential_logistic_regression",
+      "confidence_interval": [
+        2.8227,
+        4.2302
+      ],
+      "p_value": 0.0,
+      "permutation_p_value": 0.0
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "meaningful",
+      "uncertainty_level": "low",
+      "summary": "Experiment iter1_E5 testing dependency of 'Glucose' on 'Outcome' is supported_by_current_evidence: OR=3.46 (95% CI [2.82, 4.23]), parametric p=0.0000, permutation p=0.0000, 5-fold CV AUC=0.790 +/- 0.025."
+    },
+    "timestamp": "2026-11-06T20:37:51.687844+00:00"
+  }
+]

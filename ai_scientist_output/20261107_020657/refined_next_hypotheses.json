@@ -1,0 +1,92 @@
+[
+  {
+    "hypothesis_id": "iter3_H1",
+    "parent_hypothesis_id": "iter2_H1",
+    "iteration_no": 3,
+    "hypothesis": "Adding Age to the Glucose-BMI combination provides additional predictive power beyond the current synergy, with a synergy gain of at least 0.015",
+    "rationale": "Derived from iter2_E1 (iter2_H1) outcome: The combination of Glucose, BMI, and Age demonstrates a statistically significant predictive gain over the best individual feature (Glucose) with a sy",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BMI",
+        "Age"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "BMI",
+      "Age"
+    ],
+    "timestamp": "2026-11-06T20:40:27.365311+00:00"
+  },
+  {
+    "hypothesis_id": "iter3_H2",
+    "parent_hypothesis_id": "iter2_H2",
+    "iteration_no": 3,
+    "hypothesis": "Does BMI exhibit a synergistic interaction with Glucose when combined with Pregnancies in predicting Outcome, beyond additive effects?",
+    "rationale": "Derived from iter2_E2 (iter2_H2) outcome: Adding BMI to the Pregnancies-Glucose feature combination provides a statistically significant predictive improvement for Outcome, with a combined AUC",
+    "proposed_experiment": {
+      "features": [
+        "Pregnancies",
+        "Glucose",
+        "BMI"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Pregnancies",
+      "Glucose",
+      "BMI"
+    ],
+    "timestamp": "2026-11-06T20:40:27.365368+00:00"
+  },
+  {
+    "hypothesis_id": "iter3_H3",
+    "parent_hypothesis_id": "iter2_H5",
+    "iteration_no": 3,
+    "hypothesis": "Glucose concentration has a stronger positive association with Outcome when adjusted for age, BMI, and time since diagnosis (to account for temporal relationships).",
+    "rationale": "Derived from iter2_E3 (iter2_H5) outcome: The hypothesis that glucose concentration has a stronger positive association with Outcome when adjusted for age and BMI is not supported by the curre",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "Age",
+        "BMI",
+        "Time_since_diagnosis"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "adjusted_OR"
+    },
+    "features_involved": [
+      "Glucose",
+      "Age",
+      "BMI",
+      "Time_since_diagnosis"
+    ],
+    "timestamp": "2026-11-06T20:40:27.365387+00:00"
+  },
+  {
+    "hypothesis_id": "iter3_H4",
+    "parent_hypothesis_id": "iter2_H4",
+    "iteration_no": 3,
+    "hypothesis": "Age has a multiplicative interaction effect with pregnancies on outcome, which can be tested by including an interaction term (Age * Pregnancies) in the logistic regression model and examining the significance of the interaction coefficient.",
+    "rationale": "Derived from iter2_E5 (iter2_H4) outcome: The hypothesis that age has a direct causal effect on outcome independent of pregnancies is not supported by the experimental results. The combined mo",
+    "proposed_experiment": {
+      "features": [
+        "Age",
+        "Pregnancies",
+        "Age_Pregnancies"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "AUC"
+    },
+    "features_involved": [
+      "Age",
+      "Pregnancies",
+      "Age_Pregnancies"
+    ],
+    "timestamp": "2026-11-06T20:40:27.416330+00:00"
+  }
+]

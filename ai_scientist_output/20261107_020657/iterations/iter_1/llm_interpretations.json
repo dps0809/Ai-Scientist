@@ -1,0 +1,159 @@
+[
+  {
+    "interpretation_id": "INT-iter1_E1",
+    "experiment_id": "iter1_E1",
+    "hypothesis_id": "iter1_H3",
+    "iteration_no": 1,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "The combination of Glucose and BMI significantly improves predictive power for Outcome compared to either feature alone, with a combined AUC of 0.8178 versus the best individual feature (Glucose) AUC of 0.7905. This represents a statistically significant gain of 0.0274 (p=0.0026) with low uncertainty.",
+    "observations": [
+      "Combined AUC: 0.8178",
+      "Best individual feature AUC: 0.7905 (Glucose)",
+      "Gain: +0.0274",
+      "Paired t-test p-value: 0.0026",
+      "95% confidence interval for gain: [0.0124, 0.0424]"
+    ],
+    "limitations": [
+      "The experiment uses paired cross-validation but does not account for potential interactions beyond linear combinations",
+      "No causal relationship established between features and outcome",
+      "Limited to two features only, may not generalize to more complex feature interactions",
+      "Feature combination synergy represents predictive gain, distinct from multiplicative interaction."
+    ],
+    "next_hypothesis": "Combining Glucose, BMI, and Age provides greater predictive power for Outcome than the Glucose-BMI combination, with a synergy gain of at least 0.015",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BMI",
+        "Age"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "AUC"
+    },
+    "timestamp": "2026-11-06T20:38:08.460629+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter1_E2",
+    "experiment_id": "iter1_E2",
+    "hypothesis_id": "iter1_H4",
+    "iteration_no": 1,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "The combination of Pregnancies and Glucose features provides statistically significant predictive improvement over individual features, with a combined AUC of 0.8088 versus the best individual feature (Glucose) AUC of 0.7905, yielding a gain of 0.0183 (p=0.029). This synergy is distinct from multiplicative interaction effects.",
+    "observations": [
+      "Combined AUC: 0.8088",
+      "Best individual feature AUC: 0.7905 (Glucose)",
+      "Gain: 0.0183",
+      "Paired t-test p-value: 0.029",
+      "Confidence interval for gain: [0.0033, 0.0333]",
+      "Fold scores for combined model: [0.7965, 0.817, 0.8429, 0.803, 0.7846]"
+    ],
+    "limitations": [
+      "The experiment uses paired cross-validation but does not account for feature interactions beyond linear combination",
+      "No causal mechanism is established for the observed synergy",
+      "Dataset may have limited representativeness for general populations",
+      "Synergy gain is marginal (0.0183) and may not be clinically significant",
+      "Feature combination synergy represents predictive gain, distinct from multiplicative interaction."
+    ],
+    "next_hypothesis": "Does the addition of BMI as a feature to the Pregnancies-Glucose combination provide further predictive improvement for Outcome?",
+    "proposed_experiment": {
+      "features": [
+        "Pregnancies",
+        "Glucose",
+        "BMI"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "AUC"
+    },
+    "timestamp": "2026-11-06T20:38:26.795094+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter1_E3",
+    "experiment_id": "iter1_E3",
+    "hypothesis_id": "iter1_H5",
+    "iteration_no": 1,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "The interaction between Glucose and Age significantly moderates the relationship with Outcome, with a negative interaction coefficient of -0.00075 (95% bootstrap CI [-0.00129, -0.00019]). This indicates that the effect of Glucose on Outcome varies by Age, and the interaction is statistically significant (LRT chi2=7.632, p=0.0057).",
+    "observations": [
+      "Interaction coefficient: -0.00075",
+      "95% bootstrap confidence interval for interaction: [-0.00129, -0.00019]",
+      "Likelihood ratio test chi2 statistic: 7.6316 (p=0.00574)",
+      "Wald p-value for interaction: 0.0044"
+    ],
+    "limitations": [
+      "The study uses a logistic regression model which assumes linearity in the log-odds scale, potentially limiting interpretation of nonlinear relationships.",
+      "The interaction effect is statistically significant but the magnitude is small (|beta| < 0.001), which may have limited practical impact.",
+      "No information on the direction of the interaction effect (e.g., whether higher Glucose has stronger/weaker effect at higher Age).",
+      "Bootstrap confidence intervals are narrow but do not account for potential non-normality in the data."
+    ],
+    "next_hypothesis": "The effect of Glucose on Outcome is stronger for younger individuals than older individuals, with a positive interaction effect of Glucose * Age (i.e., higher Glucose has a larger positive impact on Outcome at younger ages).",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "Age"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "interaction_effect_significance"
+    },
+    "timestamp": "2026-11-06T20:38:46.101748+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter1_E4",
+    "experiment_id": "iter1_E4",
+    "hypothesis_id": "iter1_H6",
+    "iteration_no": 1,
+    "hypothesis_status": "not_supported",
+    "interpretation": "The original hypothesis that Pregnancies and Age are strongly correlated (r = 0.5443) suggests potential confounding or mediation, but the adjusted analysis shows a significant reduction in the effect of Pregnancies on Outcome when accounting for Age (delta coefficient = -0.1847, -39.96% change in OR). The covariate p-value of 1.0 indicates no statistical significance for Age as a confounder in this model.",
+    "observations": [
+      "Unadjusted OR for Pregnancies: 1.5875",
+      "Adjusted OR for Pregnancies: 1.3198",
+      "Delta coefficient: -0.1847",
+      "Percent change: -39.96%",
+      "Covariate p-value: 1.0000"
+    ],
+    "limitations": [
+      "Observational data lacks formal temporality to establish causal directionality",
+      "Unmeasured confounding variables may bias results",
+      "Covariate p-value of 1.0 indicates no statistical significance for Age as a confounder",
+      "Logistic regression assumes linearity and proportional odds, which may not hold for binary outcomes"
+    ],
+    "next_hypothesis": "Age has a direct causal effect on Outcome independent of Pregnancies, which can be tested by stratifying the analysis by Age groups and examining the relationship between Age and Outcome while controlling for Pregnancies.",
+    "proposed_experiment": {
+      "features": [
+        "Age",
+        "Pregnancies"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "adjusted_or"
+    },
+    "timestamp": "2026-11-06T20:39:02.907157+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter1_E5",
+    "experiment_id": "iter1_E5",
+    "hypothesis_id": "iter1_H1",
+    "iteration_no": 1,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "Glucose concentration shows a strong positive association with Outcome, with an odds ratio of 3.46 (95% CI [2.82, 4.23]) indicating that higher glucose levels are associated with a 3.46 times greater likelihood of the outcome. The p-value of 0.0000 confirms statistical significance, and the model's performance (AUC 0.7905) suggests practical significance.",
+    "observations": [
+      "Odds ratio of 3.4555 for Glucose",
+      "95% confidence interval [2.8227, 4.2302]",
+      "p-value of 0.0000 from both parametric and permutation tests",
+      "5-fold CV AUC of 0.7905 with standard deviation 0.0248"
+    ],
+    "limitations": [
+      "The experiment tests only a single feature (Glucose) without controlling for other potential confounders",
+      "No causal inference is established; correlation does not imply causation",
+      "The dataset may have limited representativeness for general populations"
+    ],
+    "next_hypothesis": "Glucose concentration has a stronger positive association with Outcome when adjusted for age and BMI.",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "Age",
+        "BMI"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "AUC"
+    },
+    "timestamp": "2026-11-06T20:39:18.886460+00:00"
+  }
+]

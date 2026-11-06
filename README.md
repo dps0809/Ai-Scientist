@@ -34,7 +34,7 @@ C:/Coding/Ai_Scientist/
 ├─ modules/
 │   ├─ __init__.py
 │   ├─ config.py                # central configuration (paths, model settings, DB names, DATASET_PROCESSED_DIR)
-│   ├─ schemas.py               # centralized Pydantic contracts (Input, Pattern, Hypothesis, Validation, Spec)
+│   ├─ schemas.py               # centralized Pydantic contracts (Input, Pattern, Hypothesis, Validation, Spec, Fingerprint, Report)
 │   ├─ mongo_cluster.py         # multi-database cluster manager (port 27017 with graceful fallback)
 │   ├─ load_dataset.py          # dataset loading
 │   ├─ profile_dataset.py       # basic statistics, missing‑value summary
@@ -52,8 +52,11 @@ C:/Coding/Ai_Scientist/
 │   ├─ experiment_planner.py    # Batch 2 experiment registry & specification (iter<N>_E<M>)
 │   ├─ experiment_executor.py   # Batch 3 statistical experiment execution engine (E1-E5)
 │   ├─ result_evaluator.py      # Batch 4 statistical significance & cross-experiment comparison engine
-│   └─ llm_interpreter.py       # Batch 5 LLM interpretation & hypothesis refinement engine
-├─ mains.py                     # orchestrates two-tier pipeline (cached dataset -> run hypotheses -> evaluate -> refine)
+│   ├─ llm_interpreter.py       # Batch 5 LLM interpretation & hypothesis refinement engine
+│   ├─ experiment_selector.py   # Batch 6 Component A: candidate scoring, hallucination filtering & synergy ranking
+│   ├─ experiment_controller.py # Batch 6 Component B: plan validation, stopping criteria, closed-loop orchestrator & report generator
+│   └─ experiment_memory.py     # Batch 7: normalized fingerprint deduplication & scientific history memory
+├─ mains.py                     # orchestrates two-tier pipeline (standard single-run or autonomous closed loop)
 ├─ README.md                    # this file
 └─ ai_scientist_output/
     ├─ dataset_processed/       # Shared processed dataset data (reused across all runs)
@@ -77,6 +80,10 @@ C:/Coding/Ai_Scientist/
         ├─ cross_experiment_comparison.json
         ├─ llm_interpretations.json
         ├─ refined_next_hypotheses.json
+        ├─ experiment_memory.json
+        ├─ autonomous_state.json
+        ├─ final_scientific_report.md
+        ├─ final_scientific_report.json
         └─ iterations/iter_<N>/
 ```
 
@@ -90,6 +97,7 @@ The pipeline connects to the active MongoDB port (`localhost:27017`) and segrega
 - `ai_scientist_results` – Batch 3 statistical experiment results, odds ratios, CIs, p-values, synergy gains, interaction tests, bootstrap intervals, and verdicts.
 - `ai_scientist_evaluations` – Batch 4 standardized evaluations (`evaluations`) and cross-experiment baseline comparison matrices (`comparisons`).
 - `ai_scientist_refinements` – Batch 5 LLM experiment interpretations (`interpretations`) and refined candidate hypotheses for subsequent iterations (`refined_hypotheses`).
+- `ai_scientist_memory` – Batch 7 normalized experiment fingerprints (`fingerprints`) and cumulative scientific history records (`experiments`).
 
 If MongoDB is offline or unavailable, `modules.mongo_cluster.MongoClusterManager` gracefully logs a notice and allows the system to continue operating in standalone file-based mode.
 
@@ -111,9 +119,13 @@ If MongoDB is offline or unavailable, `modules.mongo_cluster.MongoClusterManager
 11. **Batch 3 — Statistical experiment execution** – `modules.experiment_executor.execute_all_experiments` prepares data by handling physiological invalid zeros (`Glucose`, `BMI`, `BloodPressure`, `Insulin`, `SkinThickness` -> `np.nan`), applies within-fold median imputation during 5-fold Stratified CV, computes inferential odds ratios with 95% CIs and permutation tests (1000 iter), tests feature synergy gains over best individuals using paired fold comparisons, performs Likelihood Ratio Tests with 500-sample bootstrap CIs for interaction terms, and computes unadjusted vs adjusted regression diagnostics for confounding. Saves records to `experiment_results.json` and syncs to `ai_scientist_results.results`.
 12. **Batch 4 — Result evaluation & comparison matrix** – `modules.result_evaluator.evaluate_all_results` evaluates statistical significance, practical impact, uncertainty levels, and hypothesis support across all experiment types. Constructs an aggregated cross-experiment baseline comparison matrix ranking individual baselines against combinations, saving to `experiment_evaluations.json`, `cross_experiment_comparison.json`, and `ai_scientist_evaluations`.
 13. **Batch 5 — LLM interpretation & hypothesis refinement** – `modules.llm_interpreter.interpret_and_refine_all` synthesizes scientific verdicts via the local Ollama LLM (`qwen3:4b`), extracts key clinical/statistical observations and limitations, formulates `next_hypothesis` specifications for Iteration 2 (`iter2_H1`, `iter2_H2`, ...), and indexes them with `HypothesisRegistry` deduplication. Saves to `llm_interpretations.json`, `refined_next_hypotheses.json`, and `ai_scientist_refinements`.
-14. **Two-Tier Storage & Run Archival** –
+14. **Batch 6 & 7 — Autonomous Discovery Loop & Experiment Memory** –
+    - **Component A (LLM Experiment Selector)**: Analyzes statistical signals, filters unmeasured/hallucinated features (e.g. `HOMA-IR`), prioritizes multi-feature synergies combining top-ranked individual baselines, and prompts the local LLM for valid alternatives if an experiment is rejected.
+    - **Component B (Experiment Controller)**: The central authority that validates proposed configurations, checks normalized fingerprints (`sorted_features|model|target|metric`) against memory to guarantee zero duplicate executions, monitors multi-criteria stopping conditions (max experiments, max iterations, max runtime, no-improvement tolerance, target ROC-AUC), manages candidate pools, and compiles `final_scientific_report.md` / `final_scientific_report.json`.
+    - **Batch 7 (MongoDB Experiment Memory)**: Synchronizes all historical specifications, results, and normalized fingerprints across `ai_scientist_memory`, `ai_scientist_experiments`, and `ai_scientist_results`, with offline JSON fallback.
+15. **Two-Tier Storage & Run Archival** –
     - **Dataset Processing Layer (`ai_scientist_output/dataset_processed/`)**: Contains all dataset-specific artifacts (`cleaned_dataset.csv`, `dataset_profile.csv`, `correlation_matrix.csv`, `individual_dependencies.csv`, `stage1_data.json`, `feature_combinations.csv`, `stage2_data.json`, `feature_importance.csv`, `discovered_patterns.json`, and `plots/`). On startup, `mains.py` seeks these files first. If found, it reuses them immediately (`[CACHE HIT]`), bypassing expensive recomputation. If not found, it computes, profiles, and caches them for all future runs.
-    - **Run-Specific Hypothesis & Experiment Output (`ai_scientist_output/<YYYYMMDD_HHMMSS>/`)**: Isolates hypothesis-cycle artifacts (`llm_context.json`, `generated_hypotheses.json`, `validated_hypotheses.json`, `experiment_specifications.json`, `experiment_results.json`, `experiment_evaluations.json`, `cross_experiment_comparison.json`, `llm_interpretations.json`, `refined_next_hypotheses.json`, and `iterations/iter_<N>/`) for each execution without polluting the root output directory.
+    - **Run-Specific Hypothesis & Experiment Output (`ai_scientist_output/<YYYYMMDD_HHMMSS>/`)**: Isolates hypothesis-cycle artifacts (`llm_context.json`, `generated_hypotheses.json`, `validated_hypotheses.json`, `experiment_specifications.json`, `experiment_results.json`, `experiment_evaluations.json`, `cross_experiment_comparison.json`, `llm_interpretations.json`, `refined_next_hypotheses.json`, `experiment_memory.json`, `autonomous_state.json`, `final_scientific_report.md`, and `iterations/iter_<N>/`) for each execution without polluting the root output directory.
 
 ## Predefined Experiment Registry
 Supported hypothesis categories and their statistical execution mappings:
@@ -124,33 +136,33 @@ Supported hypothesis categories and their statistical execution mappings:
 | `feature_interaction_moderation` | `interaction_regression` | `statsmodels.Logit` | Mean-centered main effects + product term ($G \times A$), Likelihood Ratio Test $\chi^2$ and p-value, 500-sample bootstrap 95% CI |
 | `comparative_or_confounding_relationship` | `adjusted_regression` | `statsmodels.Logit` | Unadjusted vs adjusted standardized coefficients, percentage shift $\Delta\%$, confounding diagnosis |
 
-## Charts & tables
-`generate_eda.py` creates:
-- Histogram of each numeric feature.
-- Box‑plot grouped by the target.
-- Correlation heatmap.
-- Summary tables of missing values and basic statistics.
-All figures are saved as PNG files in `ai_scientist_output/` and referenced from the Markdown report.
+## Running the Pipeline
 
-## Extending the project
-- Replace the placeholder LLM call in `generate_hypotheses_with_llm.py` with any local LLM API.
-- Add new pattern modules (e.g., time‑series, survival analysis) and expose them in `mains.py`.
-- Swap the synthetic dataset for a real CSV by editing `modules/config.py → DATASET_PATH`.
-
-## Running the Full Pipeline
+### Mode 1: Standard Single-Run (Iteration 1)
 ```powershell
 python mains.py
 ```
-This executes the full automated research lifecycle:
-1. Data Ingestion & Profiling (assigned `input_id` saved to `ai_scientist_inputs.inputs`)
-2. Stage 1 Individual Dependency Analysis
-3. Stage 2 Feature Combination & Interaction Discovery (assigned `pattern_id` saved to `ai_scientist_patterns.patterns`)
-4. Stage 3 LLM Hypothesis Generation & Novelty De-duplication (saved to `ai_scientist_hypotheses.hypotheses`)
-5. Stage 4 Batch 1 Hypothesis Validation & Evidence Reconciliation (saved to `ai_scientist_validation.validations`)
-6. Stage 5 Batch 2 Experiment Registry Specifications (saved to `ai_scientist_experiments.specifications`)
-7. Stage 6 Batch 3 Statistical Experiment Execution Engine (saved to `ai_scientist_results.results`)
-8. Stage 7 Batch 4 Result Evaluation Engine & Cross-Experiment Comparison (saved to `ai_scientist_evaluations`)
-9. Stage 8 Batch 5 LLM Interpretation & Hypothesis Refinement (saved to `ai_scientist_refinements`)
+Executes Iteration 1 hypothesis generation, validation, planning, execution, evaluation, and refinement.
+
+### Mode 2: Autonomous Closed-Loop AI Scientist (Batches 6 & 7)
+```powershell
+# Run the autonomous multi-iteration research loop with default budgets
+python mains.py --autonomous
+
+# Run with custom budget and performance thresholds
+python mains.py --autonomous --max-experiments 12 --max-iterations 3 --target-auc 0.85 --max-runtime-minutes 15
+```
+
+Available CLI Options:
+- `--autonomous`: Enable closed-loop autonomous multi-iteration discovery.
+- `--max-experiments <int>`: Total experiment budget across all iterations (default: 15).
+- `--max-iterations <int>`: Maximum autonomous iterations (default: 3).
+- `--max-runtime-minutes <int>`: Timeout budget in minutes (default: 20).
+- `--target-auc <float>`: Target ROC-AUC stopping threshold (default: 0.85).
+- `--no-improvement-tolerance <int>`: Consecutive iterations without gain tolerance (default: 3).
+- `--n-permutations <int>`: Number of permutation test iterations (default: 1000).
+- `--n-bootstrap <int>`: Number of bootstrap iterations for CI (default: 500).
+- `--no-mongo`: Disable MongoDB sync and run in pure offline JSON file mode.
 
 ## Testing
 Run the complete unit and integration test suite:

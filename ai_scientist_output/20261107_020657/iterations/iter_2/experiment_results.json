@@ -1,0 +1,211 @@
+[
+    {
+        "result_id": "RES-iter2_E1",
+        "experiment_id": "iter2_E1",
+        "hypothesis_id": "iter2_H1",
+        "iteration_no": 2,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "Glucose",
+            "BMI",
+            "Age"
+        ],
+        "target": "Outcome",
+        "metrics": {
+            "combined_mean_auc": 0.8178,
+            "best_individual_mean_auc": 0.7905,
+            "gain_over_best_individual": 0.0274,
+            "paired_test_stat": 6.6738,
+            "paired_test_p_value": 0.0026
+        },
+        "details": {
+            "individual_scores": {
+                "Glucose": 0.7905,
+                "BMI": 0.6864
+            },
+            "best_individual_feature": "Glucose",
+            "fold_scores": {
+                "Glucose": [
+                    0.7865,
+                    0.8068,
+                    0.829,
+                    0.7635,
+                    0.7666
+                ],
+                "BMI": [
+                    0.6727,
+                    0.7438,
+                    0.679,
+                    0.6782,
+                    0.6582
+                ],
+                "Glucose_BMI": [
+                    0.8183,
+                    0.8461,
+                    0.8584,
+                    0.7815,
+                    0.7849
+                ]
+            }
+        },
+        "verdict": "SUPPORTED",
+        "summary": "Synergy experiment iter2_E1 testing [Glucose + BMI] is strongly supported: combining Glucose and BMI yields significant synergy (gain=+0.0274 AUC, paired t p=0.0026).",
+        "timestamp": "2026-11-06T20:39:19.265684+00:00"
+    },
+    {
+        "result_id": "RES-iter2_E2",
+        "experiment_id": "iter2_E2",
+        "hypothesis_id": "iter2_H2",
+        "iteration_no": 2,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "Pregnancies",
+            "Glucose",
+            "BMI"
+        ],
+        "target": "Outcome",
+        "metrics": {
+            "combined_mean_auc": 0.8088,
+            "best_individual_mean_auc": 0.7905,
+            "gain_over_best_individual": 0.0183,
+            "paired_test_stat": 3.3354,
+            "paired_test_p_value": 0.029
+        },
+        "details": {
+            "individual_scores": {
+                "Pregnancies": 0.62,
+                "Glucose": 0.7905
+            },
+            "best_individual_feature": "Glucose",
+            "fold_scores": {
+                "Pregnancies": [
+                    0.6009,
+                    0.6124,
+                    0.5656,
+                    0.645,
+                    0.676
+                ],
+                "Glucose": [
+                    0.7865,
+                    0.8068,
+                    0.829,
+                    0.7635,
+                    0.7666
+                ],
+                "Pregnancies_Glucose": [
+                    0.7965,
+                    0.817,
+                    0.8429,
+                    0.803,
+                    0.7846
+                ]
+            }
+        },
+        "verdict": "SUPPORTED",
+        "summary": "Synergy experiment iter2_E2 testing [Pregnancies + Glucose] is strongly supported: combining Pregnancies and Glucose yields significant synergy (gain=+0.0183 AUC, paired t p=0.0290).",
+        "timestamp": "2026-11-06T20:39:19.356613+00:00"
+    },
+    {
+        "result_id": "RES-iter2_E3",
+        "experiment_id": "iter2_E3",
+        "hypothesis_id": "iter2_H5",
+        "iteration_no": 2,
+        "experiment_type": "comparative_or_confounding_relationship",
+        "method": "adjusted_regression",
+        "model_type": "statsmodels.Logit",
+        "features": [
+            "Glucose",
+            "Age",
+            "BMI"
+        ],
+        "target": "Outcome",
+        "metrics": {
+            "unadjusted_coefficient": 1.2408,
+            "adjusted_coefficient": 1.1756,
+            "delta_coefficient": -0.0651,
+            "percent_change": -5.25,
+            "unadjusted_or": 3.4583,
+            "adjusted_or": 3.2402,
+            "unadjusted_ci": [
+                2.8246,
+                4.2342
+            ],
+            "adjusted_ci": [
+                2.6404,
+                3.9762
+            ],
+            "unadjusted_p_value": 0.0,
+            "adjusted_p_value": 0.0,
+            "covariate_coefficient": 0.2746,
+            "covariate_or": 1.3161,
+            "covariate_p_value": 0.00179
+        },
+        "details": {
+            "confounding_threshold_percent": 10.0,
+            "confounding_detected": false,
+            "causal_note": "Observational confounding assessment; requires temporality and no unmeasured confounders for formal causal claim.",
+            "sample_size": 763
+        },
+        "verdict": "REFUTED",
+        "summary": "Adjusted regression experiment iter2_E3 testing [Glucose adjusted for Age] is refuted: adjustment for Age does not meaningfully alter Glucose's effect (coefficient change of -5.3% is below the 10% confounding threshold).",
+        "timestamp": "2026-11-06T20:39:19.361973+00:00"
+    },
+    {
+        "result_id": "RES-iter2_E5",
+        "experiment_id": "iter2_E5",
+        "hypothesis_id": "iter2_H4",
+        "iteration_no": 2,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "Age",
+            "Pregnancies"
+        ],
+        "target": "Outcome",
+        "metrics": {
+            "combined_mean_auc": 0.6688,
+            "best_individual_mean_auc": 0.6853,
+            "gain_over_best_individual": -0.0165,
+            "paired_test_stat": -1.315,
+            "paired_test_p_value": 0.2588
+        },
+        "details": {
+            "individual_scores": {
+                "Age": 0.6853,
+                "Pregnancies": 0.62
+            },
+            "best_individual_feature": "Age",
+            "fold_scores": {
+                "Age": [
+                    0.7074,
+                    0.6939,
+                    0.658,
+                    0.7378,
+                    0.6295
+                ],
+                "Pregnancies": [
+                    0.6009,
+                    0.6124,
+                    0.5656,
+                    0.645,
+                    0.676
+                ],
+                "Age_Pregnancies": [
+                    0.6751,
+                    0.6692,
+                    0.626,
+                    0.7111,
+                    0.6628
+                ]
+            }
+        },
+        "verdict": "REFUTED",
+        "summary": "Synergy experiment iter2_E5 testing [Age + Pregnancies] is refuted: combination AUC (0.6688) does not exceed best individual feature Age (0.6853).",
+        "timestamp": "2026-11-06T20:39:19.453669+00:00"
+    }
+]

@@ -1,0 +1,290 @@
+{
+  "run_id": "RUN-20261107_021521",
+  "dataset": "diabetes.csv",
+  "total_experiments": 9,
+  "total_iterations": 4,
+  "best_roc_auc": 0.8178,
+  "best_features": [
+    "Glucose",
+    "BMI"
+  ],
+  "best_model": "sklearn.linear_model.LogisticRegression",
+  "stopping_reason": "No valid candidate hypotheses remaining in pool.",
+  "confirmed_count": 7,
+  "refuted_count": 2,
+  "confirmed_hypotheses": [
+    {
+      "experiment_id": "iter1_E1",
+      "hypothesis_id": "iter1_H3",
+      "features": [
+        "Glucose",
+        "BMI"
+      ],
+      "summary": "Synergy experiment iter1_E1 testing [Glucose + BMI] is supported_by_current_evidence: combined AUC=0.8178 vs best individual (Glucose) AUC=0.7905 (gain=+0.0274, paired t p=0.0026). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+      "metrics": {
+        "individual_auc": {
+          "Glucose": 0.7905,
+          "BMI": 0.6864
+        },
+        "combined_auc": 0.8178,
+        "gain": 0.0274,
+        "best_individual_feature": "Glucose",
+        "fold_scores": {
+          "Glucose": [
+            0.7865,
+            0.8068,
+            0.829,
+            0.7635,
+            0.7666
+          ],
+          "BMI": [
+            0.6727,
+            0.7438,
+            0.679,
+            0.6782,
+            0.6582
+          ],
+          "Glucose_BMI": [
+            0.8183,
+            0.8461,
+            0.8584,
+            0.7815,
+            0.7849
+          ]
+        }
+      }
+    },
+    {
+      "experiment_id": "iter1_E2",
+      "hypothesis_id": "iter1_H4",
+      "features": [
+        "Pregnancies",
+        "Glucose"
+      ],
+      "summary": "Synergy experiment iter1_E2 testing [Pregnancies + Glucose] is supported_by_current_evidence: combined AUC=0.8088 vs best individual (Glucose) AUC=0.7905 (gain=+0.0183, paired t p=0.0290). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+      "metrics": {
+        "individual_auc": {
+          "Pregnancies": 0.62,
+          "Glucose": 0.7905
+        },
+        "combined_auc": 0.8088,
+        "gain": 0.0183,
+        "best_individual_feature": "Glucose",
+        "fold_scores": {
+          "Pregnancies": [
+            0.6009,
+            0.6124,
+            0.5656,
+            0.645,
+            0.676
+          ],
+          "Glucose": [
+            0.7865,
+            0.8068,
+            0.829,
+            0.7635,
+            0.7666
+          ],
+          "Pregnancies_Glucose": [
+            0.7965,
+            0.817,
+            0.8429,
+            0.803,
+            0.7846
+          ]
+        }
+      }
+    },
+    {
+      "experiment_id": "iter1_E3",
+      "hypothesis_id": "iter1_H5",
+      "features": [
+        "Glucose",
+        "Age"
+      ],
+      "summary": "Interaction experiment iter1_E3 testing [Glucose * Age] is supported_by_current_evidence: LRT chi2=7.632 (p=0.0057), interaction beta=-0.00075 (Wald p=0.0044), 95% bootstrap CI [-0.00129, -0.00019].",
+      "metrics": {
+        "interaction_coefficient": -0.00075,
+        "main_effects": {
+          "feat_a": 0.0403,
+          "feat_b": 0.0289
+        },
+        "bootstrap_ci": [
+          -0.00129,
+          -0.00019
+        ]
+      }
+    },
+    {
+      "experiment_id": "iter1_E5",
+      "hypothesis_id": "iter1_H1",
+      "features": [
+        "Glucose"
+      ],
+      "summary": "Experiment iter1_E5 testing dependency of 'Glucose' on 'Outcome' is supported_by_current_evidence: OR=3.46 (95% CI [2.82, 4.23]), parametric p=0.0000, permutation p=0.0000, 5-fold CV AUC=0.790 +/- 0.025.",
+      "metrics": {
+        "coefficient": 1.24,
+        "odds_ratio": 3.4555,
+        "confidence_interval": [
+          2.8227,
+          4.2302
+        ],
+        "mean_auc": 0.7905,
+        "std_auc": 0.0248,
+        "fold_auc": [
+          0.7865,
+          0.8068,
+          0.829,
+          0.7635,
+          0.7666
+        ]
+      }
+    },
+    {
+      "experiment_id": "iter2_E1",
+      "hypothesis_id": "iter2_H1",
+      "features": [
+        "Glucose",
+        "BMI",
+        "Age"
+      ],
+      "summary": "Synergy experiment iter2_E1 testing [Glucose + BMI + Age] is supported_by_current_evidence: combined AUC=0.8178 vs best individual (Glucose) AUC=0.7905 (gain=+0.0274, paired t p=0.0026). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+      "metrics": {
+        "individual_auc": {
+          "Glucose": 0.7905,
+          "BMI": 0.6864
+        },
+        "combined_auc": 0.8178,
+        "gain": 0.0274,
+        "best_individual_feature": "Glucose",
+        "fold_scores": {
+          "Glucose": [
+            0.7865,
+            0.8068,
+            0.829,
+            0.7635,
+            0.7666
+          ],
+          "BMI": [
+            0.6727,
+            0.7438,
+            0.679,
+            0.6782,
+            0.6582
+          ],
+          "Glucose_BMI": [
+            0.8183,
+            0.8461,
+            0.8584,
+            0.7815,
+            0.7849
+          ]
+        }
+      }
+    },
+    {
+      "experiment_id": "iter2_E2",
+      "hypothesis_id": "iter2_H2",
+      "features": [
+        "Pregnancies",
+        "Glucose",
+        "BMI"
+      ],
+      "summary": "Synergy experiment iter2_E2 testing [Pregnancies + Glucose + BMI] is supported_by_current_evidence: combined AUC=0.8088 vs best individual (Glucose) AUC=0.7905 (gain=+0.0183, paired t p=0.0290). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+      "metrics": {
+        "individual_auc": {
+          "Pregnancies": 0.62,
+          "Glucose": 0.7905
+        },
+        "combined_auc": 0.8088,
+        "gain": 0.0183,
+        "best_individual_feature": "Glucose",
+        "fold_scores": {
+          "Pregnancies": [
+            0.6009,
+            0.6124,
+            0.5656,
+            0.645,
+            0.676
+          ],
+          "Glucose": [
+            0.7865,
+            0.8068,
+            0.829,
+            0.7635,
+            0.7666
+          ],
+          "Pregnancies_Glucose": [
+            0.7965,
+            0.817,
+            0.8429,
+            0.803,
+            0.7846
+          ]
+        }
+      }
+    },
+    {
+      "experiment_id": "iter4_E1",
+      "hypothesis_id": "iter4_H1",
+      "features": [
+        "Pregnancies",
+        "Age",
+        "BMI"
+      ],
+      "summary": "Interaction experiment iter4_E1 testing [Pregnancies * Age * BMI] is supported_by_current_evidence: LRT chi2=8.763 (p=0.0031), interaction beta=-0.00680 (Wald p=0.0032), 95% bootstrap CI [-0.01187, -0.00226].",
+      "metrics": {
+        "interaction_coefficient": -0.0068,
+        "main_effects": {
+          "feat_a": 0.1192,
+          "feat_b": 0.0304
+        },
+        "bootstrap_ci": [
+          -0.01187,
+          -0.00226
+        ]
+      }
+    }
+  ],
+  "refuted_hypotheses": [
+    {
+      "experiment_id": "iter1_E4",
+      "hypothesis_id": "iter1_H6",
+      "features": [
+        "Pregnancies",
+        "Age"
+      ],
+      "summary": "Adjusted regression experiment iter1_E4 testing [Pregnancies adjusted for Age] is not_supported: unadjusted OR=1.59 -> adjusted OR=1.32 (delta=-40.0%, covariate p=1.0000).",
+      "metrics": {
+        "unadjusted_coefficient": 0.4622,
+        "adjusted_coefficient": 0.2775,
+        "delta_coefficient": -0.1847,
+        "percent_change": -39.96,
+        "unadjusted_or": 1.5875,
+        "adjusted_or": 1.3198,
+        "covariate_or": 1.4172
+      }
+    },
+    {
+      "experiment_id": "iter3_E2",
+      "hypothesis_id": "iter3_H2",
+      "features": [
+        "Pregnancies",
+        "Glucose",
+        "BMI"
+      ],
+      "summary": "Interaction experiment iter3_E2 testing [Pregnancies * Glucose * BMI] is not_supported: LRT chi2=3.247 (p=0.0716), interaction beta=-0.00177 (Wald p=0.0687), 95% bootstrap CI [-0.00357, 0.00000].",
+      "metrics": {
+        "interaction_coefficient": -0.00177,
+        "main_effects": {
+          "feat_a": 0.1304,
+          "feat_b": 0.0406
+        },
+        "bootstrap_ci": [
+          -0.00357,
+          0.0
+        ]
+      }
+    }
+  ]
+}

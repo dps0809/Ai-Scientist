@@ -1,0 +1,120 @@
+{
+  "run_id": "RUN-20261107_021521",
+  "experiments_completed": 9,
+  "iterations_completed": 3,
+  "consecutive_no_improvement": 4,
+  "best_score": 0.8178,
+  "best_features": [
+    "Glucose",
+    "BMI"
+  ],
+  "best_model": "sklearn.linear_model.LogisticRegression",
+  "history": [
+    {
+      "experiment_id": "iter1_E1",
+      "hypothesis_id": "iter1_H3",
+      "score": 0.8178,
+      "features": [
+        "Glucose",
+        "BMI"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "verdict": "supported_by_current_evidence"
+    },
+    {
+      "experiment_id": "iter1_E2",
+      "hypothesis_id": "iter1_H4",
+      "score": 0.8088,
+      "features": [
+        "Pregnancies",
+        "Glucose"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "verdict": "supported_by_current_evidence"
+    },
+    {
+      "experiment_id": "iter1_E3",
+      "hypothesis_id": "iter1_H5",
+      "score": 0.0,
+      "features": [
+        "Glucose",
+        "Age"
+      ],
+      "model": "statsmodels.Logit",
+      "verdict": "supported_by_current_evidence"
+    },
+    {
+      "experiment_id": "iter1_E4",
+      "hypothesis_id": "iter1_H6",
+      "score": 0.0,
+      "features": [
+        "Pregnancies",
+        "Age"
+      ],
+      "model": "statsmodels.Logit",
+      "verdict": "not_supported"
+    },
+    {
+      "experiment_id": "iter1_E5",
+      "hypothesis_id": "iter1_H1",
+      "score": 0.7905,
+      "features": [
+        "Glucose"
+      ],
+      "model": "statsmodels.Logit",
+      "verdict": "supported_by_current_evidence"
+    },
+    {
+      "experiment_id": "iter2_E1",
+      "hypothesis_id": "iter2_H1",
+      "score": 0.8178,
+      "features": [
+        "Glucose",
+        "BMI",
+        "Age"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "verdict": "supported_by_current_evidence"
+    },
+    {
+      "experiment_id": "iter2_E2",
+      "hypothesis_id": "iter2_H2",
+      "score": 0.8088,
+      "features": [
+        "Pregnancies",
+        "Glucose",
+        "BMI"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "verdict": "supported_by_current_evidence"
+    },
+    {
+      "experiment_id": "iter3_E2",
+      "hypothesis_id": "iter3_H2",
+      "score": 0.0,
+      "features": [
+        "Pregnancies",
+        "Glucose",
+        "BMI"
+      ],
+      "model": "statsmodels.Logit",
+      "verdict": "not_supported"
+    },
+    {
+      "experiment_id": "iter4_E1",
+      "hypothesis_id": "iter4_H1",
+      "score": 0.0,
+      "features": [
+        "Pregnancies",
+        "Age",
+        "BMI"
+      ],
+      "model": "statsmodels.Logit",
+      "verdict": "supported_by_current_evidence"
+    }
+  ],
+  "status": "INITIALIZED",
+  "stopping_reason": null,
+  "start_time": "2026-11-06T20:45:21.105991+00:00",
+  "last_updated": "2026-11-06T20:47:44.794236+00:00"
+}

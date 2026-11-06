@@ -1,0 +1,47 @@
+[
+  {
+    "experiment_id": "iter4_E1",
+    "hypothesis_id": "iter4_H1",
+    "iteration_no": 4,
+    "status": "completed",
+    "experiment_type": "feature_interaction_moderation",
+    "configuration": {
+      "features": [
+        "Pregnancies",
+        "Age",
+        "BMI"
+      ],
+      "target": "Outcome",
+      "model": "statsmodels.Logit",
+      "method": "interaction_regression"
+    },
+    "results": {
+      "interaction_coefficient": -0.0068,
+      "main_effects": {
+        "feat_a": 0.1192,
+        "feat_b": 0.0304
+      },
+      "bootstrap_ci": [
+        -0.01187,
+        -0.00226
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "likelihood_ratio_test",
+      "chi2_statistic": 8.7631,
+      "p_value": 0.00307,
+      "bootstrap_confidence_interval": [
+        -0.01187,
+        -0.00226
+      ]
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "meaningful",
+      "uncertainty_level": "low",
+      "summary": "Interaction experiment iter4_E1 testing [Pregnancies * Age * BMI] is supported_by_current_evidence: LRT chi2=8.763 (p=0.0031), interaction beta=-0.00680 (Wald p=0.0032), 95% bootstrap CI [-0.01187, -0.00226]."
+    },
+    "timestamp": "2026-11-06T20:47:44.732864+00:00"
+  }
+]
