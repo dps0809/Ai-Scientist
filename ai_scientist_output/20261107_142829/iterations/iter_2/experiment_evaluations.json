@@ -1,0 +1,197 @@
+[
+  {
+    "experiment_id": "iter2_E1",
+    "hypothesis_id": "iter2_H3",
+    "iteration_no": 2,
+    "status": "completed",
+    "experiment_type": "feature_interaction_moderation",
+    "configuration": {
+      "features": [
+        "Glucose",
+        "BMI"
+      ],
+      "target": "Outcome",
+      "model": "statsmodels.Logit",
+      "method": "interaction_regression"
+    },
+    "results": {
+      "interaction_coefficient": -0.00035,
+      "main_effects": {
+        "feat_a": 0.0385,
+        "feat_b": 0.086
+      },
+      "bootstrap_ci": [
+        -0.00139,
+        0.00072
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "likelihood_ratio_test",
+      "chi2_statistic": 0.4244,
+      "p_value": 0.51477,
+      "bootstrap_confidence_interval": [
+        -0.00139,
+        0.00072
+      ]
+    },
+    "evaluation": {
+      "verdict": "not_supported",
+      "is_statistically_significant": false,
+      "practical_significance": "negligible_or_negative",
+      "uncertainty_level": "moderate",
+      "summary": "Interaction experiment iter2_E1 testing [Glucose * BMI] is not_supported: LRT chi2=0.424 (p=0.5148), interaction beta=-0.00035 (Wald p=0.5133), 95% bootstrap CI [-0.00139, 0.00072]."
+    },
+    "timestamp": "2026-11-07T09:01:25.622312+00:00"
+  },
+  {
+    "experiment_id": "iter2_E2",
+    "hypothesis_id": "iter2_H1",
+    "iteration_no": 2,
+    "status": "completed",
+    "experiment_type": "feature_combination_synergy",
+    "configuration": {
+      "features": [
+        "Glucose",
+        "BloodPressure"
+      ],
+      "target": "Outcome",
+      "model": "LogisticRegression",
+      "method": "paired_model_comparison"
+    },
+    "results": {
+      "individual_auc": {
+        "Glucose": 0.7905,
+        "BloodPressure": 0.6047
+      },
+      "individual_accuracy": {
+        "Glucose": 0.7473,
+        "BloodPressure": 0.651
+      },
+      "combined_auc": 0.7927,
+      "gain": 0.0023,
+      "combined_accuracy": 0.7499,
+      "accuracy_gain": 0.0026,
+      "best_individual_feature": "Glucose",
+      "best_model": "LogisticRegression",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "combined_mean_auc": 0.7927,
+          "best_individual_mean_auc": 0.7905,
+          "auc_gain": 0.0023,
+          "combined_mean_accuracy": 0.7499,
+          "best_individual_mean_accuracy": 0.7473,
+          "accuracy_gain": 0.0026,
+          "individual_aucs": {
+            "Glucose": 0.7905,
+            "BloodPressure": 0.6047
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7473,
+            "BloodPressure": 0.651
+          }
+        },
+        "RandomForest": {
+          "combined_mean_auc": 0.7568,
+          "best_individual_mean_auc": 0.7561,
+          "auc_gain": 0.0007,
+          "combined_mean_accuracy": 0.7317,
+          "best_individual_mean_accuracy": 0.7173,
+          "accuracy_gain": 0.0144,
+          "individual_aucs": {
+            "Glucose": 0.7561,
+            "BloodPressure": 0.5261
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7173,
+            "BloodPressure": 0.6068
+          }
+        },
+        "XGBoost": {
+          "combined_mean_auc": 0.762,
+          "best_individual_mean_auc": 0.7643,
+          "auc_gain": -0.0023,
+          "combined_mean_accuracy": 0.7356,
+          "best_individual_mean_accuracy": 0.7239,
+          "accuracy_gain": 0.0117,
+          "individual_aucs": {
+            "Glucose": 0.7643,
+            "BloodPressure": 0.5373
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7239,
+            "BloodPressure": 0.6302
+          }
+        }
+      },
+      "fold_scores": {
+        "Glucose": [
+          0.7865,
+          0.8068,
+          0.829,
+          0.7635,
+          0.7666
+        ],
+        "BloodPressure": [
+          0.631,
+          0.644,
+          0.5956,
+          0.6028,
+          0.5503
+        ],
+        "Glucose_BloodPressure": [
+          0.7919,
+          0.8115,
+          0.8334,
+          0.7619,
+          0.765
+        ]
+      },
+      "fold_accuracies": {
+        "Glucose": [
+          0.7273,
+          0.7922,
+          0.7597,
+          0.7516,
+          0.7059
+        ],
+        "BloodPressure": [
+          0.6558,
+          0.6753,
+          0.6623,
+          0.634,
+          0.6275
+        ],
+        "Glucose_BloodPressure": [
+          0.7403,
+          0.7857,
+          0.7792,
+          0.719,
+          0.7255
+        ]
+      }
+    },
+    "statistical_validation": {
+      "comparison_method": "paired_cross_validation",
+      "confidence_interval": [
+        -0.0127,
+        0.0173
+      ],
+      "p_value": 0.2268,
+      "paired_t_stat": 1.4266
+    },
+    "evaluation": {
+      "verdict": "inconclusive",
+      "is_statistically_significant": false,
+      "practical_significance": "marginal",
+      "uncertainty_level": "high",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "best_model": "LogisticRegression",
+      "distinction_note": "Feature combination synergy represents predictive gain, distinct from multiplicative interaction.",
+      "summary": "Synergy experiment iter2_E2 testing [Glucose + BloodPressure] is inconclusive: combined Primary AUC=0.7927 vs best individual (Glucose) AUC=0.7905 (gain=+0.0023, paired t p=0.2268; Secondary Accuracy=0.7499, Accuracy gain=+0.0026, best model: LogisticRegression). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction."
+    },
+    "timestamp": "2026-11-07T09:01:25.622576+00:00"
+  }
+]

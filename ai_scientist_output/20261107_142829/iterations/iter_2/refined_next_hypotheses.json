@@ -1,0 +1,42 @@
+[
+  {
+    "hypothesis_id": "iter3_H1",
+    "parent_hypothesis_id": "iter2_H3",
+    "iteration_no": 3,
+    "hypothesis": "The effect of Glucose on Outcome is further moderated by Age, with a positive interaction coefficient indicating that older age amplifies the negative impact of elevated Glucose on Outcome.",
+    "rationale": "Derived from iter2_E1 (iter2_H3) outcome: The hypothesis that higher BMI amplifies the negative impact of elevated Glucose on Outcome is not supported by the current evidence. The interaction ",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "Age"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "Age"
+    ],
+    "timestamp": "2026-11-07T09:02:10.428807+00:00"
+  },
+  {
+    "hypothesis_id": "iter3_H2",
+    "parent_hypothesis_id": "iter2_H1",
+    "iteration_no": 3,
+    "hypothesis": "Combining Glucose with BloodPressure provides a statistically significant predictive advantage for the outcome when using a more complex model architecture (e.g., Gradient Boosting with feature interactions) compared to Logistic Regression.",
+    "rationale": "Derived from iter2_E2 (iter2_H1) outcome: The feature combination of Glucose and BloodPressure shows a marginal improvement in both ROC-AUC (0.7927 vs best individual Glucose 0.7905, gain +0.0",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BloodPressure"
+      ],
+      "model": "GradientBoostingClassifier",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "BloodPressure"
+    ],
+    "timestamp": "2026-11-07T09:02:10.467572+00:00"
+  }
+]

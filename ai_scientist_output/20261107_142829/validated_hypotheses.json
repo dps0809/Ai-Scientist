@@ -1,0 +1,25 @@
+{
+    "report_id": "REP-iter5",
+    "iteration_no": 5,
+    "total": 1,
+    "validated_count": 1,
+    "needs_review_count": 0,
+    "rejected_count": 0,
+    "results": [
+        {
+            "validation_id": "VAL-iter5_H1",
+            "hypothesis_id": "iter5_H1",
+            "iteration_no": 5,
+            "hypothesis_type": "feature_interaction_moderation",
+            "status": "VALIDATED",
+            "features_involved": [
+                "Glucose",
+                "BMI"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-07T09:02:46.429336+00:00"
+        }
+    ],
+    "timestamp": "2026-11-07T09:02:46.429513+00:00"
+}

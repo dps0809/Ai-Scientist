@@ -154,3 +154,60 @@ def test_controller_updates_progress_and_detects_gain(tmp_path):
     controller.update_progress(res3)
     assert controller.state.experiments_completed == 3
     assert controller.state.consecutive_no_improvement == 1
+
+
+def test_autonomous_loop_duplicate_recovery_temp_spec(tmp_path):
+    from modules.schemas import RefinedHypothesisRecord
+    from modules.experiment_controller import run_autonomous_scientist
+
+    df = pd.DataFrame({
+        "Glucose": [100, 120, 140, 110, 130, 90, 115, 125],
+        "BMI": [25, 30, 35, 28, 32, 24, 27, 31],
+        "Outcome": [0, 1, 1, 0, 1, 0, 0, 1]
+    })
+    
+    # Create an initial hypothesis
+    initial = [{
+        "hypothesis_id": "iter1_H1",
+        "hypothesis_type": "feature_combination_synergy",
+        "hypothesis": "Glucose + BMI synergy",
+        "features_involved": ["Glucose", "BMI"],
+        "proposed_experiment": "Train model on Glucose and BMI"
+    }]
+
+    cfg = StoppingConditionConfig(
+        max_experiments=2,
+        max_iterations=3,
+        no_improvement_tolerance=2
+    )
+
+    # Pre-register the spec so it is detected as duplicate immediately
+    mem_path = str(tmp_path / "experiment_memory.json")
+    mem = ExperimentMemory(storage_path=mem_path, sync_mongo=False)
+    dup_spec = ExperimentSpecRecord(
+        experiment_id="dup_E1",
+        hypothesis_id="dup_H1",
+        iteration_no=1,
+        experiment_type="feature_combination_synergy",
+        method="paired_model_comparison",
+        model_type="sklearn.linear_model.LogisticRegression",
+        features=["Glucose", "BMI"],
+        target="Outcome"
+    )
+    mem.register_experiment_spec(dup_spec)
+
+    # run_autonomous_scientist should handle duplicate detection and fallback without raising ValidationError
+    md, report = run_autonomous_scientist(
+        initial_hypotheses=initial,
+        df=df,
+        target="Outcome",
+        config=cfg,
+        output_dir=str(tmp_path),
+        n_permutations=5,
+        n_bootstrap=5,
+        sync_mongo=False
+    )
+
+    assert report is not None
+    assert "stopping_reason" in report
+

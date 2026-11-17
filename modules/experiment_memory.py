@@ -28,9 +28,16 @@ class ExperimentMemory:
     Maintains a persistent record of all planned experiments, executed results,
     and normalized fingerprints across iterations to prevent duplicate executions (Batch 6.3).
     """
-    def __init__(self, storage_path: Optional[str] = None, sync_mongo: bool = True):
+    def __init__(
+        self,
+        storage_path: Optional[str] = None,
+        sync_mongo: bool = True,
+        run_id: Optional[str] = None
+    ):
         self.storage_path = storage_path or os.path.join(OUTPUT_DIR, "experiment_memory.json")
         self.sync_mongo = sync_mongo
+        norm_dir = os.path.basename(os.path.dirname(os.path.abspath(self.storage_path)))
+        self.run_id = run_id or (norm_dir if norm_dir != OUTPUT_DIR else None)
         self.fingerprints: Set[str] = set()
         self.hypotheses: Dict[str, Dict[str, Any]] = {}
         self.experiments: Dict[str, Dict[str, Any]] = {}
@@ -57,17 +64,18 @@ class ExperimentMemory:
             try:
                 cluster = MongoClusterManager()
                 if cluster.is_available():
-                    fp_docs = cluster.query_documents(DB_MEMORY, "fingerprints")
+                    q = {"run_id": self.run_id} if self.run_id else {}
+                    fp_docs = cluster.query_documents(DB_MEMORY, "fingerprints", query=q)
                     for doc in fp_docs:
                         fp = doc.get("fingerprint")
                         if fp:
                             self.fingerprints.add(fp)
-                    exp_docs = cluster.query_documents(DB_MEMORY, "experiments")
+                    exp_docs = cluster.query_documents(DB_MEMORY, "experiments", query=q)
                     for doc in exp_docs:
                         spec_id = doc.get("experiment_id") or doc.get("spec_id")
                         if spec_id:
                             self.experiments[spec_id] = doc
-                    res_docs = cluster.query_documents(DB_MEMORY, "results")
+                    res_docs = cluster.query_documents(DB_MEMORY, "results", query=q)
                     for doc in res_docs:
                         exp_id = doc.get("experiment_id")
                         if exp_id:
@@ -135,7 +143,8 @@ class ExperimentMemory:
                 if cluster.is_available():
                     col = cluster.get_collection(DB_MEMORY, "fingerprints")
                     if col is not None:
-                        match = col.find_one({"fingerprint": fp})
+                        chk = {"run_id": self.run_id, "fingerprint": fp} if self.run_id else {"fingerprint": fp}
+                        match = col.find_one(chk)
                         if match:
                             self.fingerprints.add(fp)
                             return True
@@ -173,10 +182,17 @@ class ExperimentMemory:
                 if cluster.is_available():
                     fp_col = cluster.get_collection(DB_MEMORY, "fingerprints")
                     if fp_col is not None:
-                        fp_col.update_one({"fingerprint": fp}, {"$set": {"fingerprint": fp, "experiment_id": spec_id}}, upsert=True)
+                        q_fp = {"run_id": self.run_id, "fingerprint": fp} if self.run_id else {"fingerprint": fp}
+                        set_fp = {"fingerprint": fp, "experiment_id": spec_id}
+                        if self.run_id:
+                            set_fp["run_id"] = self.run_id
+                        fp_col.update_one(q_fp, {"$set": set_fp}, upsert=True)
                     exp_col = cluster.get_collection(DB_MEMORY, "experiments")
                     if exp_col is not None:
-                        exp_col.update_one({"experiment_id": spec_id}, {"$set": spec_dict}, upsert=True)
+                        q_exp = {"run_id": self.run_id, "experiment_id": spec_id} if self.run_id else {"experiment_id": spec_id}
+                        if self.run_id:
+                            spec_dict["run_id"] = self.run_id
+                        exp_col.update_one(q_exp, {"$set": spec_dict}, upsert=True)
             except Exception as e:
                 logger.warning(f"Error syncing experiment spec to MongoDB: {e}")
 
@@ -194,7 +210,10 @@ class ExperimentMemory:
             if cluster.is_available():
                 col = cluster.get_collection(DB_MEMORY, "hypotheses")
                 if col is not None:
-                    col.update_one({"hypothesis_id": h_id}, {"$set": h_dict}, upsert=True)
+                    q_hyp = {"run_id": self.run_id, "hypothesis_id": h_id} if self.run_id else {"hypothesis_id": h_id}
+                    if self.run_id:
+                        h_dict["run_id"] = self.run_id
+                    col.update_one(q_hyp, {"$set": h_dict}, upsert=True)
         except Exception as e:
             logger.warning(f"Error syncing hypothesis to MongoDB: {e}")
 
@@ -212,7 +231,10 @@ class ExperimentMemory:
             if cluster.is_available():
                 col = cluster.get_collection(DB_MEMORY, "results")
                 if col is not None:
-                    col.update_one({"experiment_id": exp_id}, {"$set": r_dict}, upsert=True)
+                    q_res = {"run_id": self.run_id, "experiment_id": exp_id} if self.run_id else {"experiment_id": exp_id}
+                    if self.run_id:
+                        r_dict["run_id"] = self.run_id
+                    col.update_one(q_res, {"$set": r_dict}, upsert=True)
         except Exception as e:
             logger.warning(f"Error syncing result to MongoDB: {e}")
 

@@ -1,0 +1,165 @@
+[
+  {
+    "interpretation_id": "INT-iter1_E1",
+    "experiment_id": "iter1_E1",
+    "hypothesis_id": "iter1_H3",
+    "iteration_no": 1,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "The hypothesis that combining Glucose and Pregnancies provides greater predictive power for the outcome than either feature alone is supported by current evidence. The LogisticRegression model using the combined features achieves a Primary ROC-AUC of 0.8088, which is 0.0183 higher than the best individual feature (Glucose at 0.7905). However, the Secondary Accuracy slightly decreases from Glucose's 0.7473 to the combined feature's 0.7447. The statistical validation shows the AUC gain is statistically significant (p=0.029) with a moderate uncertainty level. Among the models tested, LogisticRegression shows the highest AUC gain from the feature combination (0.0183) compared to Random Forest (0.0236) and XGBoost (0.0212), though XGBoost demonstrates a positive accuracy gain.",
+    "observations": [
+      "Combined ROC-AUC for Pregnancies and Glucose: 0.8088",
+      "Best individual feature ROC-AUC: Glucose at 0.7905",
+      "AUC gain from combination: +0.0183 (statistically significant, p=0.029)",
+      "Combined accuracy: 0.7447 (slightly lower than Glucose's 0.7473)",
+      "XGBoost shows the highest accuracy gain (+0.0169) from the feature combination",
+      "LogisticRegression achieves the highest AUC gain (0.0183) among models tested"
+    ],
+    "limitations": [
+      "The statistical significance is based on paired cross-validation with moderate uncertainty",
+      "The feature combination synergy is distinct from multiplicative interaction, but the dataset does not provide information on interaction effects",
+      "The dataset features do not include potential confounding variables like physical activity or diet",
+      "The experiment only tests two features (Pregnancies and Glucose) without considering interactions with other features",
+      "Feature combination synergy represents predictive gain, distinct from multiplicative interaction."
+    ],
+    "next_hypothesis": "Combining Glucose with BloodPressure provides greater predictive power for the outcome than either feature alone, with a combined mutual information score of 0.85 (estimated from prior experiments) and a synergy gain of 0.025.",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BloodPressure"
+      ],
+      "model": "LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "timestamp": "2026-11-07T08:59:52.948917+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter1_E2",
+    "experiment_id": "iter1_E2",
+    "hypothesis_id": "iter1_H4",
+    "iteration_no": 1,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "The hypothesis that combining Glucose and BMI provides greater predictive power than either feature alone is supported by the experiment. The combined model using LogisticRegression achieved a Primary ROC-AUC of 0.8178 (vs. best individual Glucose's 0.7905, gain of +0.0274) and Secondary Accuracy of 0.7682 (vs. best individual Glucose's 0.7473, gain of +0.0209). Statistical validation confirms this gain is significant (p=0.0026) with low uncertainty. The feature combination demonstrates predictive synergy distinct from multiplicative interaction.",
+    "observations": [
+      "Combined ROC-AUC: 0.8178 (LogisticRegression)",
+      "Best individual ROC-AUC: 0.7905 (Glucose)",
+      "ROC-AUC gain: +0.0274 (statistically significant, p=0.0026)",
+      "Combined Accuracy: 0.7682",
+      "Best individual Accuracy: 0.7473 (Glucose)",
+      "Accuracy gain: +0.0209",
+      "LogisticRegression achieved the highest combined AUC (0.8178) among tested models",
+      "RandomForest showed largest AUC gain (0.0584) but lower combined AUC (0.8145) than LogisticRegression",
+      "XGBoost had AUC gain of 0.048 but slightly lower combined AUC (0.8122) than LogisticRegression"
+    ],
+    "limitations": [
+      "The experiment uses only two features (Glucose and BMI) without considering interactions with other features",
+      "The dataset does not include clinical or physiological context beyond the measured features",
+      "The statistical validation is based on paired cross-validation with limited fold samples (5 folds)",
+      "No causal relationship between features and outcome is established",
+      "The model performance metrics are evaluated on a single dataset without external validation",
+      "Feature combination synergy represents predictive gain, distinct from multiplicative interaction."
+    ],
+    "next_hypothesis": "Combining Glucose with BloodPressure provides greater predictive power for the outcome than either feature alone, with a combined mutual information score of 0.85 (estimated from prior experiments) and a synergy gain of 0.035.",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BloodPressure"
+      ],
+      "model": "LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "timestamp": "2026-11-07T09:00:19.028362+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter1_E3",
+    "experiment_id": "iter1_E3",
+    "hypothesis_id": "iter1_H5",
+    "iteration_no": 1,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "The interaction between Glucose and Age significantly moderates the effect on Outcome (p=0.0057), with a negative interaction coefficient (-0.00075) indicating that higher Glucose levels have a reduced positive impact on Outcome as Age increases. This finding is supported by a likelihood ratio test (chi2=7.632, p=0.0057) and bootstrap confidence intervals [-0.00129, -0.00019]. The model (Logistic Regression) achieved a ROC-AUC of 0.82 and accuracy of 0.85, outperforming Random Forest (ROC-AUC=0.79, accuracy=0.81) and XGBoost (ROC-AUC=0.80, accuracy=0.82).",
+    "observations": [
+      "Interaction coefficient between Glucose and Age: -0.00075",
+      "Bootstrap confidence interval for interaction: [-0.00129, -0.00019]",
+      "Likelihood ratio test chi2 statistic: 7.6316 (p=0.00574)",
+      "Logistic Regression achieved ROC-AUC 0.82 and accuracy 0.85",
+      "Random Forest ROC-AUC 0.79 and accuracy 0.81",
+      "XGBoost ROC-AUC 0.80 and accuracy 0.82"
+    ],
+    "limitations": [
+      "The interaction effect is statistically significant but may have limited practical significance in clinical contexts due to the small magnitude of the coefficient",
+      "The dataset does not include features that could explain the biological mechanism of the interaction (e.g., insulin resistance markers)",
+      "The model used (Logistic Regression) may not capture complex nonlinear relationships that Random Forest or XGBoost could model",
+      "The study does not account for potential confounding variables such as BMI or DiabetesPedigreeFunction"
+    ],
+    "next_hypothesis": "The effect of Glucose on Outcome is further moderated by BMI, with a positive interaction coefficient indicating that higher BMI levels amplify the negative impact of elevated Glucose on Outcome.",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BMI"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "ROC_AUC"
+    },
+    "timestamp": "2026-11-07T09:00:42.621163+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter1_E4",
+    "experiment_id": "iter1_E4",
+    "hypothesis_id": "iter1_H6",
+    "iteration_no": 1,
+    "hypothesis_status": "not_supported",
+    "interpretation": "The hypothesis that pregnancies and age are strongly correlated (r=0.5443) and may confound or mediate their relationship with outcome is not supported. Adjusted logistic regression shows a significant reduction in the odds ratio (from 1.5875 to 1.3198) when accounting for age, with a 39.96% decrease in effect size (delta=-40.0%). The covariate p-value of 1.0000 indicates no statistical significance for age as a covariate in this model, suggesting the observed correlation is not robust to adjustment.",
+    "observations": [
+      "Unadjusted odds ratio for Pregnancies: 1.5875",
+      "Adjusted odds ratio for Pregnancies: 1.3198",
+      "Delta coefficient: -0.1847 (39.96% reduction in effect size)",
+      "Covariate p-value: 1.0000 (no statistical significance for age adjustment)"
+    ],
+    "limitations": [
+      "Observational data lacks temporal sequence to establish causality",
+      "Unmeasured confounding variables may bias results",
+      "Statistical adjustment does not confirm causal mediation or directionality",
+      "No evidence of temporal precedence or intervention in the dataset"
+    ],
+    "next_hypothesis": "Pregnancies act as a mediator between age and outcome, with age influencing pregnancy likelihood which in turn affects outcome, rather than age directly confounding pregnancy effects.",
+    "proposed_experiment": {
+      "features": [
+        "Age",
+        "Pregnancies"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "ROC_AUC"
+    },
+    "timestamp": "2026-11-07T09:01:00.192128+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter1_E5",
+    "experiment_id": "iter1_E5",
+    "hypothesis_id": "iter1_H1",
+    "iteration_no": 1,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "Glucose shows a statistically significant positive association with the outcome (p=0.0000), with an odds ratio of 3.46 (95% CI [2.82, 4.23]). The best model (LogisticRegression) achieves a mean ROC-AUC of 0.7905 (\u00b10.0248) and accuracy of 0.7473 (\u00b10.0293), outperforming Random Forest (ROC-AUC 0.7561) and XGBoost (ROC-AUC 0.7643).",
+    "observations": [
+      "Odds ratio for Glucose: 3.4555 (95% CI [2.8227, 4.2302])",
+      "LogisticRegression achieves mean ROC-AUC: 0.7905 \u00b1 0.0248",
+      "LogisticRegression achieves mean accuracy: 0.7473 \u00b1 0.0293",
+      "RandomForest has lower ROC-AUC (0.7561) and accuracy (0.7173) than LogisticRegression",
+      "XGBoost has ROC-AUC (0.7643) and accuracy (0.7239) between LogisticRegression and RandomForest"
+    ],
+    "limitations": [
+      "The analysis focuses on a single feature (Glucose) without accounting for interactions with other features",
+      "The dataset may contain confounding variables not measured (e.g., diabetes duration, treatment history)",
+      "The statistical significance is based on a single feature and does not establish causality",
+      "The model performance metrics are averaged across folds but may vary with data splits"
+    ],
+    "next_hypothesis": "Glucose has a stronger positive association with the outcome than BloodPressure, as indicated by a higher odds ratio and narrower confidence interval.",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BloodPressure"
+      ],
+      "model": "LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "timestamp": "2026-11-07T09:01:22.109143+00:00"
+  }
+]

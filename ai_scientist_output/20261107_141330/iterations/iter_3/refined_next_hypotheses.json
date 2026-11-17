@@ -1,0 +1,22 @@
+[
+  {
+    "hypothesis_id": "iter4_H1",
+    "parent_hypothesis_id": "iter3_H2",
+    "iteration_no": 4,
+    "hypothesis": "The interaction between Insulin and BMI is not significant in the context of the current dataset, but we hypothesize that when BMI is above 30 (obese), the relationship between Insulin and Outcome becomes negative, indicating insulin resistance.",
+    "rationale": "Derived from iter3_E3 (iter3_H2) outcome: The interaction between Insulin and BMI does not provide statistically significant evidence to support the hypothesis that higher BMI diminishes the p",
+    "proposed_experiment": {
+      "features": [
+        "BMI",
+        "Insulin"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "BMI",
+      "Insulin"
+    ],
+    "timestamp": "2026-11-07T08:48:07.916176+00:00"
+  }
+]

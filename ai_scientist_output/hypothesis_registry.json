@@ -192,5 +192,32 @@
         "proposed_experiment": "{\"features\": [\"Pregnancies\", \"Glucose\", \"Age\"], \"model\": \"statsmodels.Logit\", \"metric\": \"adjusted_or\"}",
         "fingerprint": "('Age', 'Glucose', 'Pregnancies')-refined_follow_up",
         "timestamp": "2026-11-06T21:22:29.749509+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H2",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Glucose levels have a significant positive association with diabetes outcome, as indicated by a Pearson correlation coefficient of 0.42 and mutual information score of 0.55",
+        "features_involved": [
+            "Glucose"
+        ],
+        "evidence_from_data": "The hypothesis that pregnancies has a strong positive association with outcome is supported by current evidence. XGBoost achieved the best performance with a mean ROC-AUC of 0.633 (\u00b10.042) and accuracy of 0.684 (\u00b10.018). The odds ratio of 1.59 (95% CI [1.36, 1.85]) indicates a statistically significant positive association with p=0.0000.",
+        "proposed_experiment": "{\"features\": [\"Glucose\"], \"model\": \"XGBoost\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('Glucose',)-refined_follow_up",
+        "timestamp": "2026-11-06T22:14:24.589424+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H6",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Glucose levels may act as a confounding variable in the relationship between Pregnancies and Outcome, given that Glucose is highly correlated with Outcome in the dataset.",
+        "features_involved": [
+            "Pregnancies",
+            "Glucose"
+        ],
+        "evidence_from_data": "The hypothesis that Age acts as a confounding variable in the relationship between Pregnancies and Outcome is not supported by the current evidence. Adjusting for Age reduced the effect size of Pregnancies from an unadjusted OR of 1.5875 to an adjusted OR of 1.3198, representing a 39.96% decrease in effect size. However, the covariate p-value of 1.0 indicates no statistical significance for Age as a confounder, and the model adjustment did not achieve statistical significance.",
+        "proposed_experiment": "{\"features\": [\"Pregnancies\", \"Glucose\"], \"model\": \"statsmodels.Logit\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('Glucose', 'Pregnancies')-refined_follow_up",
+        "timestamp": "2026-11-06T22:14:24.639484+00:00"
     }
 ]

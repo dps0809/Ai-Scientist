@@ -1,0 +1,28 @@
+[
+    {
+        "experiment_id": "iter5_E1",
+        "hypothesis_id": "iter5_H1",
+        "iteration_no": 5,
+        "experiment_type": "feature_interaction_moderation",
+        "method": "interaction_regression",
+        "model_type": "statsmodels.Logit",
+        "features": [
+            "Glucose",
+            "BMI"
+        ],
+        "target": "Outcome",
+        "comparison": null,
+        "parameters": {
+            "include_interaction_term": true,
+            "maxiter": 100
+        },
+        "evaluation": {
+            "interaction_term": true,
+            "interaction_p_value": true,
+            "likelihood_ratio_test": true,
+            "bootstrap_samples": 500
+        },
+        "routing_notes": "Interaction logistic regression with product term and bootstrap.",
+        "timestamp": "2026-11-07T09:02:46.461916+00:00"
+    }
+]

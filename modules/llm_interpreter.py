@@ -75,11 +75,12 @@ Original Hypothesis ({result.hypothesis_id})
 Experiment Configuration
 - Experiment ID: {result.experiment_id}
 - Experiment Type: {result.experiment_type}
-- Model: {model_name}
+- Best Model Architecture: {model_name}
 - Features tested: {features_tested}
 - Target: {result.configuration.get('target', 'Outcome')}
+- Metrics Framework: Primary = ROC_AUC, Secondary = Accuracy
 {avail_str}
-Experimental Results
+Experimental Results & Model Tournament
 {results_str}
 
 Statistical Validation
@@ -89,7 +90,7 @@ Evaluation Summary
 {eval_str}
 
 Instructions
-1. Interpret the experimental findings.
+1. Interpret the experimental findings, noting both Primary ROC-AUC and Secondary Accuracy, and how the models (Logistic Regression vs Random Forest vs XGBoost) compared.
 2. Determine whether the hypothesis is supported, not supported, or inconclusive.
 3. Identify the strongest observations.
 4. Do not invent statistical significance or causal relationships.
@@ -488,27 +489,28 @@ def interpret_and_refine_all(
     with open(os.path.join(iter_dir, "refined_next_hypotheses.json"), "w", encoding="utf-8") as f:
         json.dump(refined_json, f, indent=2)
 
-    # MongoDB cluster sync
+    # MongoDB cluster sync scoped strictly to run_id
     try:
+        run_id = os.path.basename(out_dir.rstrip("\\/"))
         cluster = MongoClusterManager()
         if cluster.is_available():
-            int_col = cluster.get_collection(DB_REFINEMENTS, "interpretations")
-            if int_col is not None and cluster_interp_docs:
-                for doc in cluster_interp_docs:
-                    int_col.update_one(
-                        {"interpretation_id": doc["interpretation_id"], "iteration_no": doc["iteration_no"]},
-                        {"$set": doc},
-                        upsert=True
-                    )
-            ref_col = cluster.get_collection(DB_REFINEMENTS, "refined_hypotheses")
-            if ref_col is not None and refined_json:
-                for doc in refined_json:
-                    ref_col.update_one(
-                        {"hypothesis_id": doc["hypothesis_id"], "iteration_no": doc["iteration_no"]},
-                        {"$set": doc},
-                        upsert=True
-                    )
-            print(f"Synced {len(cluster_interp_docs)} interpretations and {len(refined_json)} refined hypotheses to MongoDB: {DB_REFINEMENTS}")
+            if cluster_interp_docs:
+                cluster.save_documents(
+                    db_name=DB_REFINEMENTS,
+                    collection_name="interpretations",
+                    docs=cluster_interp_docs,
+                    id_key="interpretation_id",
+                    run_id=run_id
+                )
+            if refined_json:
+                cluster.save_documents(
+                    db_name=DB_REFINEMENTS,
+                    collection_name="refined_hypotheses",
+                    docs=refined_json,
+                    id_key="hypothesis_id",
+                    run_id=run_id
+                )
+            print(f"Synced {len(cluster_interp_docs)} interpretations and {len(refined_json)} refined hypotheses to MongoDB: {DB_REFINEMENTS} (run_id={run_id})")
     except Exception as e:
         logger.warning(f"Error persisting refinements to MongoDB cluster: {e}")
 

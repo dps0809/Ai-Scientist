@@ -237,7 +237,7 @@ def main():
     run_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_output_dir = os.path.join(OUTPUT_DIR, run_timestamp)
     os.makedirs(run_output_dir, exist_ok=True)
-    registry = HypothesisRegistry()
+    registry = HypothesisRegistry(run_id=run_timestamp)
 
     print("\n" + "=" * 70)
     print(f"RUN HYPOTHESIS & EXPERIMENT CYCLE")

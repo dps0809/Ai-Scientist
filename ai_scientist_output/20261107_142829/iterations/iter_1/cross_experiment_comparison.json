@@ -1,0 +1,193 @@
+{
+  "comparison_id": "COMP-iter1",
+  "iteration_no": 1,
+  "individual_baselines": {
+    "Glucose": 0.7905
+  },
+  "individual_accuracies": {
+    "Glucose": 0.7473
+  },
+  "combination_scores": {
+    "Pregnancies + Glucose": 0.8088,
+    "Glucose + BMI": 0.8178
+  },
+  "combination_accuracies": {
+    "Pregnancies + Glucose": 0.7447,
+    "Glucose + BMI": 0.7682
+  },
+  "synergy_gains": {
+    "Pregnancies + Glucose": 0.0183,
+    "Glucose + BMI": 0.0274
+  },
+  "accuracy_gains": {
+    "Pregnancies + Glucose": -0.0026,
+    "Glucose + BMI": 0.0209
+  },
+  "ranking": [
+    {
+      "experiment_id": "iter1_E2",
+      "name": "Glucose + BMI",
+      "type": "feature_combination",
+      "score": 0.8178,
+      "gain": 0.0274,
+      "accuracy": 0.7682,
+      "accuracy_gain": 0.0209,
+      "best_model": "LogisticRegression",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "combined_mean_auc": 0.8178,
+          "best_individual_mean_auc": 0.7905,
+          "auc_gain": 0.0274,
+          "combined_mean_accuracy": 0.7682,
+          "best_individual_mean_accuracy": 0.7473,
+          "accuracy_gain": 0.0209,
+          "individual_aucs": {
+            "Glucose": 0.7905,
+            "BMI": 0.6864
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7473,
+            "BMI": 0.6589
+          }
+        },
+        "RandomForest": {
+          "combined_mean_auc": 0.8145,
+          "best_individual_mean_auc": 0.7561,
+          "auc_gain": 0.0584,
+          "combined_mean_accuracy": 0.7578,
+          "best_individual_mean_accuracy": 0.7173,
+          "accuracy_gain": 0.0404,
+          "individual_aucs": {
+            "Glucose": 0.7561,
+            "BMI": 0.6503
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7173,
+            "BMI": 0.6653
+          }
+        },
+        "XGBoost": {
+          "combined_mean_auc": 0.8122,
+          "best_individual_mean_auc": 0.7643,
+          "auc_gain": 0.048,
+          "combined_mean_accuracy": 0.7642,
+          "best_individual_mean_accuracy": 0.7239,
+          "accuracy_gain": 0.0403,
+          "individual_aucs": {
+            "Glucose": 0.7643,
+            "BMI": 0.6708
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7239,
+            "BMI": 0.6732
+          }
+        }
+      },
+      "p_value": 0.0026,
+      "rank": 1
+    },
+    {
+      "experiment_id": "iter1_E1",
+      "name": "Pregnancies + Glucose",
+      "type": "feature_combination",
+      "score": 0.8088,
+      "gain": 0.0183,
+      "accuracy": 0.7447,
+      "accuracy_gain": -0.0026,
+      "best_model": "LogisticRegression",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "combined_mean_auc": 0.8088,
+          "best_individual_mean_auc": 0.7905,
+          "auc_gain": 0.0183,
+          "combined_mean_accuracy": 0.7447,
+          "best_individual_mean_accuracy": 0.7473,
+          "accuracy_gain": -0.0026,
+          "individual_aucs": {
+            "Pregnancies": 0.62,
+            "Glucose": 0.7905
+          },
+          "individual_accuracies": {
+            "Pregnancies": 0.6589,
+            "Glucose": 0.7473
+          }
+        },
+        "RandomForest": {
+          "combined_mean_auc": 0.7797,
+          "best_individual_mean_auc": 0.7561,
+          "auc_gain": 0.0236,
+          "combined_mean_accuracy": 0.7148,
+          "best_individual_mean_accuracy": 0.7173,
+          "accuracy_gain": -0.0025,
+          "individual_aucs": {
+            "Pregnancies": 0.6327,
+            "Glucose": 0.7561
+          },
+          "individual_accuracies": {
+            "Pregnancies": 0.681,
+            "Glucose": 0.7173
+          }
+        },
+        "XGBoost": {
+          "combined_mean_auc": 0.7854,
+          "best_individual_mean_auc": 0.7643,
+          "auc_gain": 0.0212,
+          "combined_mean_accuracy": 0.7408,
+          "best_individual_mean_accuracy": 0.7239,
+          "accuracy_gain": 0.0169,
+          "individual_aucs": {
+            "Pregnancies": 0.633,
+            "Glucose": 0.7643
+          },
+          "individual_accuracies": {
+            "Pregnancies": 0.6836,
+            "Glucose": 0.7239
+          }
+        }
+      },
+      "p_value": 0.029,
+      "rank": 2
+    },
+    {
+      "experiment_id": "iter1_E5",
+      "name": "Glucose",
+      "type": "individual_baseline",
+      "score": 0.7905,
+      "accuracy": 0.7473,
+      "best_model": "LogisticRegression",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "mean_auc": 0.7905,
+          "std_auc": 0.0248,
+          "mean_accuracy": 0.7473,
+          "std_accuracy": 0.0293
+        },
+        "RandomForest": {
+          "mean_auc": 0.7561,
+          "std_auc": 0.0255,
+          "mean_accuracy": 0.7173,
+          "std_accuracy": 0.0368
+        },
+        "XGBoost": {
+          "mean_auc": 0.7643,
+          "std_auc": 0.026,
+          "mean_accuracy": 0.7239,
+          "std_accuracy": 0.0254
+        }
+      },
+      "rank": 3
+    }
+  ],
+  "summary_findings": [
+    "Top individual predictive baseline: Glucose (Primary ROC-AUC=0.7905, Secondary Accuracy=0.7473).",
+    "Top combination model: Glucose + BMI (Primary ROC-AUC=0.8178, gain=+0.0274; Secondary Accuracy=0.7682, gain=+0.0209).",
+    "Feature combination 'Glucose + BMI' outperforms all individual predictor baselines under LogisticRegression."
+  ],
+  "timestamp": "2026-11-07T08:59:27.711495+00:00"
+}

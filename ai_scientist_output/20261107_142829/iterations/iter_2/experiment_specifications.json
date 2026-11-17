@@ -1,0 +1,163 @@
+[
+    {
+        "experiment_id": "iter2_E1",
+        "hypothesis_id": "iter2_H3",
+        "iteration_no": 2,
+        "experiment_type": "feature_interaction_moderation",
+        "method": "interaction_regression",
+        "model_type": "statsmodels.Logit",
+        "features": [
+            "Glucose",
+            "BMI"
+        ],
+        "target": "Outcome",
+        "comparison": null,
+        "parameters": {
+            "include_interaction_term": true,
+            "maxiter": 100
+        },
+        "evaluation": {
+            "interaction_term": true,
+            "interaction_p_value": true,
+            "likelihood_ratio_test": true,
+            "bootstrap_samples": 500
+        },
+        "routing_notes": "Interaction logistic regression with product term and bootstrap.",
+        "timestamp": "2026-11-07T09:01:22.302938+00:00"
+    },
+    {
+        "experiment_id": "iter2_E2",
+        "hypothesis_id": "iter2_H1",
+        "iteration_no": 2,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "Glucose",
+            "BloodPressure"
+        ],
+        "target": "Outcome",
+        "comparison": [
+            [
+                "Glucose"
+            ],
+            [
+                "BloodPressure"
+            ],
+            [
+                "Glucose",
+                "BloodPressure"
+            ]
+        ],
+        "parameters": {
+            "solver": "lbfgs",
+            "max_iter": 500
+        },
+        "evaluation": {
+            "metric": "roc_auc",
+            "cross_validation": "StratifiedKFold",
+            "folds": 5
+        },
+        "routing_notes": "Multi-feature paired comparative predictive cross-validation.",
+        "timestamp": "2026-11-07T09:01:22.303419+00:00"
+    },
+    {
+        "experiment_id": "iter2_E3",
+        "hypothesis_id": "iter2_H2",
+        "iteration_no": 2,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "Glucose",
+            "BloodPressure"
+        ],
+        "target": "Outcome",
+        "comparison": [
+            [
+                "Glucose"
+            ],
+            [
+                "BloodPressure"
+            ],
+            [
+                "Glucose",
+                "BloodPressure"
+            ]
+        ],
+        "parameters": {
+            "solver": "lbfgs",
+            "max_iter": 500
+        },
+        "evaluation": {
+            "metric": "roc_auc",
+            "cross_validation": "StratifiedKFold",
+            "folds": 5
+        },
+        "routing_notes": "Multi-feature paired comparative predictive cross-validation.",
+        "timestamp": "2026-11-07T09:01:22.304111+00:00"
+    },
+    {
+        "experiment_id": "iter2_E4",
+        "hypothesis_id": "iter2_H5",
+        "iteration_no": 2,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "Glucose",
+            "BloodPressure"
+        ],
+        "target": "Outcome",
+        "comparison": [
+            [
+                "Glucose"
+            ],
+            [
+                "BloodPressure"
+            ],
+            [
+                "Glucose",
+                "BloodPressure"
+            ]
+        ],
+        "parameters": {
+            "solver": "lbfgs",
+            "max_iter": 500
+        },
+        "evaluation": {
+            "metric": "roc_auc",
+            "cross_validation": "StratifiedKFold",
+            "folds": 5
+        },
+        "routing_notes": "Multi-feature paired comparative predictive cross-validation.",
+        "timestamp": "2026-11-07T09:01:22.304581+00:00"
+    },
+    {
+        "experiment_id": "iter2_E5",
+        "hypothesis_id": "iter2_H4",
+        "iteration_no": 2,
+        "experiment_type": "comparative_or_confounding_relationship",
+        "method": "adjusted_regression",
+        "model_type": "statsmodels.Logit",
+        "features": [
+            "Age",
+            "Pregnancies"
+        ],
+        "target": "Outcome",
+        "comparison": null,
+        "parameters": {
+            "adjust_for_covariates": true,
+            "maxiter": 100
+        },
+        "evaluation": {
+            "adjusted_odds_ratio": true,
+            "unadjusted_odds_ratio": true,
+            "delta_coefficient": true,
+            "confidence_interval": true,
+            "p_value": true
+        },
+        "routing_notes": "Routed H5 initially to adjusted regression baseline to determine direct vs indirect association before attempting formal causal mediation.",
+        "timestamp": "2026-11-07T09:01:22.305085+00:00"
+    }
+]

@@ -1,0 +1,28 @@
+[
+    {
+        "experiment_id": "iter4_E1",
+        "hypothesis_id": "iter4_H1",
+        "iteration_no": 4,
+        "experiment_type": "feature_interaction_moderation",
+        "method": "interaction_regression",
+        "model_type": "statsmodels.Logit",
+        "features": [
+            "BMI",
+            "Insulin"
+        ],
+        "target": "Outcome",
+        "comparison": null,
+        "parameters": {
+            "include_interaction_term": true,
+            "maxiter": 100
+        },
+        "evaluation": {
+            "interaction_term": true,
+            "interaction_p_value": true,
+            "likelihood_ratio_test": true,
+            "bootstrap_samples": 500
+        },
+        "routing_notes": "Interaction logistic regression with product term and bootstrap.",
+        "timestamp": "2026-11-07T08:48:08.000943+00:00"
+    }
+]

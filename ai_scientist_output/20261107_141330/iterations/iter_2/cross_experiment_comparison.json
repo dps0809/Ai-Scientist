@@ -1,0 +1,157 @@
+{
+  "comparison_id": "COMP-iter2",
+  "iteration_no": 2,
+  "individual_baselines": {},
+  "individual_accuracies": {},
+  "combination_scores": {
+    "Glucose + BMI + Age": 0.8178,
+    "Glucose + BloodPressure": 0.7927
+  },
+  "combination_accuracies": {
+    "Glucose + BMI + Age": 0.7682,
+    "Glucose + BloodPressure": 0.7499
+  },
+  "synergy_gains": {
+    "Glucose + BMI + Age": 0.0274,
+    "Glucose + BloodPressure": 0.0023
+  },
+  "accuracy_gains": {
+    "Glucose + BMI + Age": 0.0209,
+    "Glucose + BloodPressure": 0.0026
+  },
+  "ranking": [
+    {
+      "experiment_id": "iter2_E1",
+      "name": "Glucose + BMI + Age",
+      "type": "feature_combination",
+      "score": 0.8178,
+      "gain": 0.0274,
+      "accuracy": 0.7682,
+      "accuracy_gain": 0.0209,
+      "best_model": "LogisticRegression",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "combined_mean_auc": 0.8178,
+          "best_individual_mean_auc": 0.7905,
+          "auc_gain": 0.0274,
+          "combined_mean_accuracy": 0.7682,
+          "best_individual_mean_accuracy": 0.7473,
+          "accuracy_gain": 0.0209,
+          "individual_aucs": {
+            "Glucose": 0.7905,
+            "BMI": 0.6864
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7473,
+            "BMI": 0.6589
+          }
+        },
+        "RandomForest": {
+          "combined_mean_auc": 0.8145,
+          "best_individual_mean_auc": 0.7561,
+          "auc_gain": 0.0584,
+          "combined_mean_accuracy": 0.7578,
+          "best_individual_mean_accuracy": 0.7173,
+          "accuracy_gain": 0.0404,
+          "individual_aucs": {
+            "Glucose": 0.7561,
+            "BMI": 0.6503
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7173,
+            "BMI": 0.6653
+          }
+        },
+        "XGBoost": {
+          "combined_mean_auc": 0.8122,
+          "best_individual_mean_auc": 0.7643,
+          "auc_gain": 0.048,
+          "combined_mean_accuracy": 0.7642,
+          "best_individual_mean_accuracy": 0.7239,
+          "accuracy_gain": 0.0403,
+          "individual_aucs": {
+            "Glucose": 0.7643,
+            "BMI": 0.6708
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7239,
+            "BMI": 0.6732
+          }
+        }
+      },
+      "p_value": 0.0026,
+      "rank": 1
+    },
+    {
+      "experiment_id": "iter2_E4",
+      "name": "Glucose + BloodPressure",
+      "type": "feature_combination",
+      "score": 0.7927,
+      "gain": 0.0023,
+      "accuracy": 0.7499,
+      "accuracy_gain": 0.0026,
+      "best_model": "LogisticRegression",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "combined_mean_auc": 0.7927,
+          "best_individual_mean_auc": 0.7905,
+          "auc_gain": 0.0023,
+          "combined_mean_accuracy": 0.7499,
+          "best_individual_mean_accuracy": 0.7473,
+          "accuracy_gain": 0.0026,
+          "individual_aucs": {
+            "Glucose": 0.7905,
+            "BloodPressure": 0.6047
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7473,
+            "BloodPressure": 0.651
+          }
+        },
+        "RandomForest": {
+          "combined_mean_auc": 0.7568,
+          "best_individual_mean_auc": 0.7561,
+          "auc_gain": 0.0007,
+          "combined_mean_accuracy": 0.7317,
+          "best_individual_mean_accuracy": 0.7173,
+          "accuracy_gain": 0.0144,
+          "individual_aucs": {
+            "Glucose": 0.7561,
+            "BloodPressure": 0.5261
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7173,
+            "BloodPressure": 0.6068
+          }
+        },
+        "XGBoost": {
+          "combined_mean_auc": 0.762,
+          "best_individual_mean_auc": 0.7643,
+          "auc_gain": -0.0023,
+          "combined_mean_accuracy": 0.7356,
+          "best_individual_mean_accuracy": 0.7239,
+          "accuracy_gain": 0.0117,
+          "individual_aucs": {
+            "Glucose": 0.7643,
+            "BloodPressure": 0.5373
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7239,
+            "BloodPressure": 0.6302
+          }
+        }
+      },
+      "p_value": 0.2268,
+      "rank": 2
+    }
+  ],
+  "summary_findings": [
+    "Top combination model: Glucose + BMI + Age (Primary ROC-AUC=0.8178, gain=+0.0274; Secondary Accuracy=0.7682, gain=+0.0209).",
+    "Feature combination 'Glucose + BMI + Age' outperforms all individual predictor baselines under LogisticRegression."
+  ],
+  "timestamp": "2026-11-07T08:46:22.424592+00:00"
+}

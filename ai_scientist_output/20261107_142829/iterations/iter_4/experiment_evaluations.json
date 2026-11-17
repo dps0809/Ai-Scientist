@@ -1,0 +1,46 @@
+[
+  {
+    "experiment_id": "iter4_E1",
+    "hypothesis_id": "iter4_H1",
+    "iteration_no": 4,
+    "status": "completed",
+    "experiment_type": "feature_interaction_moderation",
+    "configuration": {
+      "features": [
+        "Glucose",
+        "SkinThickness"
+      ],
+      "target": "Outcome",
+      "model": "statsmodels.Logit",
+      "method": "interaction_regression"
+    },
+    "results": {
+      "interaction_coefficient": -0.00016,
+      "main_effects": {
+        "feat_a": 0.0389,
+        "feat_b": 0.0444
+      },
+      "bootstrap_ci": [
+        -0.00088,
+        0.00061
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "likelihood_ratio_test",
+      "chi2_statistic": 0.1546,
+      "p_value": 0.69416,
+      "bootstrap_confidence_interval": [
+        -0.00088,
+        0.00061
+      ]
+    },
+    "evaluation": {
+      "verdict": "not_supported",
+      "is_statistically_significant": false,
+      "practical_significance": "negligible_or_negative",
+      "uncertainty_level": "moderate",
+      "summary": "Interaction experiment iter4_E1 testing [Glucose * SkinThickness] is not_supported: LRT chi2=0.155 (p=0.6942), interaction beta=-0.00016 (Wald p=0.6921), 95% bootstrap CI [-0.00088, 0.00061]."
+    },
+    "timestamp": "2026-11-07T09:02:29.732874+00:00"
+  }
+]

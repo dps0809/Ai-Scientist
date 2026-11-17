@@ -213,12 +213,14 @@ JSON Structure:
     with open(iter_path, "w") as f:
         json.dump(standardized_hypotheses, f, indent=4)
 
+    run_id = os.path.basename(out_dir.rstrip("\\/"))
     cluster = MongoClusterManager()
     cluster.save_documents(
         db_name=DB_HYPOTHESES,
         collection_name="hypotheses",
         docs=cluster_docs,
-        id_key="hypothesis_id"
+        id_key="hypothesis_id",
+        run_id=run_id
     )
 
     print("\nHypotheses saved successfully:")

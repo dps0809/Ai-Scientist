@@ -214,19 +214,22 @@ def validate_hypotheses(
     with open(os.path.join(iter_dir, "validated_hypotheses.json"), "w") as f:
         json.dump(report_dump, f, indent=4)
 
-    # Persist to MongoDB cluster
+    # Persist to MongoDB cluster scoped by run_id
+    run_id = os.path.basename(out_dir.rstrip("\\/"))
     cluster = MongoClusterManager()
     cluster.save_document(
         db_name=DB_VALIDATION,
         collection_name="reports",
         doc=report_dump,
-        id_key="report_id"
+        id_key="report_id",
+        run_id=run_id
     )
     cluster.save_documents(
         db_name=DB_VALIDATION,
         collection_name="validations",
         docs=[r.model_dump() for r in results],
-        id_key="validation_id"
+        id_key="validation_id",
+        run_id=run_id
     )
 
     print("\n" + "-" * 70)

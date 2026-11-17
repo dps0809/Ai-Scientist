@@ -1,0 +1,46 @@
+[
+  {
+    "experiment_id": "iter3_E3",
+    "hypothesis_id": "iter3_H2",
+    "iteration_no": 3,
+    "status": "completed",
+    "experiment_type": "feature_interaction_moderation",
+    "configuration": {
+      "features": [
+        "Insulin",
+        "BMI"
+      ],
+      "target": "Outcome",
+      "model": "statsmodels.Logit",
+      "method": "interaction_regression"
+    },
+    "results": {
+      "interaction_coefficient": -0.0004,
+      "main_effects": {
+        "feat_a": 0.0059,
+        "feat_b": 0.0738
+      },
+      "bootstrap_ci": [
+        -0.00067,
+        3e-05
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "likelihood_ratio_test",
+      "chi2_statistic": 7.6677,
+      "p_value": 0.00562,
+      "bootstrap_confidence_interval": [
+        -0.00067,
+        3e-05
+      ]
+    },
+    "evaluation": {
+      "verdict": "not_supported",
+      "is_statistically_significant": false,
+      "practical_significance": "negligible_or_negative",
+      "uncertainty_level": "moderate",
+      "summary": "Interaction experiment iter3_E3 testing [Insulin * BMI] is not_supported: LRT chi2=7.668 (p=0.0056), interaction beta=-0.00040 (Wald p=0.0051), 95% bootstrap CI [-0.00067, 0.00003]."
+    },
+    "timestamp": "2026-11-07T08:47:50.268597+00:00"
+  }
+]

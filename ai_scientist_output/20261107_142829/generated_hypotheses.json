@@ -1,0 +1,90 @@
+[
+    {
+        "hypothesis_id": "iter1_H1",
+        "iteration_no": 1,
+        "hypothesis_type": "individual_dependency",
+        "hypothesis": "Glucose has a strong positive association with the outcome, as indicated by a Pearson correlation coefficient of 0.2211 and a mutual information score of 0.7874.",
+        "features_involved": [
+            "Glucose"
+        ],
+        "evidence_from_data": "Pearson r: 0.2211, Spearman rho: N/A, Mutual Information: 0.7874",
+        "proposed_experiment": "Perform a linear regression analysis with Glucose as the predictor and the outcome as the response variable to quantify the effect size and significance of the relationship.",
+        "fingerprint": "('Glucose',)-individual_dependency",
+        "timestamp": "2026-11-07T08:59:20.931765+00:00",
+        "is_novel": false
+    },
+    {
+        "hypothesis_id": "iter1_H2",
+        "iteration_no": 1,
+        "hypothesis_type": "individual_dependency",
+        "hypothesis": "Pregnancies has a strong positive association with the outcome, as indicated by a Pearson correlation coefficient of 0.5443 and a mutual information score of 0.62.",
+        "features_involved": [
+            "Pregnancies"
+        ],
+        "evidence_from_data": "Pearson r: 0.5443, Spearman rho: N/A, Mutual Information: 0.62",
+        "proposed_experiment": "Conduct a logistic regression analysis with Pregnancies as the predictor and the outcome as the response variable to assess the odds ratio and statistical significance.",
+        "fingerprint": "('Pregnancies',)-individual_dependency",
+        "timestamp": "2026-11-07T08:59:20.932266+00:00",
+        "is_novel": false
+    },
+    {
+        "hypothesis_id": "iter1_H3",
+        "iteration_no": 1,
+        "hypothesis_type": "feature_combination_synergy",
+        "hypothesis": "Combining Glucose and Pregnancies provides greater predictive power for the outcome than either feature alone, with a combined mutual information score of 0.804, a synergy gain of 0.0166, and a joint mutual information of 0.1763.",
+        "features_involved": [
+            "Pregnancies",
+            "Glucose"
+        ],
+        "evidence_from_data": "Score_a: 0.7874, Score_b: 0.62, Combined_score: 0.804, Synergy_gain: 0.0166, Joint_MI: 0.1763",
+        "proposed_experiment": "Train a random forest classifier using Glucose and Pregnancies as features and evaluate the model's ROC AUC score to confirm the synergistic effect.",
+        "fingerprint": "('Glucose', 'Pregnancies')-feature_combination_synergy",
+        "timestamp": "2026-11-07T08:59:20.932602+00:00",
+        "is_novel": false
+    },
+    {
+        "hypothesis_id": "iter1_H4",
+        "iteration_no": 1,
+        "hypothesis_type": "feature_combination_synergy",
+        "hypothesis": "Combining Glucose and BMI provides greater predictive power for the outcome than either feature alone, with a combined mutual information score of 0.8097, a synergy gain of 0.0223, and a joint mutual information of 0.1993.",
+        "features_involved": [
+            "Glucose",
+            "BMI"
+        ],
+        "evidence_from_data": "Score_a: 0.7874, Score_b: 0.6881, Combined_score: 0.8097, Synergy_gain: 0.0223, Joint_MI: 0.1993",
+        "proposed_experiment": "Evaluate the predictive performance of a model using Glucose and BMI features via 5-fold cross-validation to measure the improvement in ROC AUC over single-feature models.",
+        "fingerprint": "('BMI', 'Glucose')-feature_combination_synergy",
+        "timestamp": "2026-11-07T08:59:20.932932+00:00",
+        "is_novel": false
+    },
+    {
+        "hypothesis_id": "iter1_H5",
+        "iteration_no": 1,
+        "hypothesis_type": "feature_interaction_moderation",
+        "hypothesis": "The effect of Glucose on the outcome varies significantly across levels of Age, with an interaction delta of -0.0007 and a p-value of 0.0364, indicating a statistically significant moderation effect.",
+        "features_involved": [
+            "Glucose",
+            "Age"
+        ],
+        "evidence_from_data": "Interaction_delta: -0.0007, Interaction_p_value: 0.0364",
+        "proposed_experiment": "Fit a multiple regression model with Glucose, Age, and their interaction term as predictors to test for the significance of the interaction effect using an F-test.",
+        "fingerprint": "('Age', 'Glucose')-feature_interaction_moderation",
+        "timestamp": "2026-11-07T08:59:20.933323+00:00",
+        "is_novel": false
+    },
+    {
+        "hypothesis_id": "iter1_H6",
+        "iteration_no": 1,
+        "hypothesis_type": "comparative_or_confounding_relationship",
+        "hypothesis": "Pregnancies and Age are strongly correlated (r = 0.5443), suggesting that their relationship with the outcome may be confounded or mediating, requiring further analysis to determine if one variable influences the other.",
+        "features_involved": [
+            "Pregnancies",
+            "Age"
+        ],
+        "evidence_from_data": "Correlation: 0.5443, Strength: strong",
+        "proposed_experiment": "Perform a mediation analysis using the causal inference framework to test whether Age mediates the relationship between Pregnancies and the outcome.",
+        "fingerprint": "('Age', 'Pregnancies')-comparative_or_confounding_relationship",
+        "timestamp": "2026-11-07T08:59:20.933621+00:00",
+        "is_novel": false
+    }
+]

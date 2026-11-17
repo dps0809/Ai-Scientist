@@ -1,0 +1,39 @@
+{
+    "report_id": "REP-iter3",
+    "iteration_no": 3,
+    "total": 2,
+    "validated_count": 2,
+    "needs_review_count": 0,
+    "rejected_count": 0,
+    "results": [
+        {
+            "validation_id": "VAL-iter3_H1",
+            "hypothesis_id": "iter3_H1",
+            "iteration_no": 3,
+            "hypothesis_type": "feature_interaction_moderation",
+            "status": "VALIDATED",
+            "features_involved": [
+                "Glucose",
+                "Age"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-07T09:02:10.496783+00:00"
+        },
+        {
+            "validation_id": "VAL-iter3_H2",
+            "hypothesis_id": "iter3_H2",
+            "iteration_no": 3,
+            "hypothesis_type": "feature_interaction_moderation",
+            "status": "VALIDATED",
+            "features_involved": [
+                "Glucose",
+                "BloodPressure"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-07T09:02:10.497117+00:00"
+        }
+    ],
+    "timestamp": "2026-11-07T09:02:10.497308+00:00"
+}

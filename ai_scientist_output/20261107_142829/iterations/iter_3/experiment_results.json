@@ -1,0 +1,38 @@
+[
+    {
+        "result_id": "RES-iter3_E2",
+        "experiment_id": "iter3_E2",
+        "hypothesis_id": "iter3_H2",
+        "iteration_no": 3,
+        "experiment_type": "feature_interaction_moderation",
+        "method": "interaction_regression",
+        "model_type": "statsmodels.Logit",
+        "features": [
+            "Glucose",
+            "BloodPressure"
+        ],
+        "target": "Outcome",
+        "metrics": {
+            "interaction_coefficient": -0.00022,
+            "interaction_p_value": 0.4259,
+            "lrt_statistic": 0.6288,
+            "lrt_p_value": 0.42779,
+            "bootstrap_ci": [
+                -0.00088,
+                0.00047
+            ],
+            "main_effect_a_coef": 0.0386,
+            "main_effect_b_coef": 0.0153
+        },
+        "details": {
+            "log_likelihood_additive": -374.3178,
+            "log_likelihood_interaction": -374.0034,
+            "degrees_of_freedom": 1,
+            "bootstrap_samples_collected": 500,
+            "sample_size": 728
+        },
+        "verdict": "REFUTED",
+        "summary": "Interaction experiment iter3_E2 testing [Glucose * BloodPressure] is refuted: interaction between Glucose and BloodPressure is statistically indistinguishable from zero (LRT chi2=0.629, p=0.4278, Wald p=0.4259).",
+        "timestamp": "2026-11-07T09:02:12.066836+00:00"
+    }
+]

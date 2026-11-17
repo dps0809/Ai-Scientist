@@ -16,13 +16,44 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score
+from sklearn.ensemble import RandomForestClassifier
+try:
+    from xgboost import XGBClassifier
+    XGBOOST_AVAILABLE = True
+except ImportError:
+    XGBOOST_AVAILABLE = False
+    from sklearn.ensemble import HistGradientBoostingClassifier as XGBClassifier
+from sklearn.metrics import roc_auc_score, accuracy_score
+from sklearn.base import clone
 
 from .config import OUTPUT_DIR, DB_RESULTS, EXPERIMENT_RESULTS_PATH
 from .schemas import ExperimentSpecRecord, ExperimentResultRecord
 from .mongo_cluster import MongoClusterManager
 
 logger = logging.getLogger(__name__)
+
+def get_candidate_models() -> Dict[str, Any]:
+    """
+    Returns candidate model families for tournament comparison:
+    1. Logistic Regression (linear baseline)
+    2. Random Forest (non-linear bagged ensemble)
+    3. XGBoost (gradient boosted decision trees)
+    """
+    models: Dict[str, Any] = {
+        "LogisticRegression": LogisticRegression(max_iter=1000, solver="lbfgs", random_state=42),
+        "RandomForest": RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42),
+    }
+    if XGBOOST_AVAILABLE:
+        models["XGBoost"] = XGBClassifier(
+            n_estimators=100,
+            max_depth=4,
+            learning_rate=0.05,
+            eval_metric="logloss",
+            random_state=42
+        )
+    else:
+        models["XGBoost"] = XGBClassifier(random_state=42)
+    return models
 
 # Pima physiological variables where 0 represents missing measurement
 PIMA_ZERO_MISSING_COLUMNS = [
@@ -128,36 +159,67 @@ def run_individual_dependency_experiment(
             
     perm_p_value = float(extreme_count / valid_perm_count) if valid_perm_count > 0 else float(p_value)
 
-    # 3. Predictive Cross-Validation (5-Fold Stratified CV with Fold-based Imputation)
+    # 3. Predictive Cross-Validation (5-Fold Stratified CV with Multi-Model Comparison)
     cv_df = df[[feature, target]].dropna(subset=[target]).copy()
     X_cv = cv_df[[feature]]
     y_cv = cv_df[target]
 
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-    fold_aucs = []
+    candidate_models = get_candidate_models()
+    model_comparison: Dict[str, Dict[str, float]] = {}
+    model_fold_aucs: Dict[str, List[float]] = {}
+    model_fold_accs: Dict[str, List[float]] = {}
 
-    for train_idx, test_idx in skf.split(X_cv, y_cv):
-        X_tr, X_te = X_cv.iloc[train_idx], X_cv.iloc[test_idx]
-        y_tr, y_te = y_cv.iloc[train_idx], y_cv.iloc[test_idx]
+    for model_name, model_inst in candidate_models.items():
+        fold_aucs: List[float] = []
+        fold_accs: List[float] = []
+        for train_idx, test_idx in skf.split(X_cv, y_cv):
+            X_tr, X_te = X_cv.iloc[train_idx], X_cv.iloc[test_idx]
+            y_tr, y_te = y_cv.iloc[train_idx], y_cv.iloc[test_idx]
 
-        pipe = make_pipeline(
-            SimpleImputer(strategy="median"),
-            StandardScaler(),
-            LogisticRegression(max_iter=1000, solver="lbfgs")
-        )
-        pipe.fit(X_tr, y_tr)
-        probs = pipe.predict_proba(X_te)[:, 1]
-        fold_auc = float(roc_auc_score(y_te, probs))
-        fold_aucs.append(round(fold_auc, 4))
+            pipe = make_pipeline(
+                SimpleImputer(strategy="median"),
+                StandardScaler(),
+                clone(model_inst)
+            )
+            pipe.fit(X_tr, y_tr)
+            probs = pipe.predict_proba(X_te)[:, 1]
+            preds = pipe.predict(X_te)
 
-    mean_auc = float(np.mean(fold_aucs))
-    std_auc = float(np.std(fold_aucs))
+            fold_aucs.append(round(float(roc_auc_score(y_te, probs)), 4))
+            fold_accs.append(round(float(accuracy_score(y_te, preds)), 4))
+
+        model_fold_aucs[model_name] = fold_aucs
+        model_fold_accs[model_name] = fold_accs
+        model_comparison[model_name] = {
+            "mean_auc": round(float(np.mean(fold_aucs)), 4),
+            "std_auc": round(float(np.std(fold_aucs)), 4),
+            "mean_accuracy": round(float(np.mean(fold_accs)), 4),
+            "std_accuracy": round(float(np.std(fold_accs)), 4)
+        }
+
+    # Select best model based on ROC-AUC (primary metric), breaking ties with Accuracy (secondary metric)
+    best_model_name = max(
+        model_comparison.items(),
+        key=lambda item: (item[1]["mean_auc"], item[1]["mean_accuracy"])
+    )[0]
+    best_metrics = model_comparison[best_model_name]
+    mean_auc = best_metrics["mean_auc"]
+    std_auc = best_metrics["std_auc"]
+    mean_acc = best_metrics["mean_accuracy"]
+    std_acc = best_metrics["std_accuracy"]
+    best_fold_aucs = model_fold_aucs[best_model_name]
+    best_fold_accs = model_fold_accs[best_model_name]
 
     # 4. Verdict Determination
     if p_value < 0.05 and perm_p_value < 0.05:
         if odds_ratio > 1.0:
             verdict = "SUPPORTED"
-            verdict_text = f"strongly supported (OR={odds_ratio:.2f}, 95% CI [{ci_lower:.2f}, {ci_upper:.2f}], p={p_value:.4f}, mean CV AUC={mean_auc:.3f})"
+            verdict_text = (
+                f"strongly supported (OR={odds_ratio:.2f}, 95% CI [{ci_lower:.2f}, {ci_upper:.2f}], "
+                f"p={p_value:.4f}, Primary ROC-AUC={mean_auc:.3f} +/- {std_auc:.3f}, "
+                f"Secondary Accuracy={mean_acc:.3f} +/- {std_acc:.3f}, best model: {best_model_name})"
+            )
         else:
             verdict = "REFUTED"
             verdict_text = f"refuted: inverse relationship observed (OR={odds_ratio:.2f}, p={p_value:.4f})"
@@ -176,7 +238,7 @@ def run_individual_dependency_experiment(
         iteration_no=spec.iteration_no,
         experiment_type=spec.experiment_type,
         method=spec.method,
-        model_type=spec.model_type,
+        model_type=best_model_name,
         features=spec.features,
         target=target,
         metrics={
@@ -187,11 +249,22 @@ def run_individual_dependency_experiment(
             "permutation_p_value": round(perm_p_value, 5),
             "mean_auc": round(mean_auc, 4),
             "std_auc": round(std_auc, 4),
+            "mean_accuracy": round(mean_acc, 4),
+            "std_accuracy": round(std_acc, 4),
+            "best_model": best_model_name,
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
+            "model_comparison": model_comparison
         },
         details={
-            "fold_auc": fold_aucs,
+            "fold_auc": best_fold_aucs,
+            "fold_accuracy": best_fold_accs,
             "mean_auc": round(mean_auc, 4),
             "std_auc": round(std_auc, 4),
+            "mean_accuracy": round(mean_acc, 4),
+            "std_accuracy": round(std_acc, 4),
+            "best_model": best_model_name,
+            "model_comparison": model_comparison,
             "sample_size": len(data),
             "null_permutations_evaluated": valid_perm_count
         },
@@ -240,37 +313,85 @@ def run_feature_combination_synergy_experiment(
         )
 
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-    fold_results: Dict[str, List[float]] = {name: [] for name in feature_sets}
+    candidate_models = get_candidate_models()
+    model_comparison: Dict[str, Dict[str, Any]] = {}
+    model_fold_results: Dict[str, Dict[str, List[float]]] = {}
+    model_fold_acc_results: Dict[str, Dict[str, List[float]]] = {}
 
-    # Evaluate all models on identical splits
-    for train_idx, test_idx in cv.split(valid_df, valid_df[target]):
-        y_train = valid_df.iloc[train_idx][target]
-        y_test = valid_df.iloc[test_idx][target]
+    for model_name, model_inst in candidate_models.items():
+        fold_results: Dict[str, List[float]] = {name: [] for name in feature_sets}
+        fold_acc_results: Dict[str, List[float]] = {name: [] for name in feature_sets}
 
-        for name, features in feature_sets.items():
-            X_train = valid_df.iloc[train_idx][features]
-            X_test = valid_df.iloc[test_idx][features]
+        for train_idx, test_idx in cv.split(valid_df, valid_df[target]):
+            y_train = valid_df.iloc[train_idx][target]
+            y_test = valid_df.iloc[test_idx][target]
 
-            pipe = make_pipeline(
-                SimpleImputer(strategy="median"),
-                StandardScaler(),
-                LogisticRegression(max_iter=1000, solver="lbfgs")
-            )
-            pipe.fit(X_train, y_train)
-            probs = pipe.predict_proba(X_test)[:, 1]
-            auc = float(roc_auc_score(y_test, probs))
-            fold_results[name].append(round(auc, 4))
+            for name, features in feature_sets.items():
+                X_train = valid_df.iloc[train_idx][features]
+                X_test = valid_df.iloc[test_idx][features]
 
-    mean_scores = {name: float(np.mean(scores)) for name, scores in fold_results.items()}
-    score_a = mean_scores[feat_a]
-    score_b = mean_scores[feat_b]
-    score_c = mean_scores[combined_name]
+                pipe = make_pipeline(
+                    SimpleImputer(strategy="median"),
+                    StandardScaler(),
+                    clone(model_inst)
+                )
+                pipe.fit(X_train, y_train)
+                probs = pipe.predict_proba(X_test)[:, 1]
+                preds = pipe.predict(X_test)
 
+                auc = float(roc_auc_score(y_test, probs))
+                acc = float(accuracy_score(y_test, preds))
+
+                fold_results[name].append(round(auc, 4))
+                fold_acc_results[name].append(round(acc, 4))
+
+        m_scores = {name: float(np.mean(scores)) for name, scores in fold_results.items()}
+        m_accs = {name: float(np.mean(accs)) for name, accs in fold_acc_results.items()}
+
+        s_a, s_b, s_c = m_scores[feat_a], m_scores[feat_b], m_scores[combined_name]
+        ac_a, ac_b, ac_c = m_accs[feat_a], m_accs[feat_b], m_accs[combined_name]
+
+        best_indiv_s = max(s_a, s_b)
+        best_indiv_ac = max(ac_a, ac_b)
+        g_auc = s_c - best_indiv_s
+        g_acc = ac_c - best_indiv_ac
+
+        model_fold_results[model_name] = fold_results
+        model_fold_acc_results[model_name] = fold_acc_results
+        model_comparison[model_name] = {
+            "combined_mean_auc": round(s_c, 4),
+            "best_individual_mean_auc": round(best_indiv_s, 4),
+            "auc_gain": round(g_auc, 4),
+            "combined_mean_accuracy": round(ac_c, 4),
+            "best_individual_mean_accuracy": round(best_indiv_ac, 4),
+            "accuracy_gain": round(g_acc, 4),
+            "individual_aucs": {feat_a: round(s_a, 4), feat_b: round(s_b, 4)},
+            "individual_accuracies": {feat_a: round(ac_a, 4), feat_b: round(ac_b, 4)}
+        }
+
+    # Select winning model based on combined ROC-AUC (primary metric), breaking ties with Accuracy (secondary metric)
+    best_model_name = max(
+        model_comparison.items(),
+        key=lambda item: (item[1]["combined_mean_auc"], item[1]["combined_mean_accuracy"])
+    )[0]
+    best_comp = model_comparison[best_model_name]
+    score_c = best_comp["combined_mean_auc"]
+    best_indiv_score = best_comp["best_individual_mean_auc"]
+    gain = best_comp["auc_gain"]
+    acc_c = best_comp["combined_mean_accuracy"]
+    best_indiv_acc = best_comp["best_individual_mean_accuracy"]
+    acc_gain = best_comp["accuracy_gain"]
+
+    score_a = best_comp["individual_aucs"][feat_a]
+    score_b = best_comp["individual_aucs"][feat_b]
+    acc_a = best_comp["individual_accuracies"][feat_a]
+    acc_b = best_comp["individual_accuracies"][feat_b]
     best_indiv_name = feat_a if score_a >= score_b else feat_b
-    best_indiv_score = max(score_a, score_b)
-    gain = score_c - best_indiv_score
 
-    # Paired test on fold differences between Model C and best individual model
+    fold_results = model_fold_results[best_model_name]
+    fold_acc_results = model_fold_acc_results[best_model_name]
+
+    # Paired test on fold differences between Model C and best individual model for winning architecture
     c_folds = fold_results[combined_name]
     best_folds = fold_results[best_indiv_name]
     differences = np.array(c_folds) - np.array(best_folds)
@@ -290,13 +411,22 @@ def run_feature_combination_synergy_experiment(
     # Verdict determination
     if gain > 0 and paired_p < 0.05:
         verdict = "SUPPORTED"
-        verdict_text = f"strongly supported: combining {feat_a} and {feat_b} yields significant synergy (gain={gain:+.4f} AUC, paired t p={paired_p:.4f})"
+        verdict_text = (
+            f"strongly supported: combining {feat_a} and {feat_b} yields significant synergy "
+            f"(Primary AUC gain={gain:+.4f}, Secondary Accuracy gain={acc_gain:+.4f}, paired t p={paired_p:.4f}, best model: {best_model_name})"
+        )
     elif gain > 0:
         verdict = "INCONCLUSIVE"
-        verdict_text = f"partially supported: empirical gain of {gain:+.4f} AUC observed, but fold variation did not reach strict significance (paired p={paired_p:.4f})"
+        verdict_text = (
+            f"partially supported: empirical gain of {gain:+.4f} AUC (Accuracy gain={acc_gain:+.4f}) observed with {best_model_name}, "
+            f"but fold variation did not reach strict significance (paired p={paired_p:.4f})"
+        )
     else:
         verdict = "REFUTED"
-        verdict_text = f"refuted: combination AUC ({score_c:.4f}) does not exceed best individual feature {best_indiv_name} ({best_indiv_score:.4f})"
+        verdict_text = (
+            f"refuted: combination AUC ({score_c:.4f}) does not exceed best individual feature {best_indiv_name} "
+            f"({best_indiv_score:.4f}) under {best_model_name}"
+        )
 
     summary = f"Synergy experiment {spec.experiment_id} testing [{feat_a} + {feat_b}] is {verdict_text}."
 
@@ -307,23 +437,37 @@ def run_feature_combination_synergy_experiment(
         iteration_no=spec.iteration_no,
         experiment_type=spec.experiment_type,
         method=spec.method,
-        model_type=spec.model_type,
+        model_type=best_model_name,
         features=spec.features,
         target=target,
         metrics={
             "combined_mean_auc": round(score_c, 4),
             "best_individual_mean_auc": round(best_indiv_score, 4),
             "gain_over_best_individual": round(gain, 4),
+            "combined_mean_accuracy": round(acc_c, 4),
+            "best_individual_mean_accuracy": round(best_indiv_acc, 4),
+            "accuracy_gain": round(acc_gain, 4),
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
             "paired_test_stat": round(paired_stat, 4),
-            "paired_test_p_value": round(paired_p, 4)
+            "paired_test_p_value": round(paired_p, 4),
+            "best_model": best_model_name,
+            "model_comparison": model_comparison
         },
         details={
             "individual_scores": {
                 feat_a: round(score_a, 4),
                 feat_b: round(score_b, 4)
             },
+            "individual_accuracies": {
+                feat_a: round(acc_a, 4),
+                feat_b: round(acc_b, 4)
+            },
             "best_individual_feature": best_indiv_name,
-            "fold_scores": fold_results
+            "fold_scores": fold_results,
+            "fold_accuracies": fold_acc_results,
+            "best_model": best_model_name,
+            "model_comparison": model_comparison
         },
         verdict=verdict,
         summary=summary
@@ -700,13 +844,15 @@ def execute_all_experiments(
     with open(os.path.join(iter_dir, "experiment_results.json"), "w") as f:
         json.dump(results_dump, f, indent=4)
 
-    # Persistence to MongoDB cluster: dedicated ai_scientist_results database
+    # Persistence to MongoDB cluster: dedicated ai_scientist_results database scoped by run_id
+    run_id = os.path.basename(out_dir.rstrip("\\/"))
     cluster = MongoClusterManager()
     cluster.save_documents(
         db_name=DB_RESULTS,
         collection_name="results",
         docs=cluster_docs,
-        id_key="result_id"
+        id_key="result_id",
+        run_id=run_id
     )
 
     print("\n" + "-" * 70)

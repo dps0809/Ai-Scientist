@@ -60,12 +60,15 @@ class ExperimentController:
         self.df = df
         self.target = target
         self.start_time = datetime.now(timezone.utc)
+        folder_name = os.path.basename(self.output_dir.rstrip("\\/"))
+        run_id = folder_name if folder_name and folder_name != "ai_scientist_output" else f"RUN-{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         self.state = AutonomousStateRecord(
-            run_id=f"RUN-{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            run_id=run_id,
             experiments_completed=0,
             iterations_completed=0,
             consecutive_no_improvement=0,
             best_score=0.0,
+            best_accuracy=0.0,
             status="INITIALIZED",
             start_time=self.start_time.isoformat()
         )
@@ -134,6 +137,7 @@ class ExperimentController:
     def update_progress(self, result: StandardExperimentResult) -> None:
         """
         Updates the internal state, checks gain significance, and saves state to disk/MongoDB.
+        Tracks primary ROC-AUC metric and secondary Accuracy metric.
         """
         self.state.experiments_completed += 1
         results_data = result.results
@@ -143,6 +147,16 @@ class ExperimentController:
             results_data.get("mean_cv_auc") or
             results_data.get("mean_auc") or
             0.0
+        )
+        accuracy = (
+            results_data.get("combined_accuracy") or
+            results_data.get("accuracy") or
+            results_data.get("mean_accuracy") or
+            0.0
+        )
+        best_model = (
+            results_data.get("best_model") or
+            result.configuration.get("model", "")
         )
 
         # Inferential statistical tests (moderation LRT, confounding shift) do not yield predictive AUC
@@ -157,8 +171,9 @@ class ExperimentController:
         if not is_inferential_test:
             if gain >= self.config.min_meaningful_gain:
                 self.state.best_score = score
+                self.state.best_accuracy = accuracy
                 self.state.best_features = result.configuration.get("features", [])
-                self.state.best_model = result.configuration.get("model", "")
+                self.state.best_model = best_model
                 self.state.consecutive_no_improvement = 0
             else:
                 self.state.consecutive_no_improvement += 1
@@ -167,8 +182,9 @@ class ExperimentController:
             "experiment_id": result.experiment_id,
             "hypothesis_id": result.hypothesis_id,
             "score": score,
+            "accuracy": accuracy,
             "features": result.configuration.get("features", []),
-            "model": result.configuration.get("model", ""),
+            "model": best_model,
             "verdict": result.evaluation.get("verdict", "")
         })
 
@@ -177,7 +193,7 @@ class ExperimentController:
 
     def _persist_state(self) -> None:
         """
-        Saves current state to local JSON file and MongoDB.
+        Saves current state to local JSON file and MongoDB scoped by run_id.
         """
         try:
             state_file = os.path.join(self.output_dir, "autonomous_state.json")
@@ -186,9 +202,13 @@ class ExperimentController:
 
             cluster = MongoClusterManager()
             if cluster.is_available():
-                col = cluster.get_collection(DB_MEMORY, "autonomous_state")
-                if col is not None:
-                    col.update_one({"run_id": self.state.run_id}, {"$set": self.state.model_dump()}, upsert=True)
+                cluster.save_document(
+                    db_name=DB_MEMORY,
+                    collection_name="autonomous_state",
+                    doc=self.state.model_dump(),
+                    id_key="run_id",
+                    run_id=self.state.run_id
+                )
         except Exception as e:
             logger.warning(f"Failed to persist autonomous state: {e}")
 
@@ -204,33 +224,57 @@ class ExperimentController:
 
         confirmed = []
         refuted = []
+        multi_model_rows = []
+
         for r in target_results:
             verdict = r.get("evaluation", {}).get("verdict", "").lower()
+            res_metrics = r.get("results", {})
             exp_info = {
                 "experiment_id": r.get("experiment_id"),
                 "hypothesis_id": r.get("hypothesis_id"),
                 "features": r.get("configuration", {}).get("features", []),
                 "summary": r.get("evaluation", {}).get("summary", ""),
-                "metrics": r.get("results", {})
+                "metrics": res_metrics,
+                "best_model": res_metrics.get("best_model", r.get("configuration", {}).get("model", ""))
             }
             if "supported" in verdict and "not" not in verdict:
                 confirmed.append(exp_info)
             else:
                 refuted.append(exp_info)
 
+            # Extract model comparison if available
+            m_comp = res_metrics.get("model_comparison", {})
+            if m_comp:
+                feats_str = ", ".join(r.get("configuration", {}).get("features", []))
+                best_m = res_metrics.get("best_model", "")
+                primary_score = res_metrics.get("combined_auc") or res_metrics.get("mean_auc") or 0.0
+                sec_score = res_metrics.get("combined_accuracy") or res_metrics.get("mean_accuracy") or 0.0
+                multi_model_rows.append({
+                    "experiment_id": r.get("experiment_id"),
+                    "features": feats_str,
+                    "winning_model": best_m,
+                    "primary_auc": primary_score,
+                    "secondary_accuracy": sec_score,
+                    "comparison": m_comp
+                })
+
         report_data = {
             "run_id": self.state.run_id,
             "dataset": "diabetes.csv",
             "total_experiments": self.state.experiments_completed,
             "total_iterations": self.state.iterations_completed,
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
             "best_roc_auc": self.state.best_score,
+            "best_accuracy": self.state.best_accuracy,
             "best_features": self.state.best_features,
             "best_model": self.state.best_model,
             "stopping_reason": self.state.stopping_reason or "All tasks completed",
             "confirmed_count": len(confirmed),
             "refuted_count": len(refuted),
             "confirmed_hypotheses": confirmed,
-            "refuted_hypotheses": refuted
+            "refuted_hypotheses": refuted,
+            "multi_model_tournaments": multi_model_rows
         }
 
         # Build Markdown Report
@@ -249,8 +293,10 @@ The Autonomous AI Scientist executed a closed-loop empirical research program:
 - **Autonomous Iterations Completed:** {self.state.iterations_completed}
 - **Confirmed Discoveries (Supported):** {len(confirmed)}
 - **Refuted Hypotheses:** {len(refuted)}
-- **Top Predictive Performance:** **ROC-AUC = {self.state.best_score:.4f}**
-- **Optimal Feature Set:** `{", ".join(self.state.best_features) if self.state.best_features else "N/A"}` ({self.state.best_model})
+- **Top Predictive Performance (Primary Metric):** **ROC-AUC = {self.state.best_score:.4f}**
+- **Secondary Metric Performance:** **Accuracy = {self.state.best_accuracy:.4f}**
+- **Optimal Feature Set:** `{", ".join(self.state.best_features) if self.state.best_features else "N/A"}`
+- **Optimal Model Architecture:** `{self.state.best_model or "N/A"}`
 
 ---
 
@@ -264,17 +310,33 @@ The Autonomous AI Scientist executed a closed-loop empirical research program:
             metrics_str = ", ".join(f"{k}: {v:.4f}" if isinstance(v, float) else f"{k}: {v}" for k, v in c.get('metrics', {}).items() if not isinstance(v, (list, dict)))
             md += f"- **Key Metrics:** {metrics_str}\n\n"
 
-        md += "## 3. Refuted Hypotheses & Negative Results\n"
+        if multi_model_rows:
+            md += "## 3. Multi-Model Architecture Tournament (Logistic Regression vs Random Forest vs XGBoost)\n"
+            md += "Candidate predictive models were simultaneously evaluated across identical 5-fold Stratified Cross-Validation splits:\n\n"
+            md += "| Experiment | Features | Winning Model | Primary ROC-AUC | Secondary Accuracy | Model Breakdown (AUC / Accuracy) |\n"
+            md += "|---|---|---|---|---|---|\n"
+            for row in multi_model_rows:
+                breakdowns = []
+                for m_name, m_vals in row["comparison"].items():
+                    m_auc = m_vals.get("combined_mean_auc") or m_vals.get("mean_auc") or 0.0
+                    m_acc = m_vals.get("combined_mean_accuracy") or m_vals.get("mean_accuracy") or 0.0
+                    breakdowns.append(f"**{m_name}**: {m_auc:.3f}/{m_acc:.3f}")
+                bd_str = " <br> ".join(breakdowns)
+                md += f"| `{row['experiment_id']}` | `{row['features']}` | **{row['winning_model']}** | **{row['primary_auc']:.4f}** | {row['secondary_accuracy']:.4f} | {bd_str} |\n"
+            md += "\n"
+
+        md += "## 4. Refuted Hypotheses & Negative Results\n"
         for i, r in enumerate(refuted, 1):
             feats_str = ", ".join(r.get("features", []))
             md += f"### Negative Result {i}: {r.get('experiment_id')} ({r.get('hypothesis_id')})\n"
             md += f"- **Features Tested:** `{feats_str}`\n"
             md += f"- **Evaluation Summary:** {r.get('summary')}\n\n"
 
-        md += """## 4. Limitations & Methodological Integrity
+        md += """## 5. Limitations & Methodological Integrity
 1. **Predictive Synergy vs Statistical Interaction:** Model gains were evaluated under cross-validation separately from multiplicative product terms to prevent confounding predictive power with interaction effects.
-2. **Multiple Testing:** Candidate hypotheses underwent permutation testing and within-fold median imputation to avoid data leakage.
-3. **Clinical Interpretation:** While predictive performance improved consistently, observational associations must be confirmed through prospective clinical trials.
+2. **Multiple Model Comparison:** Logistic Regression, Random Forest, and XGBoost were tested under identical cross-validation folds to determine whether linear separation or non-linear tree-based boundaries best capture the underlying biological risk.
+3. **Primary vs Secondary Metrics:** ROC-AUC acts as the primary evaluation criterion due to class imbalance resilience; Accuracy is reported alongside as an auxiliary operational metric.
+4. **Multiple Testing & Integrity:** Candidate hypotheses underwent permutation testing and within-fold median imputation to strictly avoid data leakage.
 
 ---
 *Report generated autonomously by AI Scientist Engine.*
@@ -293,9 +355,13 @@ The Autonomous AI Scientist executed a closed-loop empirical research program:
         try:
             cluster = MongoClusterManager()
             if cluster.is_available():
-                col = cluster.get_collection(DB_MEMORY, "final_reports")
-                if col is not None:
-                    col.update_one({"run_id": self.state.run_id}, {"$set": report_data}, upsert=True)
+                cluster.save_document(
+                    db_name=DB_MEMORY,
+                    collection_name="final_reports",
+                    doc=report_data,
+                    id_key="run_id",
+                    run_id=self.state.run_id
+                )
         except Exception as e:
             logger.warning(f"Error saving final report to MongoDB: {e}")
 
@@ -323,9 +389,10 @@ def run_autonomous_scientist(
     os.makedirs(out_dir, exist_ok=True)
     cfg = config or StoppingConditionConfig()
 
-    memory = ExperimentMemory(storage_path=os.path.join(out_dir, "experiment_memory.json"), sync_mongo=sync_mongo)
+    run_id = os.path.basename(out_dir.rstrip("\\/"))
+    memory = ExperimentMemory(storage_path=os.path.join(out_dir, "experiment_memory.json"), run_id=run_id, sync_mongo=sync_mongo)
     controller = ExperimentController(config=cfg, memory=memory, df=df, target=target, output_dir=out_dir)
-    registry = HypothesisRegistry(registry_path=os.path.join(out_dir, "hypothesis_registry.json"))
+    registry = HypothesisRegistry(registry_path=os.path.join(out_dir, "hypothesis_registry.json"), run_id=run_id)
 
     print("\n" + "=" * 70)
     print("STARTING AUTONOMOUS SCIENTIFIC DISCOVERY LOOP")
@@ -464,14 +531,17 @@ def run_autonomous_scientist(
                         rejection_reason="Duplicate experiment configuration already executed.",
                         valid_columns=valid_columns
                     )
-                    if alt and alt.features:
+                    alt_feats = getattr(alt, "features_involved", None) or getattr(alt, "features", None) if alt else None
+                    if alt and alt_feats:
+                        exp_type = "individual_dependency" if len(alt_feats) <= 1 else "feature_combination_synergy"
                         temp_spec = ExperimentSpecRecord(
                             experiment_id="temp",
                             hypothesis_id=alt.hypothesis_id,
                             iteration_no=iteration_no,
-                            method="paired_model_comparison",
+                            experiment_type=exp_type,
+                            method="paired_model_comparison" if len(alt_feats) > 1 else "logistic_regression",
                             model_type=(alt.proposed_experiment.get("model") if isinstance(alt.proposed_experiment, dict) else getattr(alt.proposed_experiment, "model", None)) or "sklearn.linear_model.LogisticRegression",
-                            features=alt.features,
+                            features=alt_feats,
                             target=target
                         )
                         if not memory.is_duplicate_experiment(temp_spec):

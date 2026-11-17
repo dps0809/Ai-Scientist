@@ -50,6 +50,10 @@ def _evaluate_individual_dependency(result: ExperimentResultRecord) -> StandardE
     details = result.details
     mean_auc = metrics.get("mean_auc") if metrics.get("mean_auc") is not None else details.get("mean_auc", 0.5)
     std_auc = metrics.get("std_auc") if metrics.get("std_auc") is not None else details.get("std_auc", 0.0)
+    mean_acc = metrics.get("mean_accuracy") if metrics.get("mean_accuracy") is not None else details.get("mean_accuracy", 0.5)
+    std_acc = metrics.get("std_accuracy") if metrics.get("std_accuracy") is not None else details.get("std_accuracy", 0.0)
+    best_model = metrics.get("best_model") or details.get("best_model") or result.model_type or "LogisticRegression"
+    model_comparison = metrics.get("model_comparison") or details.get("model_comparison", {})
 
     # Check whether confidence interval strictly excludes 1.0
     ci_excludes_null = (ci[0] > 1.0 or ci[1] < 1.0)
@@ -83,7 +87,8 @@ def _evaluate_individual_dependency(result: ExperimentResultRecord) -> StandardE
     summary = (
         f"Experiment {result.experiment_id} testing dependency of '{feat}' on '{result.target}' is {verdict}: "
         f"OR={odds_ratio:.2f} (95% CI [{ci[0]:.2f}, {ci[1]:.2f}]), parametric p={p_val:.4f}, "
-        f"permutation p={perm_p:.4f}, 5-fold CV AUC={mean_auc:.3f} +/- {std_auc:.3f}."
+        f"permutation p={perm_p:.4f}, 5-fold CV Primary ROC-AUC={mean_auc:.3f} +/- {std_auc:.3f}, "
+        f"Secondary Accuracy={mean_acc:.3f} +/- {std_acc:.3f} (Best model: {best_model})."
     )
 
     return StandardExperimentResult(
@@ -95,7 +100,7 @@ def _evaluate_individual_dependency(result: ExperimentResultRecord) -> StandardE
         configuration={
             "features": result.features,
             "target": result.target,
-            "model": result.model_type,
+            "model": best_model,
             "method": result.method
         },
         results={
@@ -104,7 +109,14 @@ def _evaluate_individual_dependency(result: ExperimentResultRecord) -> StandardE
             "confidence_interval": ci,
             "mean_auc": mean_auc,
             "std_auc": std_auc,
-            "fold_auc": result.details.get("fold_auc", [])
+            "mean_accuracy": mean_acc,
+            "std_accuracy": std_acc,
+            "best_model": best_model,
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
+            "model_comparison": model_comparison,
+            "fold_auc": result.details.get("fold_auc", []),
+            "fold_accuracy": result.details.get("fold_accuracy", [])
         },
         statistical_validation={
             "comparison_method": "inferential_logistic_regression",
@@ -117,6 +129,9 @@ def _evaluate_individual_dependency(result: ExperimentResultRecord) -> StandardE
             "is_statistically_significant": is_stat_sig,
             "practical_significance": practical_sig,
             "uncertainty_level": uncertainty,
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
+            "best_model": best_model,
             "summary": summary
         }
     )
@@ -128,6 +143,11 @@ def _evaluate_feature_synergy(result: ExperimentResultRecord) -> StandardExperim
     combined_auc = metrics.get("combined_mean_auc", 0.5)
     best_indiv_auc = metrics.get("best_individual_mean_auc", 0.5)
     gain = metrics.get("gain_over_best_individual", 0.0)
+    combined_acc = metrics.get("combined_mean_accuracy", 0.5)
+    best_indiv_acc = metrics.get("best_individual_mean_accuracy", 0.5)
+    acc_gain = metrics.get("accuracy_gain", 0.0)
+    best_model = metrics.get("best_model") or details.get("best_model") or result.model_type or "LogisticRegression"
+    model_comparison = metrics.get("model_comparison") or details.get("model_comparison", {})
     paired_p = metrics.get("paired_test_p_value", 1.0)
     paired_stat = metrics.get("paired_test_stat", 0.0)
 
@@ -153,8 +173,9 @@ def _evaluate_feature_synergy(result: ExperimentResultRecord) -> StandardExperim
 
     summary = (
         f"Synergy experiment {result.experiment_id} testing [{feat_str}] is {verdict}: "
-        f"combined AUC={combined_auc:.4f} vs best individual ({best_feat}) AUC={best_indiv_auc:.4f} "
-        f"(gain={gain:+.4f}, paired t p={paired_p:.4f}). Note: Predictive synergy indicates feature "
+        f"combined Primary AUC={combined_auc:.4f} vs best individual ({best_feat}) AUC={best_indiv_auc:.4f} "
+        f"(gain={gain:+.4f}, paired t p={paired_p:.4f}; Secondary Accuracy={combined_acc:.4f}, "
+        f"Accuracy gain={acc_gain:+.4f}, best model: {best_model}). Note: Predictive synergy indicates feature "
         f"combination improvement, distinct from statistical interaction."
     )
 
@@ -167,15 +188,23 @@ def _evaluate_feature_synergy(result: ExperimentResultRecord) -> StandardExperim
         configuration={
             "features": result.features,
             "target": result.target,
-            "model": result.model_type,
+            "model": best_model,
             "method": result.method
         },
         results={
             "individual_auc": details.get("individual_scores", {}),
+            "individual_accuracy": details.get("individual_accuracies", {}),
             "combined_auc": combined_auc,
             "gain": gain,
+            "combined_accuracy": combined_acc,
+            "accuracy_gain": acc_gain,
             "best_individual_feature": best_feat,
-            "fold_scores": details.get("fold_scores", {})
+            "best_model": best_model,
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
+            "model_comparison": model_comparison,
+            "fold_scores": details.get("fold_scores", {}),
+            "fold_accuracies": details.get("fold_accuracies", {})
         },
         statistical_validation={
             "comparison_method": "paired_cross_validation",
@@ -188,6 +217,9 @@ def _evaluate_feature_synergy(result: ExperimentResultRecord) -> StandardExperim
             "is_statistically_significant": is_stat_sig,
             "practical_significance": practical_sig,
             "uncertainty_level": uncertainty,
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
+            "best_model": best_model,
             "distinction_note": "Feature combination synergy represents predictive gain, distinct from multiplicative interaction.",
             "summary": summary
         }
@@ -356,60 +388,89 @@ def build_cross_experiment_comparison(
     """
     Builds an aggregated comparative matrix across individual feature baselines
     and feature combination models to establish incremental progression (Batch 4.5).
+    Tracks both primary ROC-AUC and secondary Accuracy alongside model comparisons.
     """
     individual_baselines: Dict[str, float] = {}
+    individual_accuracies: Dict[str, float] = {}
     combination_scores: Dict[str, float] = {}
+    combination_accuracies: Dict[str, float] = {}
     synergy_gains: Dict[str, float] = {}
+    accuracy_gains: Dict[str, float] = {}
     ranking_items: List[Dict[str, Any]] = []
 
     for r in results:
         if r.experiment_type == "individual_dependency":
             feat = r.features[0] if r.features else r.experiment_id
             auc = r.metrics.get("mean_auc", 0.5)
+            acc = r.metrics.get("mean_accuracy", 0.5)
+            best_m = r.metrics.get("best_model", r.model_type)
             individual_baselines[feat] = round(float(auc), 4)
+            individual_accuracies[feat] = round(float(acc), 4)
             ranking_items.append({
                 "experiment_id": r.experiment_id,
                 "name": feat,
                 "type": "individual_baseline",
-                "score": round(float(auc), 4)
+                "score": round(float(auc), 4),
+                "accuracy": round(float(acc), 4),
+                "best_model": best_m,
+                "primary_metric": "ROC_AUC",
+                "secondary_metric": "Accuracy",
+                "model_comparison": r.metrics.get("model_comparison", {})
             })
         elif r.experiment_type == "feature_combination_synergy":
             name = " + ".join(r.features)
             comb_auc = r.metrics.get("combined_mean_auc", 0.5)
             gain = r.metrics.get("gain_over_best_individual", 0.0)
+            comb_acc = r.metrics.get("combined_mean_accuracy", 0.5)
+            acc_gain = r.metrics.get("accuracy_gain", 0.0)
+            best_m = r.metrics.get("best_model", r.model_type)
             combination_scores[name] = round(float(comb_auc), 4)
+            combination_accuracies[name] = round(float(comb_acc), 4)
             synergy_gains[name] = round(float(gain), 4)
+            accuracy_gains[name] = round(float(acc_gain), 4)
             ranking_items.append({
                 "experiment_id": r.experiment_id,
                 "name": name,
                 "type": "feature_combination",
                 "score": round(float(comb_auc), 4),
                 "gain": round(float(gain), 4),
+                "accuracy": round(float(comb_acc), 4),
+                "accuracy_gain": round(float(acc_gain), 4),
+                "best_model": best_m,
+                "primary_metric": "ROC_AUC",
+                "secondary_metric": "Accuracy",
+                "model_comparison": r.metrics.get("model_comparison", {}),
                 "p_value": r.metrics.get("paired_test_p_value", 1.0)
             })
 
-    # Sort descending by ROC-AUC
-    ranking_items.sort(key=lambda x: x["score"], reverse=True)
+    # Sort descending by primary ROC-AUC score, break ties by secondary Accuracy
+    ranking_items.sort(key=lambda x: (x["score"], x.get("accuracy", 0.0)), reverse=True)
     for idx, item in enumerate(ranking_items, 1):
         item["rank"] = idx
 
     summary_findings: List[str] = []
     if individual_baselines:
         best_indiv = max(individual_baselines.items(), key=lambda x: x[1])
-        summary_findings.append(f"Top individual predictive baseline: {best_indiv[0]} (ROC-AUC={best_indiv[1]:.4f}).")
+        indiv_acc = individual_accuracies.get(best_indiv[0], 0.0)
+        summary_findings.append(f"Top individual predictive baseline: {best_indiv[0]} (Primary ROC-AUC={best_indiv[1]:.4f}, Secondary Accuracy={indiv_acc:.4f}).")
     if combination_scores:
         best_comb = max(combination_scores.items(), key=lambda x: x[1])
         gain_val = synergy_gains.get(best_comb[0], 0.0)
-        summary_findings.append(f"Top combination model: {best_comb[0]} (ROC-AUC={best_comb[1]:.4f}, gain={gain_val:+.4f}).")
+        comb_acc = combination_accuracies.get(best_comb[0], 0.0)
+        acc_gain_val = accuracy_gains.get(best_comb[0], 0.0)
+        summary_findings.append(f"Top combination model: {best_comb[0]} (Primary ROC-AUC={best_comb[1]:.4f}, gain={gain_val:+.4f}; Secondary Accuracy={comb_acc:.4f}, gain={acc_gain_val:+.4f}).")
     if ranking_items and ranking_items[0]["type"] == "feature_combination":
-        summary_findings.append(f"Feature combination '{ranking_items[0]['name']}' outperforms all individual predictor baselines.")
+        summary_findings.append(f"Feature combination '{ranking_items[0]['name']}' outperforms all individual predictor baselines under {ranking_items[0].get('best_model', 'winning architecture')}.")
 
     return CrossExperimentComparisonRecord(
         comparison_id=f"COMP-iter{iteration_no}",
         iteration_no=iteration_no,
         individual_baselines=individual_baselines,
+        individual_accuracies=individual_accuracies,
         combination_scores=combination_scores,
+        combination_accuracies=combination_accuracies,
         synergy_gains=synergy_gains,
+        accuracy_gains=accuracy_gains,
         ranking=ranking_items,
         summary_findings=summary_findings
     )
@@ -423,7 +484,7 @@ def evaluate_all_results(
     """
     Evaluates all executed experiment results, builds comparative matrix,
     saves outputs locally and in run/iteration directories, and synchronizes
-    to MongoDB cluster database 'ai_scientist_evaluations.evaluations'.
+    to MongoDB cluster database 'ai_scientist_evaluations.evaluations' scoped by run_id.
     """
     print("\n" + "=" * 70)
     print(f"STAGE 7: BATCH 4 — RESULT EVALUATION & COMPARISON (ITERATION {iteration_no})")
@@ -454,11 +515,13 @@ def evaluate_all_results(
     print("-" * 70)
     print(f"  Individual Baselines: {comparison.individual_baselines}")
     print(f"  Combination Models  : {comparison.combination_scores}")
-    print(f"  Synergy Gains       : {comparison.synergy_gains}")
+    print(f"  Synergy Gains (AUC) : {comparison.synergy_gains}")
     print("  Rankings:")
     for item in comparison.ranking:
         gain_str = f" (Gain: {item.get('gain', 0.0):+.4f})" if "gain" in item else ""
-        print(f"    #{item.get('rank', '?')}: {item.get('name', '')} -> ROC-AUC: {item.get('score', 0.0):.4f}{gain_str}")
+        acc_str = f" | Accuracy: {item.get('accuracy', 0.0):.4f}" if "accuracy" in item else ""
+        model_str = f" [{item.get('best_model', '')}]" if "best_model" in item else ""
+        print(f"    #{item.get('rank', '?')}: {item.get('name', '')}{model_str} -> Primary ROC-AUC: {item.get('score', 0.0):.4f}{gain_str}{acc_str}")
     print("  Findings:")
     for f in comparison.summary_findings:
         print(f"    - {f}")
@@ -484,26 +547,26 @@ def evaluate_all_results(
     with open(os.path.join(iter_dir, "cross_experiment_comparison.json"), "w", encoding="utf-8") as f:
         json.dump(comp_json, f, indent=2)
 
-    # MongoDB cluster sync
+    # MongoDB cluster sync scoped strictly to run_id
     try:
+        run_id = os.path.basename(out_dir.rstrip("\\/"))
         cluster = MongoClusterManager()
         if cluster.is_available():
-            col = cluster.get_collection(DB_EVALUATIONS, "evaluations")
-            if col is not None and cluster_docs:
-                for doc in cluster_docs:
-                    col.update_one(
-                        {"experiment_id": doc["experiment_id"], "iteration_no": doc["iteration_no"]},
-                        {"$set": doc},
-                        upsert=True
-                    )
-                comp_col = cluster.get_collection(DB_EVALUATIONS, "comparisons")
-                if comp_col is not None:
-                    comp_col.update_one(
-                        {"comparison_id": comp_json["comparison_id"], "iteration_no": comp_json["iteration_no"]},
-                        {"$set": comp_json},
-                        upsert=True
-                    )
-                print(f"Synced {len(cluster_docs)} evaluation records to MongoDB: {DB_EVALUATIONS}.evaluations")
+            cluster.save_documents(
+                db_name=DB_EVALUATIONS,
+                collection_name="evaluations",
+                docs=cluster_docs,
+                id_key="experiment_id",
+                run_id=run_id
+            )
+            cluster.save_document(
+                db_name=DB_EVALUATIONS,
+                collection_name="comparisons",
+                doc=comp_json,
+                id_key="comparison_id",
+                run_id=run_id
+            )
+            print(f"Synced {len(cluster_docs)} evaluation records to MongoDB: {DB_EVALUATIONS}.evaluations (run_id={run_id})")
     except Exception as e:
         logger.warning(f"Error persisting evaluations to MongoDB cluster: {e}")
 

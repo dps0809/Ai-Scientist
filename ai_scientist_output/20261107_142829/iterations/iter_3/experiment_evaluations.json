@@ -1,0 +1,46 @@
+[
+  {
+    "experiment_id": "iter3_E2",
+    "hypothesis_id": "iter3_H2",
+    "iteration_no": 3,
+    "status": "completed",
+    "experiment_type": "feature_interaction_moderation",
+    "configuration": {
+      "features": [
+        "Glucose",
+        "BloodPressure"
+      ],
+      "target": "Outcome",
+      "model": "statsmodels.Logit",
+      "method": "interaction_regression"
+    },
+    "results": {
+      "interaction_coefficient": -0.00022,
+      "main_effects": {
+        "feat_a": 0.0386,
+        "feat_b": 0.0153
+      },
+      "bootstrap_ci": [
+        -0.00088,
+        0.00047
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "likelihood_ratio_test",
+      "chi2_statistic": 0.6288,
+      "p_value": 0.42779,
+      "bootstrap_confidence_interval": [
+        -0.00088,
+        0.00047
+      ]
+    },
+    "evaluation": {
+      "verdict": "not_supported",
+      "is_statistically_significant": false,
+      "practical_significance": "negligible_or_negative",
+      "uncertainty_level": "moderate",
+      "summary": "Interaction experiment iter3_E2 testing [Glucose * BloodPressure] is not_supported: LRT chi2=0.629 (p=0.4278), interaction beta=-0.00022 (Wald p=0.4259), 95% bootstrap CI [-0.00088, 0.00047]."
+    },
+    "timestamp": "2026-11-07T09:02:12.087499+00:00"
+  }
+]

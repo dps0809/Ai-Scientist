@@ -69,11 +69,11 @@ class ExperimentSpecRecord(BaseModel):
     experiment_id: str
     hypothesis_id: str
     iteration_no: int = 1
-    experiment_type: str
-    method: str
-    model_type: str
+    experiment_type: str = "feature_combination_synergy"
+    method: str = "paired_model_comparison"
+    model_type: str = "sklearn.linear_model.LogisticRegression"
     features: List[str]
-    target: str
+    target: str = "Outcome"
     comparison: Optional[List[List[str]]] = None
     parameters: Dict[str, Any] = Field(default_factory=dict)
     evaluation: Dict[str, Any] = Field(default_factory=dict)
@@ -120,8 +120,11 @@ class CrossExperimentComparisonRecord(BaseModel):
     comparison_id: str
     iteration_no: int = 1
     individual_baselines: Dict[str, float] = Field(default_factory=dict)
+    individual_accuracies: Dict[str, float] = Field(default_factory=dict)
     combination_scores: Dict[str, float] = Field(default_factory=dict)
+    combination_accuracies: Dict[str, float] = Field(default_factory=dict)
     synergy_gains: Dict[str, float] = Field(default_factory=dict)
+    accuracy_gains: Dict[str, float] = Field(default_factory=dict)
     ranking: List[Dict[str, Any]] = Field(default_factory=list)
     summary_findings: List[str] = Field(default_factory=list)
     timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
@@ -224,6 +227,7 @@ class AutonomousStateRecord(BaseModel):
     iterations_completed: int = 0
     consecutive_no_improvement: int = 0
     best_score: float = 0.0
+    best_accuracy: float = 0.0
     best_features: List[str] = Field(default_factory=list)
     best_model: str = ""
     history: List[Dict[str, Any]] = Field(default_factory=list)
@@ -243,6 +247,9 @@ class FinalScientificReportRecord(BaseModel):
     total_experiments: int = 0
     total_iterations: int = 0
     best_roc_auc: float = 0.0
+    best_accuracy: float = 0.0
+    primary_metric: str = "ROC_AUC"
+    secondary_metric: str = "Accuracy"
     best_feature_combination: List[str] = Field(default_factory=list)
     best_model: str = ""
     confirmed_hypotheses: List[Dict[str, Any]] = Field(default_factory=list)

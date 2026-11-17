@@ -1,0 +1,22 @@
+[
+  {
+    "hypothesis_id": "iter5_H1",
+    "parent_hypothesis_id": "iter4_H1",
+    "iteration_no": 5,
+    "hypothesis": "Testing whether adding BMI as a feature interaction with Glucose provides a statistically significant predictive advantage over Logistic Regression in the diabetes prediction model.",
+    "rationale": "Derived from iter4_E1 (iter4_H1) outcome: The interaction between Glucose and SkinThickness does not provide a statistically significant predictive advantage over Logistic Regression. The like",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BMI"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "BMI"
+    ],
+    "timestamp": "2026-11-07T09:02:46.407890+00:00"
+  }
+]

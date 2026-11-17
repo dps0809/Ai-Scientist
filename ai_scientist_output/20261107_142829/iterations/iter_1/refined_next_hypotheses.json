@@ -1,0 +1,102 @@
+[
+  {
+    "hypothesis_id": "iter2_H1",
+    "parent_hypothesis_id": "iter1_H3",
+    "iteration_no": 2,
+    "hypothesis": "Combining Glucose with BloodPressure provides greater predictive power for the outcome than either feature alone, with a combined mutual information score of 0.85 (estimated from prior experiments) and a synergy gain of 0.025.",
+    "rationale": "Derived from iter1_E1 (iter1_H3) outcome: The hypothesis that combining Glucose and Pregnancies provides greater predictive power for the outcome than either feature alone is supported by curr",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BloodPressure"
+      ],
+      "model": "LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "BloodPressure"
+    ],
+    "timestamp": "2026-11-07T09:01:22.109708+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H2",
+    "parent_hypothesis_id": "iter1_H4",
+    "iteration_no": 2,
+    "hypothesis": "Combining Glucose with BloodPressure provides greater predictive power for the outcome than either feature alone, with a combined mutual information score of 0.85 (estimated from prior experiments) and a synergy gain of 0.035.",
+    "rationale": "Derived from iter1_E2 (iter1_H4) outcome: The hypothesis that combining Glucose and BMI provides greater predictive power than either feature alone is supported by the experiment. The combined",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BloodPressure"
+      ],
+      "model": "LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "BloodPressure"
+    ],
+    "timestamp": "2026-11-07T09:01:22.142938+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H3",
+    "parent_hypothesis_id": "iter1_H5",
+    "iteration_no": 2,
+    "hypothesis": "The effect of Glucose on Outcome is further moderated by BMI, with a positive interaction coefficient indicating that higher BMI levels amplify the negative impact of elevated Glucose on Outcome.",
+    "rationale": "Derived from iter1_E3 (iter1_H5) outcome: The interaction between Glucose and Age significantly moderates the effect on Outcome (p=0.0057), with a negative interaction coefficient (-0.00075) i",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BMI"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "BMI"
+    ],
+    "timestamp": "2026-11-07T09:01:22.143040+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H4",
+    "parent_hypothesis_id": "iter1_H6",
+    "iteration_no": 2,
+    "hypothesis": "Pregnancies act as a mediator between age and outcome, with age influencing pregnancy likelihood which in turn affects outcome, rather than age directly confounding pregnancy effects.",
+    "rationale": "Derived from iter1_E4 (iter1_H6) outcome: The hypothesis that pregnancies and age are strongly correlated (r=0.5443) and may confound or mediate their relationship with outcome is not supporte",
+    "proposed_experiment": {
+      "features": [
+        "Age",
+        "Pregnancies"
+      ],
+      "model": "statsmodels.Logit",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "Age",
+      "Pregnancies"
+    ],
+    "timestamp": "2026-11-07T09:01:22.155025+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H5",
+    "parent_hypothesis_id": "iter1_H1",
+    "iteration_no": 2,
+    "hypothesis": "Glucose has a stronger positive association with the outcome than BloodPressure, as indicated by a higher odds ratio and narrower confidence interval.",
+    "rationale": "Derived from iter1_E5 (iter1_H1) outcome: Glucose shows a statistically significant positive association with the outcome (p=0.0000), with an odds ratio of 3.46 (95% CI [2.82, 4.23]). The best",
+    "proposed_experiment": {
+      "features": [
+        "Glucose",
+        "BloodPressure"
+      ],
+      "model": "LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "Glucose",
+      "BloodPressure"
+    ],
+    "timestamp": "2026-11-07T09:01:22.193441+00:00"
+  }
+]

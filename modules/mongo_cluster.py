@@ -64,14 +64,25 @@ class MongoClusterManager:
         db_name: str,
         collection_name: str,
         doc: Dict[str, Any],
-        id_key: str = "_id"
+        id_key: str = "_id",
+        run_id: Optional[str] = None
     ) -> bool:
         col = self.get_collection(db_name, collection_name)
         if col is None:
             return False
         try:
-            if id_key in doc:
-                col.update_one({id_key: doc[id_key]}, {"$set": doc}, upsert=True)
+            if run_id:
+                doc["run_id"] = run_id
+            filter_query: Dict[str, Any] = {}
+            if "run_id" in doc:
+                filter_query["run_id"] = doc["run_id"]
+            if id_key in doc and id_key != "_id":
+                filter_query[id_key] = doc[id_key]
+            elif "_id" in doc:
+                filter_query["_id"] = doc["_id"]
+
+            if filter_query:
+                col.update_one(filter_query, {"$set": doc}, upsert=True)
             else:
                 col.insert_one(doc)
             return True
@@ -84,7 +95,8 @@ class MongoClusterManager:
         db_name: str,
         collection_name: str,
         docs: List[Dict[str, Any]],
-        id_key: str = "_id"
+        id_key: str = "_id",
+        run_id: Optional[str] = None
     ) -> bool:
         if not docs:
             return True
@@ -93,10 +105,7 @@ class MongoClusterManager:
             return False
         try:
             for doc in docs:
-                if id_key in doc:
-                    col.update_one({id_key: doc[id_key]}, {"$set": doc}, upsert=True)
-                else:
-                    col.insert_one(doc)
+                self.save_document(db_name, collection_name, doc, id_key=id_key, run_id=run_id)
             return True
         except PyMongoError as e:
             logger.warning(f"Failed to save documents to {db_name}.{collection_name}: {e}")
@@ -106,13 +115,17 @@ class MongoClusterManager:
         self,
         db_name: str,
         collection_name: str,
-        query: Optional[Dict[str, Any]] = None
+        query: Optional[Dict[str, Any]] = None,
+        run_id: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         col = self.get_collection(db_name, collection_name)
         if col is None:
             return []
         try:
-            return list(col.find(query or {}, {"_id": 0}))
+            q = dict(query or {})
+            if run_id:
+                q["run_id"] = run_id
+            return list(col.find(q, {"_id": 0}))
         except PyMongoError as e:
             logger.warning(f"Failed to query {db_name}.{collection_name}: {e}")
             return []

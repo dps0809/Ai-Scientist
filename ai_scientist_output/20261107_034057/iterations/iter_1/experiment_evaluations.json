@@ -1,0 +1,555 @@
+[
+  {
+    "experiment_id": "iter1_E1",
+    "hypothesis_id": "iter1_H1",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "individual_dependency",
+    "configuration": {
+      "features": [
+        "Glucose"
+      ],
+      "target": "Outcome",
+      "model": "LogisticRegression",
+      "method": "logistic_regression"
+    },
+    "results": {
+      "coefficient": 1.24,
+      "odds_ratio": 3.4555,
+      "confidence_interval": [
+        2.8227,
+        4.2302
+      ],
+      "mean_auc": 0.7905,
+      "std_auc": 0.0248,
+      "mean_accuracy": 0.7473,
+      "std_accuracy": 0.0293,
+      "best_model": "LogisticRegression",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "mean_auc": 0.7905,
+          "std_auc": 0.0248,
+          "mean_accuracy": 0.7473,
+          "std_accuracy": 0.0293
+        },
+        "RandomForest": {
+          "mean_auc": 0.7561,
+          "std_auc": 0.0255,
+          "mean_accuracy": 0.7173,
+          "std_accuracy": 0.0368
+        },
+        "XGBoost": {
+          "mean_auc": 0.7643,
+          "std_auc": 0.026,
+          "mean_accuracy": 0.7239,
+          "std_accuracy": 0.0254
+        }
+      },
+      "fold_auc": [
+        0.7865,
+        0.8068,
+        0.829,
+        0.7635,
+        0.7666
+      ],
+      "fold_accuracy": [
+        0.7273,
+        0.7922,
+        0.7597,
+        0.7516,
+        0.7059
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "inferential_logistic_regression",
+      "confidence_interval": [
+        2.8227,
+        4.2302
+      ],
+      "p_value": 0.0,
+      "permutation_p_value": 0.0
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "meaningful",
+      "uncertainty_level": "low",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "best_model": "LogisticRegression",
+      "summary": "Experiment iter1_E1 testing dependency of 'Glucose' on 'Outcome' is supported_by_current_evidence: OR=3.46 (95% CI [2.82, 4.23]), parametric p=0.0000, permutation p=0.0000, 5-fold CV Primary ROC-AUC=0.790 +/- 0.025, Secondary Accuracy=0.747 +/- 0.029 (Best model: LogisticRegression)."
+    },
+    "timestamp": "2026-11-06T22:12:05.261817+00:00"
+  },
+  {
+    "experiment_id": "iter1_E2",
+    "hypothesis_id": "iter1_H2",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "individual_dependency",
+    "configuration": {
+      "features": [
+        "Pregnancies"
+      ],
+      "target": "Outcome",
+      "model": "XGBoost",
+      "method": "logistic_regression"
+    },
+    "results": {
+      "coefficient": 0.4619,
+      "odds_ratio": 1.587,
+      "confidence_interval": [
+        1.3643,
+        1.8461
+      ],
+      "mean_auc": 0.633,
+      "std_auc": 0.0423,
+      "mean_accuracy": 0.6836,
+      "std_accuracy": 0.0184,
+      "best_model": "XGBoost",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "mean_auc": 0.62,
+          "std_auc": 0.0378,
+          "mean_accuracy": 0.6589,
+          "std_accuracy": 0.0114
+        },
+        "RandomForest": {
+          "mean_auc": 0.6327,
+          "std_auc": 0.0402,
+          "mean_accuracy": 0.681,
+          "std_accuracy": 0.0213
+        },
+        "XGBoost": {
+          "mean_auc": 0.633,
+          "std_auc": 0.0423,
+          "mean_accuracy": 0.6836,
+          "std_accuracy": 0.0184
+        }
+      },
+      "fold_auc": [
+        0.6116,
+        0.6396,
+        0.565,
+        0.6607,
+        0.6881
+      ],
+      "fold_accuracy": [
+        0.6818,
+        0.6948,
+        0.6623,
+        0.6667,
+        0.7124
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "inferential_logistic_regression",
+      "confidence_interval": [
+        1.3643,
+        1.8461
+      ],
+      "p_value": 0.0,
+      "permutation_p_value": 0.0
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "meaningful",
+      "uncertainty_level": "moderate",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "best_model": "XGBoost",
+      "summary": "Experiment iter1_E2 testing dependency of 'Pregnancies' on 'Outcome' is supported_by_current_evidence: OR=1.59 (95% CI [1.36, 1.85]), parametric p=0.0000, permutation p=0.0000, 5-fold CV Primary ROC-AUC=0.633 +/- 0.042, Secondary Accuracy=0.684 +/- 0.018 (Best model: XGBoost)."
+    },
+    "timestamp": "2026-11-06T22:12:05.261915+00:00"
+  },
+  {
+    "experiment_id": "iter1_E3",
+    "hypothesis_id": "iter1_H3",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "feature_combination_synergy",
+    "configuration": {
+      "features": [
+        "Pregnancies",
+        "Glucose"
+      ],
+      "target": "Outcome",
+      "model": "LogisticRegression",
+      "method": "paired_model_comparison"
+    },
+    "results": {
+      "individual_auc": {
+        "Pregnancies": 0.62,
+        "Glucose": 0.7905
+      },
+      "individual_accuracy": {
+        "Pregnancies": 0.6589,
+        "Glucose": 0.7473
+      },
+      "combined_auc": 0.8088,
+      "gain": 0.0183,
+      "combined_accuracy": 0.7447,
+      "accuracy_gain": -0.0026,
+      "best_individual_feature": "Glucose",
+      "best_model": "LogisticRegression",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "combined_mean_auc": 0.8088,
+          "best_individual_mean_auc": 0.7905,
+          "auc_gain": 0.0183,
+          "combined_mean_accuracy": 0.7447,
+          "best_individual_mean_accuracy": 0.7473,
+          "accuracy_gain": -0.0026,
+          "individual_aucs": {
+            "Pregnancies": 0.62,
+            "Glucose": 0.7905
+          },
+          "individual_accuracies": {
+            "Pregnancies": 0.6589,
+            "Glucose": 0.7473
+          }
+        },
+        "RandomForest": {
+          "combined_mean_auc": 0.7797,
+          "best_individual_mean_auc": 0.7561,
+          "auc_gain": 0.0236,
+          "combined_mean_accuracy": 0.7148,
+          "best_individual_mean_accuracy": 0.7173,
+          "accuracy_gain": -0.0025,
+          "individual_aucs": {
+            "Pregnancies": 0.6327,
+            "Glucose": 0.7561
+          },
+          "individual_accuracies": {
+            "Pregnancies": 0.681,
+            "Glucose": 0.7173
+          }
+        },
+        "XGBoost": {
+          "combined_mean_auc": 0.7854,
+          "best_individual_mean_auc": 0.7643,
+          "auc_gain": 0.0212,
+          "combined_mean_accuracy": 0.7408,
+          "best_individual_mean_accuracy": 0.7239,
+          "accuracy_gain": 0.0169,
+          "individual_aucs": {
+            "Pregnancies": 0.633,
+            "Glucose": 0.7643
+          },
+          "individual_accuracies": {
+            "Pregnancies": 0.6836,
+            "Glucose": 0.7239
+          }
+        }
+      },
+      "fold_scores": {
+        "Pregnancies": [
+          0.6009,
+          0.6124,
+          0.5656,
+          0.645,
+          0.676
+        ],
+        "Glucose": [
+          0.7865,
+          0.8068,
+          0.829,
+          0.7635,
+          0.7666
+        ],
+        "Pregnancies_Glucose": [
+          0.7965,
+          0.817,
+          0.8429,
+          0.803,
+          0.7846
+        ]
+      },
+      "fold_accuracies": {
+        "Pregnancies": [
+          0.6494,
+          0.6429,
+          0.6688,
+          0.6732,
+          0.6601
+        ],
+        "Glucose": [
+          0.7273,
+          0.7922,
+          0.7597,
+          0.7516,
+          0.7059
+        ],
+        "Pregnancies_Glucose": [
+          0.7208,
+          0.7857,
+          0.7792,
+          0.7255,
+          0.7124
+        ]
+      }
+    },
+    "statistical_validation": {
+      "comparison_method": "paired_cross_validation",
+      "confidence_interval": [
+        0.0033,
+        0.0333
+      ],
+      "p_value": 0.029,
+      "paired_t_stat": 3.3354
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "marginal",
+      "uncertainty_level": "moderate",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "best_model": "LogisticRegression",
+      "distinction_note": "Feature combination synergy represents predictive gain, distinct from multiplicative interaction.",
+      "summary": "Synergy experiment iter1_E3 testing [Pregnancies + Glucose] is supported_by_current_evidence: combined Primary AUC=0.8088 vs best individual (Glucose) AUC=0.7905 (gain=+0.0183, paired t p=0.0290; Secondary Accuracy=0.7447, Accuracy gain=-0.0026, best model: LogisticRegression). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction."
+    },
+    "timestamp": "2026-11-06T22:12:05.261976+00:00"
+  },
+  {
+    "experiment_id": "iter1_E4",
+    "hypothesis_id": "iter1_H4",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "feature_combination_synergy",
+    "configuration": {
+      "features": [
+        "Glucose",
+        "BMI"
+      ],
+      "target": "Outcome",
+      "model": "LogisticRegression",
+      "method": "paired_model_comparison"
+    },
+    "results": {
+      "individual_auc": {
+        "Glucose": 0.7905,
+        "BMI": 0.6864
+      },
+      "individual_accuracy": {
+        "Glucose": 0.7473,
+        "BMI": 0.6589
+      },
+      "combined_auc": 0.8178,
+      "gain": 0.0274,
+      "combined_accuracy": 0.7682,
+      "accuracy_gain": 0.0209,
+      "best_individual_feature": "Glucose",
+      "best_model": "LogisticRegression",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "combined_mean_auc": 0.8178,
+          "best_individual_mean_auc": 0.7905,
+          "auc_gain": 0.0274,
+          "combined_mean_accuracy": 0.7682,
+          "best_individual_mean_accuracy": 0.7473,
+          "accuracy_gain": 0.0209,
+          "individual_aucs": {
+            "Glucose": 0.7905,
+            "BMI": 0.6864
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7473,
+            "BMI": 0.6589
+          }
+        },
+        "RandomForest": {
+          "combined_mean_auc": 0.8145,
+          "best_individual_mean_auc": 0.7561,
+          "auc_gain": 0.0584,
+          "combined_mean_accuracy": 0.7578,
+          "best_individual_mean_accuracy": 0.7173,
+          "accuracy_gain": 0.0404,
+          "individual_aucs": {
+            "Glucose": 0.7561,
+            "BMI": 0.6503
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7173,
+            "BMI": 0.6653
+          }
+        },
+        "XGBoost": {
+          "combined_mean_auc": 0.8122,
+          "best_individual_mean_auc": 0.7643,
+          "auc_gain": 0.048,
+          "combined_mean_accuracy": 0.7642,
+          "best_individual_mean_accuracy": 0.7239,
+          "accuracy_gain": 0.0403,
+          "individual_aucs": {
+            "Glucose": 0.7643,
+            "BMI": 0.6708
+          },
+          "individual_accuracies": {
+            "Glucose": 0.7239,
+            "BMI": 0.6732
+          }
+        }
+      },
+      "fold_scores": {
+        "Glucose": [
+          0.7865,
+          0.8068,
+          0.829,
+          0.7635,
+          0.7666
+        ],
+        "BMI": [
+          0.6727,
+          0.7438,
+          0.679,
+          0.6782,
+          0.6582
+        ],
+        "Glucose_BMI": [
+          0.8183,
+          0.8461,
+          0.8584,
+          0.7815,
+          0.7849
+        ]
+      },
+      "fold_accuracies": {
+        "Glucose": [
+          0.7273,
+          0.7922,
+          0.7597,
+          0.7516,
+          0.7059
+        ],
+        "BMI": [
+          0.6299,
+          0.6883,
+          0.6558,
+          0.6928,
+          0.6275
+        ],
+        "Glucose_BMI": [
+          0.7403,
+          0.8182,
+          0.7662,
+          0.7647,
+          0.7516
+        ]
+      }
+    },
+    "statistical_validation": {
+      "comparison_method": "paired_cross_validation",
+      "confidence_interval": [
+        0.0124,
+        0.0424
+      ],
+      "p_value": 0.0026,
+      "paired_t_stat": 6.6738
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "meaningful",
+      "uncertainty_level": "low",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "best_model": "LogisticRegression",
+      "distinction_note": "Feature combination synergy represents predictive gain, distinct from multiplicative interaction.",
+      "summary": "Synergy experiment iter1_E4 testing [Glucose + BMI] is supported_by_current_evidence: combined Primary AUC=0.8178 vs best individual (Glucose) AUC=0.7905 (gain=+0.0274, paired t p=0.0026; Secondary Accuracy=0.7682, Accuracy gain=+0.0209, best model: LogisticRegression). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction."
+    },
+    "timestamp": "2026-11-06T22:12:05.262029+00:00"
+  },
+  {
+    "experiment_id": "iter1_E5",
+    "hypothesis_id": "iter1_H5",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "feature_interaction_moderation",
+    "configuration": {
+      "features": [
+        "Glucose",
+        "Age"
+      ],
+      "target": "Outcome",
+      "model": "statsmodels.Logit",
+      "method": "interaction_regression"
+    },
+    "results": {
+      "interaction_coefficient": -0.00075,
+      "main_effects": {
+        "feat_a": 0.0403,
+        "feat_b": 0.0289
+      },
+      "bootstrap_ci": [
+        -0.00146,
+        -0.00025
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "likelihood_ratio_test",
+      "chi2_statistic": 7.6316,
+      "p_value": 0.00574,
+      "bootstrap_confidence_interval": [
+        -0.00146,
+        -0.00025
+      ]
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "meaningful",
+      "uncertainty_level": "low",
+      "summary": "Interaction experiment iter1_E5 testing [Glucose * Age] is supported_by_current_evidence: LRT chi2=7.632 (p=0.0057), interaction beta=-0.00075 (Wald p=0.0044), 95% bootstrap CI [-0.00146, -0.00025]."
+    },
+    "timestamp": "2026-11-06T22:12:05.262076+00:00"
+  },
+  {
+    "experiment_id": "iter1_E6",
+    "hypothesis_id": "iter1_H6",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "comparative_or_confounding_relationship",
+    "configuration": {
+      "features": [
+        "Pregnancies",
+        "Age"
+      ],
+      "target": "Outcome",
+      "model": "statsmodels.Logit",
+      "method": "adjusted_regression"
+    },
+    "results": {
+      "unadjusted_coefficient": 0.4622,
+      "adjusted_coefficient": 0.2775,
+      "delta_coefficient": -0.1847,
+      "percent_change": -39.96,
+      "unadjusted_or": 1.5875,
+      "adjusted_or": 1.3198,
+      "covariate_or": 1.4172
+    },
+    "statistical_validation": {
+      "comparison_method": "adjusted_logistic_regression",
+      "delta_threshold_percent": 10.0,
+      "covariate_p_value": 1.0
+    },
+    "evaluation": {
+      "verdict": "not_supported",
+      "is_statistically_significant": false,
+      "practical_significance": "negligible_or_negative",
+      "uncertainty_level": "moderate",
+      "causal_limitations": "Observational regression adjustment identifies statistical coefficient shifts only. It does not establish causal mediation or directionality without formal temporality and unmeasured confounding assumptions.",
+      "summary": "Adjusted regression experiment iter1_E6 testing [Pregnancies adjusted for Age] is not_supported: unadjusted OR=1.59 -> adjusted OR=1.32 (delta=-40.0%, covariate p=1.0000)."
+    },
+    "timestamp": "2026-11-06T22:12:05.262107+00:00"
+  }
+]

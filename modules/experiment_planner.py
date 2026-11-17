@@ -156,13 +156,15 @@ def plan_experiments(
     with open(os.path.join(iter_dir, "experiment_specifications.json"), "w") as f:
         json.dump(specs_dump, f, indent=4)
 
-    # Persist to MongoDB cluster
+    # Persist to MongoDB cluster scoped by run_id
+    run_id = os.path.basename(out_dir.rstrip("\\/"))
     cluster = MongoClusterManager()
     cluster.save_documents(
         db_name=DB_EXPERIMENTS,
         collection_name="specifications",
         docs=cluster_docs,
-        id_key="experiment_id"
+        id_key="experiment_id",
+        run_id=run_id
     )
 
     print("\n" + "-" * 70)

@@ -13,8 +13,14 @@ class HypothesisRegistry:
     Maintains a deduplicated index of all hypotheses across iterations.
     Prevents generating redundant hypotheses in subsequent iteration loops.
     """
-    def __init__(self, registry_path: str = HYPOTHESIS_REGISTRY_PATH):
+    def __init__(
+        self,
+        registry_path: str = HYPOTHESIS_REGISTRY_PATH,
+        run_id: Optional[str] = None
+    ):
         self.registry_path = registry_path
+        norm_dir = os.path.basename(os.path.dirname(os.path.abspath(registry_path)))
+        self.run_id = run_id or (norm_dir if norm_dir != "ai_scientist_output" else None)
         self._hypotheses: List[HypothesisRecord] = []
         self._fingerprints: set[str] = set()
         self._load_registry()
@@ -70,7 +76,8 @@ class HypothesisRegistry:
             db_name=DB_HYPOTHESES,
             collection_name="hypotheses",
             docs=docs,
-            id_key="hypothesis_id"
+            id_key="hypothesis_id",
+            run_id=self.run_id
         )
 
     def get_all_hypotheses(self) -> List[HypothesisRecord]:
