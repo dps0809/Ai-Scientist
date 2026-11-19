@@ -1,0 +1,215 @@
+[
+    {
+        "hypothesis_id": "iter1_H1",
+        "iteration_no": 1,
+        "hypothesis_type": "individual_dependency",
+        "hypothesis": "Ic has a strong positive independent association with Output (S), with Pearson r=-0.1010 and Mutual Information=0.0129.",
+        "features_involved": [
+            "G",
+            "C",
+            "A",
+            "Ia",
+            "Ic"
+        ],
+        "evidence_from_data": "Pearson r: -0.1010, Spearman rho: -0.0539, Mutual Information: 0.0129, rank: 1",
+        "proposed_experiment": "Conduct logistic regression for Ic, odds ratio, confidence interval and statistical testing.",
+        "fingerprint": "('A', 'C', 'G', 'Ia', 'Ic')-individual_dependency",
+        "timestamp": "2026-11-18T18:22:40.990008+00:00"
+    },
+    {
+        "hypothesis_id": "iter1_H3",
+        "iteration_no": 1,
+        "hypothesis_type": "feature_combination_synergy",
+        "hypothesis": "Combining Ic and Vb provides greater predictive power for Output (S) than either feature alone, achieving combined ROC-AUC of 0.5680 (synergy gain=+0.0315) and Joint MI of 0.0325.",
+        "features_involved": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Vb"
+        ],
+        "evidence_from_data": "Score A: 0.5309, Score B: 0.5365, Combined: 0.5680, Synergy Gain: +0.0315, Joint MI: 0.0325",
+        "proposed_experiment": "Compare Ic, Vb and their combination using the same cross-validation splits.",
+        "fingerprint": "('A', 'B', 'C', 'G', 'Ic', 'Vb')-feature_combination_synergy",
+        "timestamp": "2026-11-18T18:22:41.023045+00:00"
+    },
+    {
+        "hypothesis_id": "iter1_H4",
+        "iteration_no": 1,
+        "hypothesis_type": "feature_interaction_moderation",
+        "hypothesis": "The relationship between Ic and Output (S) is moderated by Vb, with interaction delta 0.0026 and LRT p-value < 0.0001.",
+        "features_involved": [
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Va",
+            "Vb"
+        ],
+        "evidence_from_data": "Interaction delta: 0.0026, interaction p-value: < 0.0001",
+        "proposed_experiment": "Interaction logistic regression with product term Ic * Vb and bootstrap confidence interval.",
+        "fingerprint": "('A', 'B', 'C', 'Ic', 'Va', 'Vb')-feature_interaction_moderation",
+        "timestamp": "2026-11-18T18:22:41.041762+00:00"
+    },
+    {
+        "hypothesis_id": "iter1_H5",
+        "iteration_no": 1,
+        "hypothesis_type": "comparative_or_confounding_relationship",
+        "hypothesis": "G and A exhibit a notable correlation (r=0.7553), indicating that A may act as a confounder in the relationship between G and Output (S).",
+        "features_involved": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ib",
+            "Ic"
+        ],
+        "evidence_from_data": "Inter-feature correlation: 0.7553",
+        "proposed_experiment": "Fit unadjusted vs adjusted logistic regression for G controlling for A to assess confounding shift.",
+        "fingerprint": "('A', 'B', 'C', 'G', 'Ib', 'Ic')-comparative_or_confounding_relationship",
+        "timestamp": "2026-11-18T18:22:41.087036+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H1",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Combining G with B will provide superior predictive discrimination for Output (S) than G alone.",
+        "features_involved": [
+            "G",
+            "B"
+        ],
+        "evidence_from_data": "Experiment iter1_E1 testing dependency of 'G' on 'Output (S)' is supported_by_current_evidence: OR=1.25 (95% CI [1.20, 1.31]), parametric p=0.0000, permutation p=0.0000, 5-fold CV Primary ROC-AUC=0.555 +/- 0.017, Secondary Accuracy=0.555 +/- 0.000 (Best model: LogisticRegression).",
+        "proposed_experiment": "{\"features\": [\"G\", \"B\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('B', 'G')-refined_follow_up",
+        "timestamp": "2026-11-18T18:23:14.283105+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H2",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Extending the combination [G, C, B, A, Ic, Vb] with Ia will further enhance cross-validated classification performance.",
+        "features_involved": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Vb",
+            "Ia"
+        ],
+        "evidence_from_data": "Synergy experiment iter1_E3 testing [G + C + B + A + Ic + Vb] is supported_by_current_evidence: combined Primary AUC=0.7536 vs best individual (Ic) AUC=0.6211 (gain=+0.1324, paired t p=0.0000; Secondary Accuracy=0.6686, Accuracy gain=+0.0873, best model: RandomForest). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+        "proposed_experiment": "{\"features\": [\"G\", \"C\", \"B\", \"A\", \"Ic\", \"Vb\", \"Ia\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('A', 'B', 'C', 'G', 'Ia', 'Ic', 'Vb')-refined_follow_up",
+        "timestamp": "2026-11-18T18:23:14.293396+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H3",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Multivariate model testing joint effects of ['C', 'B', 'A', 'Ic', 'Va', 'Vb'] controlling for available covariates.",
+        "features_involved": [
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Va",
+            "Vb"
+        ],
+        "evidence_from_data": "Interaction experiment iter1_E4 testing [C * B * A * Ic * Va * Vb] is not_supported: LRT chi2=0.000 (p=1.0000), interaction beta=0.36639 (Wald p=nan), 95% bootstrap CI [0.28774, 0.44364].",
+        "proposed_experiment": "{\"features\": [\"C\", \"B\", \"A\", \"Ic\", \"Va\", \"Vb\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('A', 'B', 'C', 'Ic', 'Va', 'Vb')-refined_follow_up",
+        "timestamp": "2026-11-18T18:23:14.303060+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H4",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Multivariate model testing joint effects of ['G', 'C', 'B', 'A', 'Ib', 'Ic'] controlling for available covariates.",
+        "features_involved": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ib",
+            "Ic"
+        ],
+        "evidence_from_data": "Adjusted regression experiment iter1_E5 testing [G adjusted for C] is not_supported: unadjusted OR=1.25 -> adjusted OR=1.33 (delta=+26.5%, covariate p=1.0000).",
+        "proposed_experiment": "{\"features\": [\"G\", \"C\", \"B\", \"A\", \"Ib\", \"Ic\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('A', 'B', 'C', 'G', 'Ib', 'Ic')-refined_follow_up",
+        "timestamp": "2026-11-18T18:23:14.315046+00:00"
+    },
+    {
+        "hypothesis_id": "iter3_H1",
+        "iteration_no": 3,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Extending the combination [G, C, B, A, Ic, Vb, Ia] with Ib will further enhance cross-validated classification performance.",
+        "features_involved": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Vb",
+            "Ia",
+            "Ib"
+        ],
+        "evidence_from_data": "Synergy experiment iter2_E1 testing [G + C + B + A + Ic + Vb + Ia] is supported_by_current_evidence: combined Primary AUC=0.7674 vs best individual (Ic) AUC=0.6165 (gain=+0.1510, paired t p=0.0000; Secondary Accuracy=0.6821, Accuracy gain=+0.0996, best model: XGBoost). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+        "proposed_experiment": "{\"features\": [\"G\", \"C\", \"B\", \"A\", \"Ic\", \"Vb\", \"Ia\", \"Ib\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('A', 'B', 'C', 'G', 'Ia', 'Ib', 'Ic', 'Vb')-refined_follow_up",
+        "timestamp": "2026-11-18T18:23:58.973584+00:00"
+    },
+    {
+        "hypothesis_id": "iter3_H2",
+        "iteration_no": 3,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Extending the combination [C, B, A, Ic, Va, Vb] with G will further enhance cross-validated classification performance.",
+        "features_involved": [
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Va",
+            "Vb",
+            "G"
+        ],
+        "evidence_from_data": "Synergy experiment iter2_E2 testing [C + B + A + Ic + Va + Vb] is supported_by_current_evidence: combined Primary AUC=0.6907 vs best individual (Ic) AUC=0.6211 (gain=+0.0696, paired t p=0.0001; Secondary Accuracy=0.6307, Accuracy gain=+0.0494, best model: RandomForest). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+        "proposed_experiment": "{\"features\": [\"C\", \"B\", \"A\", \"Ic\", \"Va\", \"Vb\", \"G\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('A', 'B', 'C', 'G', 'Ic', 'Va', 'Vb')-refined_follow_up",
+        "timestamp": "2026-11-18T18:23:59.010186+00:00"
+    },
+    {
+        "hypothesis_id": "iter3_H3",
+        "iteration_no": 3,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Extending the combination [G, C, B, A, Ib, Ic] with Ia will further enhance cross-validated classification performance.",
+        "features_involved": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ib",
+            "Ic",
+            "Ia"
+        ],
+        "evidence_from_data": "Synergy experiment iter2_E3 testing [G + C + B + A + Ib + Ic] is supported_by_current_evidence: combined Primary AUC=0.7730 vs best individual (Ic) AUC=0.6211 (gain=+0.1519, paired t p=0.0000; Secondary Accuracy=0.6787, Accuracy gain=+0.0973, best model: RandomForest). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+        "proposed_experiment": "{\"features\": [\"G\", \"C\", \"B\", \"A\", \"Ib\", \"Ic\", \"Ia\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('A', 'B', 'C', 'G', 'Ia', 'Ib', 'Ic')-refined_follow_up",
+        "timestamp": "2026-11-18T18:23:59.047728+00:00"
+    },
+    {
+        "hypothesis_id": "iter3_H4",
+        "iteration_no": 3,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Extending the combination [G, B] with C will further enhance cross-validated classification performance.",
+        "features_involved": [
+            "G",
+            "B",
+            "C"
+        ],
+        "evidence_from_data": "Synergy experiment iter2_E4 testing [G + B] is inconclusive: combined Primary AUC=0.5699 vs best individual (G) AUC=0.5549 (gain=+0.0150, paired t p=0.0922; Secondary Accuracy=0.5681, Accuracy gain=+0.0131, best model: LogisticRegression). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+        "proposed_experiment": "{\"features\": [\"G\", \"B\", \"C\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('B', 'C', 'G')-refined_follow_up",
+        "timestamp": "2026-11-18T18:23:59.077376+00:00"
+    }
+]

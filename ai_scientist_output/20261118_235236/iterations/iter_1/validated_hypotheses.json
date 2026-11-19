@@ -1,0 +1,103 @@
+{
+    "report_id": "REP-iter1",
+    "iteration_no": 1,
+    "total": 5,
+    "validated_count": 4,
+    "needs_review_count": 1,
+    "rejected_count": 0,
+    "results": [
+        {
+            "validation_id": "VAL-iter1_H1",
+            "hypothesis_id": "iter1_H1",
+            "iteration_no": 1,
+            "hypothesis_type": "individual_dependency",
+            "status": "VALIDATED",
+            "features_involved": [
+                "G",
+                "C",
+                "A",
+                "Ia",
+                "Ic"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-18T18:22:41.298485+00:00"
+        },
+        {
+            "validation_id": "VAL-iter1_H2",
+            "hypothesis_id": "iter1_H2",
+            "iteration_no": 1,
+            "hypothesis_type": "individual_dependency",
+            "status": "VALIDATED",
+            "features_involved": [
+                "G",
+                "C",
+                "A",
+                "Ia",
+                "Ic"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-18T18:22:41.299088+00:00"
+        },
+        {
+            "validation_id": "VAL-iter1_H3",
+            "hypothesis_id": "iter1_H3",
+            "iteration_no": 1,
+            "hypothesis_type": "feature_combination_synergy",
+            "status": "VALIDATED",
+            "features_involved": [
+                "G",
+                "C",
+                "B",
+                "A",
+                "Ic",
+                "Vb"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-18T18:22:41.299715+00:00"
+        },
+        {
+            "validation_id": "VAL-iter1_H4",
+            "hypothesis_id": "iter1_H4",
+            "iteration_no": 1,
+            "hypothesis_type": "feature_interaction_moderation",
+            "status": "VALIDATED",
+            "features_involved": [
+                "C",
+                "B",
+                "A",
+                "Ic",
+                "Va",
+                "Vb"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-18T18:22:41.300507+00:00"
+        },
+        {
+            "validation_id": "VAL-iter1_H5",
+            "hypothesis_id": "iter1_H5",
+            "iteration_no": 1,
+            "hypothesis_type": "comparative_or_confounding_relationship",
+            "status": "NEEDS_REVIEW",
+            "features_involved": [
+                "G",
+                "C",
+                "B",
+                "A",
+                "Ib",
+                "Ic"
+            ],
+            "reconciled_evidence": {
+                "correlation": 0.7553
+            },
+            "reasons": [
+                "Hypothesis suggests confounding/mediation; routed to adjusted regression verification."
+            ],
+            "timestamp": "2026-11-18T18:22:41.301170+00:00"
+        }
+    ],
+    "timestamp": "2026-11-18T18:22:41.301337+00:00"
+}

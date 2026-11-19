@@ -1,0 +1,494 @@
+[
+    {
+        "result_id": "RES-iter1_E1",
+        "experiment_id": "iter1_E1",
+        "hypothesis_id": "iter1_H1",
+        "iteration_no": 1,
+        "experiment_type": "individual_dependency",
+        "method": "logistic_regression",
+        "model_type": "LogisticRegression",
+        "features": [
+            "G",
+            "C",
+            "A",
+            "Ia",
+            "Ic"
+        ],
+        "target": "Output (S)",
+        "metrics": {
+            "coefficient": 0.2234,
+            "odds_ratio": 1.2504,
+            "confidence_interval": [
+                1.1954,
+                1.3078
+            ],
+            "p_value": 0.0,
+            "permutation_p_value": 0.0,
+            "mean_auc": 0.5549,
+            "std_auc": 0.017,
+            "mean_accuracy": 0.555,
+            "std_accuracy": 0.0003,
+            "best_model": "LogisticRegression",
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "mean_auc": 0.5549,
+                    "std_auc": 0.017,
+                    "mean_accuracy": 0.555,
+                    "std_accuracy": 0.0003
+                },
+                "RandomForest": {
+                    "mean_auc": 0.5549,
+                    "std_auc": 0.017,
+                    "mean_accuracy": 0.5478,
+                    "std_accuracy": 0.0145
+                },
+                "XGBoost": {
+                    "mean_auc": 0.5549,
+                    "std_auc": 0.017,
+                    "mean_accuracy": 0.555,
+                    "std_accuracy": 0.0003
+                }
+            }
+        },
+        "details": {
+            "fold_auc": [
+                0.5265,
+                0.5637,
+                0.5622,
+                0.5758,
+                0.5463
+            ],
+            "fold_accuracy": [
+                0.555,
+                0.5547,
+                0.5547,
+                0.5553,
+                0.5553
+            ],
+            "mean_auc": 0.5549,
+            "std_auc": 0.017,
+            "mean_accuracy": 0.555,
+            "std_accuracy": 0.0003,
+            "best_model": "LogisticRegression",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "mean_auc": 0.5549,
+                    "std_auc": 0.017,
+                    "mean_accuracy": 0.555,
+                    "std_accuracy": 0.0003
+                },
+                "RandomForest": {
+                    "mean_auc": 0.5549,
+                    "std_auc": 0.017,
+                    "mean_accuracy": 0.5478,
+                    "std_accuracy": 0.0145
+                },
+                "XGBoost": {
+                    "mean_auc": 0.5549,
+                    "std_auc": 0.017,
+                    "mean_accuracy": 0.555,
+                    "std_accuracy": 0.0003
+                }
+            },
+            "sample_size": 7861,
+            "null_permutations_evaluated": 1000
+        },
+        "verdict": "SUPPORTED",
+        "summary": "Experiment iter1_E1 testing dependency of 'G' on 'Output (S)' is strongly supported (OR=1.25, 95% CI [1.20, 1.31], p=0.0000, Primary ROC-AUC=0.555 +/- 0.017, Secondary Accuracy=0.555 +/- 0.000, best model: LogisticRegression).",
+        "timestamp": "2026-11-18T18:22:44.942170+00:00"
+    },
+    {
+        "result_id": "RES-iter1_E3",
+        "experiment_id": "iter1_E3",
+        "hypothesis_id": "iter1_H3",
+        "iteration_no": 1,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "RandomForest",
+        "features": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Vb"
+        ],
+        "target": "Output (S)",
+        "metrics": {
+            "combined_mean_auc": 0.7536,
+            "best_individual_mean_auc": 0.6211,
+            "gain_over_best_individual": 0.1324,
+            "combined_mean_accuracy": 0.6686,
+            "best_individual_mean_accuracy": 0.5813,
+            "accuracy_gain": 0.0873,
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
+            "paired_test_stat": 19.4947,
+            "paired_test_p_value": 0.0,
+            "best_model": "RandomForest",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "combined_mean_auc": 0.6972,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.1177,
+                    "combined_mean_accuracy": 0.6362,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0674,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.5309,
+                        "Vb": 0.5365
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5387,
+                        "Vb": 0.5616
+                    }
+                },
+                "RandomForest": {
+                    "combined_mean_auc": 0.7536,
+                    "best_individual_mean_auc": 0.6211,
+                    "auc_gain": 0.1324,
+                    "combined_mean_accuracy": 0.6686,
+                    "best_individual_mean_accuracy": 0.5813,
+                    "accuracy_gain": 0.0873,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6211,
+                        "Vb": 0.5742
+                    },
+                    "individual_accuracies": {
+                        "G": 0.5478,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5813,
+                        "Vb": 0.5574
+                    }
+                },
+                "XGBoost": {
+                    "combined_mean_auc": 0.7447,
+                    "best_individual_mean_auc": 0.6165,
+                    "auc_gain": 0.1282,
+                    "combined_mean_accuracy": 0.6598,
+                    "best_individual_mean_accuracy": 0.5825,
+                    "accuracy_gain": 0.0773,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6165,
+                        "Vb": 0.5755
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.5514,
+                        "A": 0.555,
+                        "Ic": 0.5825,
+                        "Vb": 0.5567
+                    }
+                }
+            }
+        },
+        "details": {
+            "individual_scores": {
+                "G": 0.5549,
+                "C": 0.5795,
+                "B": 0.5472,
+                "A": 0.5065,
+                "Ic": 0.6211,
+                "Vb": 0.5742
+            },
+            "individual_accuracies": {
+                "G": 0.5478,
+                "C": 0.5688,
+                "B": 0.549,
+                "A": 0.555,
+                "Ic": 0.5813,
+                "Vb": 0.5574
+            },
+            "best_individual_feature": "Ic",
+            "fold_scores": {
+                "G": [
+                    0.5265,
+                    0.5637,
+                    0.5622,
+                    0.5758,
+                    0.5463
+                ],
+                "C": [
+                    0.5854,
+                    0.6016,
+                    0.5773,
+                    0.5589,
+                    0.5743
+                ],
+                "B": [
+                    0.5535,
+                    0.5662,
+                    0.548,
+                    0.5294,
+                    0.5387
+                ],
+                "A": [
+                    0.5231,
+                    0.4949,
+                    0.5003,
+                    0.4982,
+                    0.5159
+                ],
+                "Ic": [
+                    0.6153,
+                    0.6389,
+                    0.615,
+                    0.6174,
+                    0.619
+                ],
+                "Vb": [
+                    0.579,
+                    0.5951,
+                    0.5694,
+                    0.5648,
+                    0.5626
+                ],
+                "G_C_B_A_Ic_Vb": [
+                    0.7234,
+                    0.7706,
+                    0.7543,
+                    0.7666,
+                    0.7529
+                ]
+            },
+            "fold_accuracies": {
+                "G": [
+                    0.5188,
+                    0.5547,
+                    0.5547,
+                    0.5553,
+                    0.5553
+                ],
+                "C": [
+                    0.5728,
+                    0.5922,
+                    0.5674,
+                    0.5503,
+                    0.5611
+                ],
+                "B": [
+                    0.555,
+                    0.5547,
+                    0.5547,
+                    0.5375,
+                    0.5433
+                ],
+                "A": [
+                    0.555,
+                    0.5547,
+                    0.5547,
+                    0.5553,
+                    0.5553
+                ],
+                "Ic": [
+                    0.5709,
+                    0.5852,
+                    0.5782,
+                    0.5846,
+                    0.5878
+                ],
+                "Vb": [
+                    0.5658,
+                    0.5674,
+                    0.563,
+                    0.5496,
+                    0.5413
+                ],
+                "G_C_B_A_Ic_Vb": [
+                    0.6408,
+                    0.6845,
+                    0.6686,
+                    0.6858,
+                    0.6635
+                ]
+            },
+            "best_model": "RandomForest",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "combined_mean_auc": 0.6972,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.1177,
+                    "combined_mean_accuracy": 0.6362,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0674,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.5309,
+                        "Vb": 0.5365
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5387,
+                        "Vb": 0.5616
+                    }
+                },
+                "RandomForest": {
+                    "combined_mean_auc": 0.7536,
+                    "best_individual_mean_auc": 0.6211,
+                    "auc_gain": 0.1324,
+                    "combined_mean_accuracy": 0.6686,
+                    "best_individual_mean_accuracy": 0.5813,
+                    "accuracy_gain": 0.0873,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6211,
+                        "Vb": 0.5742
+                    },
+                    "individual_accuracies": {
+                        "G": 0.5478,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5813,
+                        "Vb": 0.5574
+                    }
+                },
+                "XGBoost": {
+                    "combined_mean_auc": 0.7447,
+                    "best_individual_mean_auc": 0.6165,
+                    "auc_gain": 0.1282,
+                    "combined_mean_accuracy": 0.6598,
+                    "best_individual_mean_accuracy": 0.5825,
+                    "accuracy_gain": 0.0773,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6165,
+                        "Vb": 0.5755
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.5514,
+                        "A": 0.555,
+                        "Ic": 0.5825,
+                        "Vb": 0.5567
+                    }
+                }
+            }
+        },
+        "verdict": "SUPPORTED",
+        "summary": "Synergy experiment iter1_E3 testing [G + C + B + A + Ic + Vb] is strongly supported: combining [G + C + B + A + Ic + Vb] yields significant synergy (Primary AUC gain=+0.1324, Secondary Accuracy gain=+0.0873, paired t p=0.0000, best model: RandomForest).",
+        "timestamp": "2026-11-18T18:22:52.324896+00:00"
+    },
+    {
+        "result_id": "RES-iter1_E4",
+        "experiment_id": "iter1_E4",
+        "hypothesis_id": "iter1_H4",
+        "iteration_no": 1,
+        "experiment_type": "feature_interaction_moderation",
+        "method": "interaction_regression",
+        "model_type": "statsmodels.Logit",
+        "features": [
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Va",
+            "Vb"
+        ],
+        "target": "Output (S)",
+        "metrics": {
+            "interaction_coefficient": 0.36639,
+            "interaction_p_value": NaN,
+            "lrt_statistic": 0.0,
+            "lrt_p_value": 1.0,
+            "bootstrap_ci": [
+                0.28774,
+                0.44364
+            ],
+            "main_effect_a_coef": 0.6814,
+            "main_effect_b_coef": -0.0828
+        },
+        "details": {
+            "log_likelihood_additive": -5293.0582,
+            "log_likelihood_interaction": -5293.0582,
+            "degrees_of_freedom": 1,
+            "bootstrap_samples_collected": 489,
+            "sample_size": 7861
+        },
+        "verdict": "REFUTED",
+        "summary": "Interaction experiment iter1_E4 testing [C * B] is refuted: interaction between C and B is statistically indistinguishable from zero (LRT chi2=0.000, p=1.0000, Wald p=nan).",
+        "timestamp": "2026-11-18T18:22:57.478681+00:00"
+    },
+    {
+        "result_id": "RES-iter1_E5",
+        "experiment_id": "iter1_E5",
+        "hypothesis_id": "iter1_H5",
+        "iteration_no": 1,
+        "experiment_type": "comparative_or_confounding_relationship",
+        "method": "adjusted_regression",
+        "model_type": "statsmodels.Logit",
+        "features": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ib",
+            "Ic"
+        ],
+        "target": "Output (S)",
+        "metrics": {
+            "unadjusted_coefficient": 0.2234,
+            "adjusted_coefficient": 0.2827,
+            "delta_coefficient": 0.0592,
+            "percent_change": 26.51,
+            "unadjusted_or": 1.2504,
+            "adjusted_or": 1.3267,
+            "unadjusted_ci": [
+                1.1954,
+                1.3079
+            ],
+            "adjusted_ci": [
+                1.2665,
+                1.3897
+            ],
+            "unadjusted_p_value": 0.0,
+            "adjusted_p_value": 0.0,
+            "covariate_coefficient": 0.3738,
+            "covariate_or": 1.4533,
+            "covariate_p_value": 0.0
+        },
+        "details": {
+            "confounding_threshold_percent": 10.0,
+            "confounding_detected": true,
+            "causal_note": "Observational confounding assessment; requires temporality and no unmeasured confounders for formal causal claim.",
+            "sample_size": 7861
+        },
+        "verdict": "SUPPORTED",
+        "summary": "Adjusted regression experiment iter1_E5 testing [G adjusted for C] is supported: adjustment for C substantially alters G's effect (unadjusted OR=1.25 -> adjusted OR=1.33, delta=+26.5%, covariate p=0.0000).",
+        "timestamp": "2026-11-18T18:22:57.485849+00:00"
+    }
+]

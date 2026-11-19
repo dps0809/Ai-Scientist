@@ -1,0 +1,1247 @@
+[
+    {
+        "result_id": "RES-iter3_E1",
+        "experiment_id": "iter3_E1",
+        "hypothesis_id": "iter3_H1",
+        "iteration_no": 3,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "RandomForest",
+        "features": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Vb",
+            "Ia",
+            "Ib"
+        ],
+        "target": "Output (S)",
+        "metrics": {
+            "combined_mean_auc": 0.7797,
+            "best_individual_mean_auc": 0.6211,
+            "gain_over_best_individual": 0.1586,
+            "combined_mean_accuracy": 0.6938,
+            "best_individual_mean_accuracy": 0.5813,
+            "accuracy_gain": 0.1125,
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
+            "paired_test_stat": 38.004,
+            "paired_test_p_value": 0.0,
+            "best_model": "RandomForest",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "combined_mean_auc": 0.698,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.1185,
+                    "combined_mean_accuracy": 0.6293,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0605,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.5309,
+                        "Vb": 0.5365,
+                        "Ia": 0.5209,
+                        "Ib": 0.543
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5387,
+                        "Vb": 0.5616,
+                        "Ia": 0.5525,
+                        "Ib": 0.5475
+                    }
+                },
+                "RandomForest": {
+                    "combined_mean_auc": 0.7797,
+                    "best_individual_mean_auc": 0.6211,
+                    "auc_gain": 0.1586,
+                    "combined_mean_accuracy": 0.6938,
+                    "best_individual_mean_accuracy": 0.5813,
+                    "accuracy_gain": 0.1125,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6211,
+                        "Vb": 0.5742,
+                        "Ia": 0.5519,
+                        "Ib": 0.5815
+                    },
+                    "individual_accuracies": {
+                        "G": 0.5478,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5813,
+                        "Vb": 0.5574,
+                        "Ia": 0.5489,
+                        "Ib": 0.5607
+                    }
+                },
+                "XGBoost": {
+                    "combined_mean_auc": 0.7748,
+                    "best_individual_mean_auc": 0.6165,
+                    "auc_gain": 0.1583,
+                    "combined_mean_accuracy": 0.6914,
+                    "best_individual_mean_accuracy": 0.5825,
+                    "accuracy_gain": 0.1089,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6165,
+                        "Vb": 0.5755,
+                        "Ia": 0.5416,
+                        "Ib": 0.5796
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.5514,
+                        "A": 0.555,
+                        "Ic": 0.5825,
+                        "Vb": 0.5567,
+                        "Ia": 0.5504,
+                        "Ib": 0.5619
+                    }
+                }
+            }
+        },
+        "details": {
+            "individual_scores": {
+                "G": 0.5549,
+                "C": 0.5795,
+                "B": 0.5472,
+                "A": 0.5065,
+                "Ic": 0.6211,
+                "Vb": 0.5742,
+                "Ia": 0.5519,
+                "Ib": 0.5815
+            },
+            "individual_accuracies": {
+                "G": 0.5478,
+                "C": 0.5688,
+                "B": 0.549,
+                "A": 0.555,
+                "Ic": 0.5813,
+                "Vb": 0.5574,
+                "Ia": 0.5489,
+                "Ib": 0.5607
+            },
+            "best_individual_feature": "Ic",
+            "fold_scores": {
+                "G": [
+                    0.5265,
+                    0.5637,
+                    0.5622,
+                    0.5758,
+                    0.5463
+                ],
+                "C": [
+                    0.5854,
+                    0.6016,
+                    0.5773,
+                    0.5589,
+                    0.5743
+                ],
+                "B": [
+                    0.5535,
+                    0.5662,
+                    0.548,
+                    0.5294,
+                    0.5387
+                ],
+                "A": [
+                    0.5231,
+                    0.4949,
+                    0.5003,
+                    0.4982,
+                    0.5159
+                ],
+                "Ic": [
+                    0.6153,
+                    0.6389,
+                    0.615,
+                    0.6174,
+                    0.619
+                ],
+                "Vb": [
+                    0.579,
+                    0.5951,
+                    0.5694,
+                    0.5648,
+                    0.5626
+                ],
+                "Ia": [
+                    0.5648,
+                    0.5396,
+                    0.5683,
+                    0.534,
+                    0.5529
+                ],
+                "Ib": [
+                    0.5938,
+                    0.5883,
+                    0.5895,
+                    0.5682,
+                    0.5675
+                ],
+                "G_C_B_A_Ic_Vb_Ia_Ib": [
+                    0.7645,
+                    0.7899,
+                    0.7873,
+                    0.7798,
+                    0.7772
+                ]
+            },
+            "fold_accuracies": {
+                "G": [
+                    0.5188,
+                    0.5547,
+                    0.5547,
+                    0.5553,
+                    0.5553
+                ],
+                "C": [
+                    0.5728,
+                    0.5922,
+                    0.5674,
+                    0.5503,
+                    0.5611
+                ],
+                "B": [
+                    0.555,
+                    0.5547,
+                    0.5547,
+                    0.5375,
+                    0.5433
+                ],
+                "A": [
+                    0.555,
+                    0.5547,
+                    0.5547,
+                    0.5553,
+                    0.5553
+                ],
+                "Ic": [
+                    0.5709,
+                    0.5852,
+                    0.5782,
+                    0.5846,
+                    0.5878
+                ],
+                "Vb": [
+                    0.5658,
+                    0.5674,
+                    0.563,
+                    0.5496,
+                    0.5413
+                ],
+                "Ia": [
+                    0.5474,
+                    0.5566,
+                    0.5623,
+                    0.5331,
+                    0.5452
+                ],
+                "Ib": [
+                    0.5696,
+                    0.5509,
+                    0.5662,
+                    0.5547,
+                    0.5623
+                ],
+                "G_C_B_A_Ic_Vb_Ia_Ib": [
+                    0.6751,
+                    0.6915,
+                    0.6978,
+                    0.7042,
+                    0.7004
+                ]
+            },
+            "best_model": "RandomForest",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "combined_mean_auc": 0.698,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.1185,
+                    "combined_mean_accuracy": 0.6293,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0605,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.5309,
+                        "Vb": 0.5365,
+                        "Ia": 0.5209,
+                        "Ib": 0.543
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5387,
+                        "Vb": 0.5616,
+                        "Ia": 0.5525,
+                        "Ib": 0.5475
+                    }
+                },
+                "RandomForest": {
+                    "combined_mean_auc": 0.7797,
+                    "best_individual_mean_auc": 0.6211,
+                    "auc_gain": 0.1586,
+                    "combined_mean_accuracy": 0.6938,
+                    "best_individual_mean_accuracy": 0.5813,
+                    "accuracy_gain": 0.1125,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6211,
+                        "Vb": 0.5742,
+                        "Ia": 0.5519,
+                        "Ib": 0.5815
+                    },
+                    "individual_accuracies": {
+                        "G": 0.5478,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5813,
+                        "Vb": 0.5574,
+                        "Ia": 0.5489,
+                        "Ib": 0.5607
+                    }
+                },
+                "XGBoost": {
+                    "combined_mean_auc": 0.7748,
+                    "best_individual_mean_auc": 0.6165,
+                    "auc_gain": 0.1583,
+                    "combined_mean_accuracy": 0.6914,
+                    "best_individual_mean_accuracy": 0.5825,
+                    "accuracy_gain": 0.1089,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6165,
+                        "Vb": 0.5755,
+                        "Ia": 0.5416,
+                        "Ib": 0.5796
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.5514,
+                        "A": 0.555,
+                        "Ic": 0.5825,
+                        "Vb": 0.5567,
+                        "Ia": 0.5504,
+                        "Ib": 0.5619
+                    }
+                }
+            }
+        },
+        "verdict": "SUPPORTED",
+        "summary": "Synergy experiment iter3_E1 testing [G + C + B + A + Ic + Vb + Ia + Ib] is strongly supported: combining [G + C + B + A + Ic + Vb + Ia + Ib] yields significant synergy (Primary AUC gain=+0.1586, Secondary Accuracy gain=+0.1125, paired t p=0.0000, best model: RandomForest).",
+        "timestamp": "2026-11-18T18:24:28.200243+00:00"
+    },
+    {
+        "result_id": "RES-iter3_E2",
+        "experiment_id": "iter3_E2",
+        "hypothesis_id": "iter3_H3",
+        "iteration_no": 3,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "RandomForest",
+        "features": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ib",
+            "Ic",
+            "Ia"
+        ],
+        "target": "Output (S)",
+        "metrics": {
+            "combined_mean_auc": 0.7817,
+            "best_individual_mean_auc": 0.6211,
+            "gain_over_best_individual": 0.1606,
+            "combined_mean_accuracy": 0.6915,
+            "best_individual_mean_accuracy": 0.5813,
+            "accuracy_gain": 0.1102,
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
+            "paired_test_stat": 30.6608,
+            "paired_test_p_value": 0.0,
+            "best_model": "RandomForest",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "combined_mean_auc": 0.6824,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.1029,
+                    "combined_mean_accuracy": 0.6277,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0589,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ib": 0.543,
+                        "Ic": 0.5309,
+                        "Ia": 0.5209
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ib": 0.5475,
+                        "Ic": 0.5387,
+                        "Ia": 0.5525
+                    }
+                },
+                "RandomForest": {
+                    "combined_mean_auc": 0.7817,
+                    "best_individual_mean_auc": 0.6211,
+                    "auc_gain": 0.1606,
+                    "combined_mean_accuracy": 0.6915,
+                    "best_individual_mean_accuracy": 0.5813,
+                    "accuracy_gain": 0.1102,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ib": 0.5815,
+                        "Ic": 0.6211,
+                        "Ia": 0.5519
+                    },
+                    "individual_accuracies": {
+                        "G": 0.5478,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ib": 0.5607,
+                        "Ic": 0.5813,
+                        "Ia": 0.5489
+                    }
+                },
+                "XGBoost": {
+                    "combined_mean_auc": 0.7679,
+                    "best_individual_mean_auc": 0.6165,
+                    "auc_gain": 0.1514,
+                    "combined_mean_accuracy": 0.6797,
+                    "best_individual_mean_accuracy": 0.5825,
+                    "accuracy_gain": 0.0972,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ib": 0.5796,
+                        "Ic": 0.6165,
+                        "Ia": 0.5416
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.5514,
+                        "A": 0.555,
+                        "Ib": 0.5619,
+                        "Ic": 0.5825,
+                        "Ia": 0.5504
+                    }
+                }
+            }
+        },
+        "details": {
+            "individual_scores": {
+                "G": 0.5549,
+                "C": 0.5795,
+                "B": 0.5472,
+                "A": 0.5065,
+                "Ib": 0.5815,
+                "Ic": 0.6211,
+                "Ia": 0.5519
+            },
+            "individual_accuracies": {
+                "G": 0.5478,
+                "C": 0.5688,
+                "B": 0.549,
+                "A": 0.555,
+                "Ib": 0.5607,
+                "Ic": 0.5813,
+                "Ia": 0.5489
+            },
+            "best_individual_feature": "Ic",
+            "fold_scores": {
+                "G": [
+                    0.5265,
+                    0.5637,
+                    0.5622,
+                    0.5758,
+                    0.5463
+                ],
+                "C": [
+                    0.5854,
+                    0.6016,
+                    0.5773,
+                    0.5589,
+                    0.5743
+                ],
+                "B": [
+                    0.5535,
+                    0.5662,
+                    0.548,
+                    0.5294,
+                    0.5387
+                ],
+                "A": [
+                    0.5231,
+                    0.4949,
+                    0.5003,
+                    0.4982,
+                    0.5159
+                ],
+                "Ib": [
+                    0.5938,
+                    0.5883,
+                    0.5895,
+                    0.5682,
+                    0.5675
+                ],
+                "Ic": [
+                    0.6153,
+                    0.6389,
+                    0.615,
+                    0.6174,
+                    0.619
+                ],
+                "Ia": [
+                    0.5648,
+                    0.5396,
+                    0.5683,
+                    0.534,
+                    0.5529
+                ],
+                "G_C_B_A_Ib_Ic_Ia": [
+                    0.7721,
+                    0.786,
+                    0.7919,
+                    0.785,
+                    0.7735
+                ]
+            },
+            "fold_accuracies": {
+                "G": [
+                    0.5188,
+                    0.5547,
+                    0.5547,
+                    0.5553,
+                    0.5553
+                ],
+                "C": [
+                    0.5728,
+                    0.5922,
+                    0.5674,
+                    0.5503,
+                    0.5611
+                ],
+                "B": [
+                    0.555,
+                    0.5547,
+                    0.5547,
+                    0.5375,
+                    0.5433
+                ],
+                "A": [
+                    0.555,
+                    0.5547,
+                    0.5547,
+                    0.5553,
+                    0.5553
+                ],
+                "Ib": [
+                    0.5696,
+                    0.5509,
+                    0.5662,
+                    0.5547,
+                    0.5623
+                ],
+                "Ic": [
+                    0.5709,
+                    0.5852,
+                    0.5782,
+                    0.5846,
+                    0.5878
+                ],
+                "Ia": [
+                    0.5474,
+                    0.5566,
+                    0.5623,
+                    0.5331,
+                    0.5452
+                ],
+                "G_C_B_A_Ib_Ic_Ia": [
+                    0.6866,
+                    0.6908,
+                    0.694,
+                    0.7023,
+                    0.6838
+                ]
+            },
+            "best_model": "RandomForest",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "combined_mean_auc": 0.6824,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.1029,
+                    "combined_mean_accuracy": 0.6277,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0589,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ib": 0.543,
+                        "Ic": 0.5309,
+                        "Ia": 0.5209
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ib": 0.5475,
+                        "Ic": 0.5387,
+                        "Ia": 0.5525
+                    }
+                },
+                "RandomForest": {
+                    "combined_mean_auc": 0.7817,
+                    "best_individual_mean_auc": 0.6211,
+                    "auc_gain": 0.1606,
+                    "combined_mean_accuracy": 0.6915,
+                    "best_individual_mean_accuracy": 0.5813,
+                    "accuracy_gain": 0.1102,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ib": 0.5815,
+                        "Ic": 0.6211,
+                        "Ia": 0.5519
+                    },
+                    "individual_accuracies": {
+                        "G": 0.5478,
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ib": 0.5607,
+                        "Ic": 0.5813,
+                        "Ia": 0.5489
+                    }
+                },
+                "XGBoost": {
+                    "combined_mean_auc": 0.7679,
+                    "best_individual_mean_auc": 0.6165,
+                    "auc_gain": 0.1514,
+                    "combined_mean_accuracy": 0.6797,
+                    "best_individual_mean_accuracy": 0.5825,
+                    "accuracy_gain": 0.0972,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ib": 0.5796,
+                        "Ic": 0.6165,
+                        "Ia": 0.5416
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "C": 0.5688,
+                        "B": 0.5514,
+                        "A": 0.555,
+                        "Ib": 0.5619,
+                        "Ic": 0.5825,
+                        "Ia": 0.5504
+                    }
+                }
+            }
+        },
+        "verdict": "SUPPORTED",
+        "summary": "Synergy experiment iter3_E2 testing [G + C + B + A + Ib + Ic + Ia] is strongly supported: combining [G + C + B + A + Ib + Ic + Ia] yields significant synergy (Primary AUC gain=+0.1606, Secondary Accuracy gain=+0.1102, paired t p=0.0000, best model: RandomForest).",
+        "timestamp": "2026-11-18T18:24:58.150480+00:00"
+    },
+    {
+        "result_id": "RES-iter3_E3",
+        "experiment_id": "iter3_E3",
+        "hypothesis_id": "iter3_H2",
+        "iteration_no": 3,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "RandomForest",
+        "features": [
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Va",
+            "Vb",
+            "G"
+        ],
+        "target": "Output (S)",
+        "metrics": {
+            "combined_mean_auc": 0.7686,
+            "best_individual_mean_auc": 0.6211,
+            "gain_over_best_individual": 0.1475,
+            "combined_mean_accuracy": 0.6753,
+            "best_individual_mean_accuracy": 0.5813,
+            "accuracy_gain": 0.094,
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
+            "paired_test_stat": 22.1457,
+            "paired_test_p_value": 0.0,
+            "best_model": "RandomForest",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "combined_mean_auc": 0.6969,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.1174,
+                    "combined_mean_accuracy": 0.6367,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0679,
+                    "individual_aucs": {
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.5309,
+                        "Va": 0.5292,
+                        "Vb": 0.5365,
+                        "G": 0.5549
+                    },
+                    "individual_accuracies": {
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5387,
+                        "Va": 0.5546,
+                        "Vb": 0.5616,
+                        "G": 0.555
+                    }
+                },
+                "RandomForest": {
+                    "combined_mean_auc": 0.7686,
+                    "best_individual_mean_auc": 0.6211,
+                    "auc_gain": 0.1475,
+                    "combined_mean_accuracy": 0.6753,
+                    "best_individual_mean_accuracy": 0.5813,
+                    "accuracy_gain": 0.094,
+                    "individual_aucs": {
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6211,
+                        "Va": 0.5198,
+                        "Vb": 0.5742,
+                        "G": 0.5549
+                    },
+                    "individual_accuracies": {
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5813,
+                        "Va": 0.5455,
+                        "Vb": 0.5574,
+                        "G": 0.5478
+                    }
+                },
+                "XGBoost": {
+                    "combined_mean_auc": 0.7582,
+                    "best_individual_mean_auc": 0.6165,
+                    "auc_gain": 0.1418,
+                    "combined_mean_accuracy": 0.6695,
+                    "best_individual_mean_accuracy": 0.5825,
+                    "accuracy_gain": 0.087,
+                    "individual_aucs": {
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6165,
+                        "Va": 0.5057,
+                        "Vb": 0.5755,
+                        "G": 0.5549
+                    },
+                    "individual_accuracies": {
+                        "C": 0.5688,
+                        "B": 0.5514,
+                        "A": 0.555,
+                        "Ic": 0.5825,
+                        "Va": 0.5394,
+                        "Vb": 0.5567,
+                        "G": 0.555
+                    }
+                }
+            }
+        },
+        "details": {
+            "individual_scores": {
+                "C": 0.5795,
+                "B": 0.5472,
+                "A": 0.5065,
+                "Ic": 0.6211,
+                "Va": 0.5198,
+                "Vb": 0.5742,
+                "G": 0.5549
+            },
+            "individual_accuracies": {
+                "C": 0.5688,
+                "B": 0.549,
+                "A": 0.555,
+                "Ic": 0.5813,
+                "Va": 0.5455,
+                "Vb": 0.5574,
+                "G": 0.5478
+            },
+            "best_individual_feature": "Ic",
+            "fold_scores": {
+                "C": [
+                    0.5854,
+                    0.6016,
+                    0.5773,
+                    0.5589,
+                    0.5743
+                ],
+                "B": [
+                    0.5535,
+                    0.5662,
+                    0.548,
+                    0.5294,
+                    0.5387
+                ],
+                "A": [
+                    0.5231,
+                    0.4949,
+                    0.5003,
+                    0.4982,
+                    0.5159
+                ],
+                "Ic": [
+                    0.6153,
+                    0.6389,
+                    0.615,
+                    0.6174,
+                    0.619
+                ],
+                "Va": [
+                    0.5194,
+                    0.5156,
+                    0.5229,
+                    0.5246,
+                    0.5167
+                ],
+                "Vb": [
+                    0.579,
+                    0.5951,
+                    0.5694,
+                    0.5648,
+                    0.5626
+                ],
+                "G": [
+                    0.5265,
+                    0.5637,
+                    0.5622,
+                    0.5758,
+                    0.5463
+                ],
+                "C_B_A_Ic_Va_Vb_G": [
+                    0.7378,
+                    0.7907,
+                    0.7752,
+                    0.7739,
+                    0.7654
+                ]
+            },
+            "fold_accuracies": {
+                "C": [
+                    0.5728,
+                    0.5922,
+                    0.5674,
+                    0.5503,
+                    0.5611
+                ],
+                "B": [
+                    0.555,
+                    0.5547,
+                    0.5547,
+                    0.5375,
+                    0.5433
+                ],
+                "A": [
+                    0.555,
+                    0.5547,
+                    0.5547,
+                    0.5553,
+                    0.5553
+                ],
+                "Ic": [
+                    0.5709,
+                    0.5852,
+                    0.5782,
+                    0.5846,
+                    0.5878
+                ],
+                "Va": [
+                    0.5455,
+                    0.5382,
+                    0.5458,
+                    0.5553,
+                    0.5426
+                ],
+                "Vb": [
+                    0.5658,
+                    0.5674,
+                    0.563,
+                    0.5496,
+                    0.5413
+                ],
+                "G": [
+                    0.5188,
+                    0.5547,
+                    0.5547,
+                    0.5553,
+                    0.5553
+                ],
+                "C_B_A_Ic_Va_Vb_G": [
+                    0.6446,
+                    0.6953,
+                    0.6819,
+                    0.68,
+                    0.6749
+                ]
+            },
+            "best_model": "RandomForest",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "combined_mean_auc": 0.6969,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.1174,
+                    "combined_mean_accuracy": 0.6367,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0679,
+                    "individual_aucs": {
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.5309,
+                        "Va": 0.5292,
+                        "Vb": 0.5365,
+                        "G": 0.5549
+                    },
+                    "individual_accuracies": {
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5387,
+                        "Va": 0.5546,
+                        "Vb": 0.5616,
+                        "G": 0.555
+                    }
+                },
+                "RandomForest": {
+                    "combined_mean_auc": 0.7686,
+                    "best_individual_mean_auc": 0.6211,
+                    "auc_gain": 0.1475,
+                    "combined_mean_accuracy": 0.6753,
+                    "best_individual_mean_accuracy": 0.5813,
+                    "accuracy_gain": 0.094,
+                    "individual_aucs": {
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6211,
+                        "Va": 0.5198,
+                        "Vb": 0.5742,
+                        "G": 0.5549
+                    },
+                    "individual_accuracies": {
+                        "C": 0.5688,
+                        "B": 0.549,
+                        "A": 0.555,
+                        "Ic": 0.5813,
+                        "Va": 0.5455,
+                        "Vb": 0.5574,
+                        "G": 0.5478
+                    }
+                },
+                "XGBoost": {
+                    "combined_mean_auc": 0.7582,
+                    "best_individual_mean_auc": 0.6165,
+                    "auc_gain": 0.1418,
+                    "combined_mean_accuracy": 0.6695,
+                    "best_individual_mean_accuracy": 0.5825,
+                    "accuracy_gain": 0.087,
+                    "individual_aucs": {
+                        "C": 0.5795,
+                        "B": 0.5472,
+                        "A": 0.5065,
+                        "Ic": 0.6165,
+                        "Va": 0.5057,
+                        "Vb": 0.5755,
+                        "G": 0.5549
+                    },
+                    "individual_accuracies": {
+                        "C": 0.5688,
+                        "B": 0.5514,
+                        "A": 0.555,
+                        "Ic": 0.5825,
+                        "Va": 0.5394,
+                        "Vb": 0.5567,
+                        "G": 0.555
+                    }
+                }
+            }
+        },
+        "verdict": "SUPPORTED",
+        "summary": "Synergy experiment iter3_E3 testing [C + B + A + Ic + Va + Vb + G] is strongly supported: combining [C + B + A + Ic + Va + Vb + G] yields significant synergy (Primary AUC gain=+0.1475, Secondary Accuracy gain=+0.0940, paired t p=0.0000, best model: RandomForest).",
+        "timestamp": "2026-11-18T18:25:27.332986+00:00"
+    },
+    {
+        "result_id": "RES-iter3_E4",
+        "experiment_id": "iter3_E4",
+        "hypothesis_id": "iter3_H4",
+        "iteration_no": 3,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "RandomForest",
+        "features": [
+            "G",
+            "B",
+            "C"
+        ],
+        "target": "Output (S)",
+        "metrics": {
+            "combined_mean_auc": 0.6172,
+            "best_individual_mean_auc": 0.5795,
+            "gain_over_best_individual": 0.0377,
+            "combined_mean_accuracy": 0.5842,
+            "best_individual_mean_accuracy": 0.5688,
+            "accuracy_gain": 0.0154,
+            "primary_metric": "ROC_AUC",
+            "secondary_metric": "Accuracy",
+            "paired_test_stat": 6.1448,
+            "paired_test_p_value": 0.0036,
+            "best_model": "RandomForest",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "combined_mean_auc": 0.6143,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.0348,
+                    "combined_mean_accuracy": 0.5842,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0154,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "B": 0.5472,
+                        "C": 0.5795
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "B": 0.549,
+                        "C": 0.5688
+                    }
+                },
+                "RandomForest": {
+                    "combined_mean_auc": 0.6172,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.0377,
+                    "combined_mean_accuracy": 0.5842,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0154,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "B": 0.5472,
+                        "C": 0.5795
+                    },
+                    "individual_accuracies": {
+                        "G": 0.5478,
+                        "B": 0.549,
+                        "C": 0.5688
+                    }
+                },
+                "XGBoost": {
+                    "combined_mean_auc": 0.6172,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.0377,
+                    "combined_mean_accuracy": 0.5842,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0154,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "B": 0.5472,
+                        "C": 0.5795
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "B": 0.5514,
+                        "C": 0.5688
+                    }
+                }
+            }
+        },
+        "details": {
+            "individual_scores": {
+                "G": 0.5549,
+                "B": 0.5472,
+                "C": 0.5795
+            },
+            "individual_accuracies": {
+                "G": 0.5478,
+                "B": 0.549,
+                "C": 0.5688
+            },
+            "best_individual_feature": "C",
+            "fold_scores": {
+                "G": [
+                    0.5265,
+                    0.5637,
+                    0.5622,
+                    0.5758,
+                    0.5463
+                ],
+                "B": [
+                    0.5535,
+                    0.5662,
+                    0.548,
+                    0.5294,
+                    0.5387
+                ],
+                "C": [
+                    0.5854,
+                    0.6016,
+                    0.5773,
+                    0.5589,
+                    0.5743
+                ],
+                "G_B_C": [
+                    0.5994,
+                    0.6456,
+                    0.6222,
+                    0.6065,
+                    0.6121
+                ]
+            },
+            "fold_accuracies": {
+                "G": [
+                    0.5188,
+                    0.5547,
+                    0.5547,
+                    0.5553,
+                    0.5553
+                ],
+                "B": [
+                    0.555,
+                    0.5547,
+                    0.5547,
+                    0.5375,
+                    0.5433
+                ],
+                "C": [
+                    0.5728,
+                    0.5922,
+                    0.5674,
+                    0.5503,
+                    0.5611
+                ],
+                "G_B_C": [
+                    0.5728,
+                    0.6139,
+                    0.5821,
+                    0.5776,
+                    0.5744
+                ]
+            },
+            "best_model": "RandomForest",
+            "model_comparison": {
+                "LogisticRegression": {
+                    "combined_mean_auc": 0.6143,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.0348,
+                    "combined_mean_accuracy": 0.5842,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0154,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "B": 0.5472,
+                        "C": 0.5795
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "B": 0.549,
+                        "C": 0.5688
+                    }
+                },
+                "RandomForest": {
+                    "combined_mean_auc": 0.6172,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.0377,
+                    "combined_mean_accuracy": 0.5842,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0154,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "B": 0.5472,
+                        "C": 0.5795
+                    },
+                    "individual_accuracies": {
+                        "G": 0.5478,
+                        "B": 0.549,
+                        "C": 0.5688
+                    }
+                },
+                "XGBoost": {
+                    "combined_mean_auc": 0.6172,
+                    "best_individual_mean_auc": 0.5795,
+                    "auc_gain": 0.0377,
+                    "combined_mean_accuracy": 0.5842,
+                    "best_individual_mean_accuracy": 0.5688,
+                    "accuracy_gain": 0.0154,
+                    "individual_aucs": {
+                        "G": 0.5549,
+                        "B": 0.5472,
+                        "C": 0.5795
+                    },
+                    "individual_accuracies": {
+                        "G": 0.555,
+                        "B": 0.5514,
+                        "C": 0.5688
+                    }
+                }
+            }
+        },
+        "verdict": "SUPPORTED",
+        "summary": "Synergy experiment iter3_E4 testing [G + B + C] is strongly supported: combining [G + B + C] yields significant synergy (Primary AUC gain=+0.0377, Secondary Accuracy gain=+0.0154, paired t p=0.0036, best model: RandomForest).",
+        "timestamp": "2026-11-18T18:25:37.387930+00:00"
+    }
+]

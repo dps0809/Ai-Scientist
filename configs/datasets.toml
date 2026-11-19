@@ -1,0 +1,33 @@
+# ============================================================
+# DATASET REGISTRY
+# ============================================================
+# Each [datasets.<name>] section defines a dataset that can be
+# selected via:   python mains.py --dataset <name>
+#
+# Supported types:
+#   single_file        – one CSV/Excel containing both features and target
+#   split_input_output – features in one file, target in another
+# ============================================================
+
+[datasets.diabetes]
+name = "diabetes"
+type = "single_file"
+path = "diabetes.csv"
+target_column = "Outcome"
+
+[datasets.power_system_class]
+name = "power_system_class"
+type = "single_file"
+path = "Data/classData.csv"
+target_column = "G"
+
+[datasets.power_system_detect]
+name = "power_system_detect"
+type = "split_input_output"
+input_path = "Data/classData.csv"
+output_path = "Data/detect_dataset.csv"
+input_features = ["Ia", "Ib", "Ic", "Va", "Vb", "Vc"]
+extra_input_columns = ["G", "C", "B", "A"]
+output_target = "Output (S)"
+merge_strategy = "column_bind"
+drop_unnamed = true

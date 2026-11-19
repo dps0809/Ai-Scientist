@@ -1,0 +1,84 @@
+{
+    "report_id": "REP-iter3",
+    "iteration_no": 3,
+    "total": 4,
+    "validated_count": 4,
+    "needs_review_count": 0,
+    "rejected_count": 0,
+    "results": [
+        {
+            "validation_id": "VAL-iter3_H1",
+            "hypothesis_id": "iter3_H1",
+            "iteration_no": 3,
+            "hypothesis_type": "feature_combination_synergy",
+            "status": "VALIDATED",
+            "features_involved": [
+                "G",
+                "C",
+                "B",
+                "A",
+                "Ic",
+                "Vb",
+                "Ia",
+                "Ib"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-18T18:23:59.152941+00:00"
+        },
+        {
+            "validation_id": "VAL-iter3_H3",
+            "hypothesis_id": "iter3_H3",
+            "iteration_no": 3,
+            "hypothesis_type": "feature_combination_synergy",
+            "status": "VALIDATED",
+            "features_involved": [
+                "G",
+                "C",
+                "B",
+                "A",
+                "Ib",
+                "Ic",
+                "Ia"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-18T18:23:59.153543+00:00"
+        },
+        {
+            "validation_id": "VAL-iter3_H2",
+            "hypothesis_id": "iter3_H2",
+            "iteration_no": 3,
+            "hypothesis_type": "feature_combination_synergy",
+            "status": "VALIDATED",
+            "features_involved": [
+                "C",
+                "B",
+                "A",
+                "Ic",
+                "Va",
+                "Vb",
+                "G"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-18T18:23:59.154085+00:00"
+        },
+        {
+            "validation_id": "VAL-iter3_H4",
+            "hypothesis_id": "iter3_H4",
+            "iteration_no": 3,
+            "hypothesis_type": "feature_combination_synergy",
+            "status": "VALIDATED",
+            "features_involved": [
+                "G",
+                "B",
+                "C"
+            ],
+            "reconciled_evidence": {},
+            "reasons": [],
+            "timestamp": "2026-11-18T18:23:59.154362+00:00"
+        }
+    ],
+    "timestamp": "2026-11-18T18:23:59.154443+00:00"
+}

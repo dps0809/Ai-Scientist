@@ -1,0 +1,149 @@
+{
+  "comparison_id": "COMP-iter1",
+  "iteration_no": 1,
+  "individual_baselines": {
+    "G": 0.5549
+  },
+  "individual_accuracies": {
+    "G": 0.555
+  },
+  "combination_scores": {
+    "G + C + B + A + Ic + Vb": 0.7536
+  },
+  "combination_accuracies": {
+    "G + C + B + A + Ic + Vb": 0.6686
+  },
+  "synergy_gains": {
+    "G + C + B + A + Ic + Vb": 0.1324
+  },
+  "accuracy_gains": {
+    "G + C + B + A + Ic + Vb": 0.0873
+  },
+  "ranking": [
+    {
+      "experiment_id": "iter1_E3",
+      "name": "G + C + B + A + Ic + Vb",
+      "type": "feature_combination",
+      "score": 0.7536,
+      "gain": 0.1324,
+      "accuracy": 0.6686,
+      "accuracy_gain": 0.0873,
+      "best_model": "RandomForest",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "combined_mean_auc": 0.6972,
+          "best_individual_mean_auc": 0.5795,
+          "auc_gain": 0.1177,
+          "combined_mean_accuracy": 0.6362,
+          "best_individual_mean_accuracy": 0.5688,
+          "accuracy_gain": 0.0674,
+          "individual_aucs": {
+            "G": 0.5549,
+            "C": 0.5795,
+            "B": 0.5472,
+            "A": 0.5065,
+            "Ic": 0.5309,
+            "Vb": 0.5365
+          },
+          "individual_accuracies": {
+            "G": 0.555,
+            "C": 0.5688,
+            "B": 0.549,
+            "A": 0.555,
+            "Ic": 0.5387,
+            "Vb": 0.5616
+          }
+        },
+        "RandomForest": {
+          "combined_mean_auc": 0.7536,
+          "best_individual_mean_auc": 0.6211,
+          "auc_gain": 0.1324,
+          "combined_mean_accuracy": 0.6686,
+          "best_individual_mean_accuracy": 0.5813,
+          "accuracy_gain": 0.0873,
+          "individual_aucs": {
+            "G": 0.5549,
+            "C": 0.5795,
+            "B": 0.5472,
+            "A": 0.5065,
+            "Ic": 0.6211,
+            "Vb": 0.5742
+          },
+          "individual_accuracies": {
+            "G": 0.5478,
+            "C": 0.5688,
+            "B": 0.549,
+            "A": 0.555,
+            "Ic": 0.5813,
+            "Vb": 0.5574
+          }
+        },
+        "XGBoost": {
+          "combined_mean_auc": 0.7447,
+          "best_individual_mean_auc": 0.6165,
+          "auc_gain": 0.1282,
+          "combined_mean_accuracy": 0.6598,
+          "best_individual_mean_accuracy": 0.5825,
+          "accuracy_gain": 0.0773,
+          "individual_aucs": {
+            "G": 0.5549,
+            "C": 0.5795,
+            "B": 0.5472,
+            "A": 0.5065,
+            "Ic": 0.6165,
+            "Vb": 0.5755
+          },
+          "individual_accuracies": {
+            "G": 0.555,
+            "C": 0.5688,
+            "B": 0.5514,
+            "A": 0.555,
+            "Ic": 0.5825,
+            "Vb": 0.5567
+          }
+        }
+      },
+      "p_value": 0.0,
+      "rank": 1
+    },
+    {
+      "experiment_id": "iter1_E1",
+      "name": "G",
+      "type": "individual_baseline",
+      "score": 0.5549,
+      "accuracy": 0.555,
+      "best_model": "LogisticRegression",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "mean_auc": 0.5549,
+          "std_auc": 0.017,
+          "mean_accuracy": 0.555,
+          "std_accuracy": 0.0003
+        },
+        "RandomForest": {
+          "mean_auc": 0.5549,
+          "std_auc": 0.017,
+          "mean_accuracy": 0.5478,
+          "std_accuracy": 0.0145
+        },
+        "XGBoost": {
+          "mean_auc": 0.5549,
+          "std_auc": 0.017,
+          "mean_accuracy": 0.555,
+          "std_accuracy": 0.0003
+        }
+      },
+      "rank": 2
+    }
+  ],
+  "summary_findings": [
+    "Top individual predictive baseline: G (Primary ROC-AUC=0.5549, Secondary Accuracy=0.5550).",
+    "Top combination model: G + C + B + A + Ic + Vb (Primary ROC-AUC=0.7536, gain=+0.1324; Secondary Accuracy=0.6686, gain=+0.0873).",
+    "Feature combination 'G + C + B + A + Ic + Vb' outperforms all individual predictor baselines under RandomForest."
+  ],
+  "timestamp": "2026-11-18T18:22:57.530643+00:00"
+}

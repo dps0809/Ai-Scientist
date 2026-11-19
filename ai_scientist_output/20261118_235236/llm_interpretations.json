@@ -1,0 +1,123 @@
+[
+  {
+    "interpretation_id": "INT-iter2_E1",
+    "experiment_id": "iter2_E1",
+    "hypothesis_id": "iter2_H2",
+    "iteration_no": 2,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "Synergy experiment iter2_E1 testing [G + C + B + A + Ic + Vb + Ia] is supported_by_current_evidence: combined Primary AUC=0.7674 vs best individual (Ic) AUC=0.6165 (gain=+0.1510, paired t p=0.0000; Secondary Accuracy=0.6821, Accuracy gain=+0.0996, best model: XGBoost). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+    "observations": [
+      "Synergy experiment iter2_E1 testing [G + C + B + A + Ic + Vb + Ia] is supported_by_current_evidence: combined Primary AUC=0.7674 vs best individual (Ic) AUC=0.6165 (gain=+0.1510, paired t p=0.0000; Secondary Accuracy=0.6821, Accuracy gain=+0.0996, best model: XGBoost). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction."
+    ],
+    "limitations": [
+      "Observational retrospective dataset requires external cohort validation.",
+      "Statistical significance in sample does not guarantee out-of-cohort generalization.",
+      "Feature combination synergy represents predictive gain, distinct from multiplicative interaction."
+    ],
+    "next_hypothesis": "Extending the combination [G, C, B, A, Ic, Vb, Ia] with Ib will further enhance cross-validated classification performance.",
+    "proposed_experiment": {
+      "features": [
+        "G",
+        "C",
+        "B",
+        "A",
+        "Ic",
+        "Vb",
+        "Ia",
+        "Ib"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "timestamp": "2026-11-18T18:23:46.772662+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter2_E2",
+    "experiment_id": "iter2_E2",
+    "hypothesis_id": "iter2_H3",
+    "iteration_no": 2,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "Synergy experiment iter2_E2 testing [C + B + A + Ic + Va + Vb] is supported_by_current_evidence: combined Primary AUC=0.6907 vs best individual (Ic) AUC=0.6211 (gain=+0.0696, paired t p=0.0001; Secondary Accuracy=0.6307, Accuracy gain=+0.0494, best model: RandomForest). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+    "observations": [
+      "Synergy experiment iter2_E2 testing [C + B + A + Ic + Va + Vb] is supported_by_current_evidence: combined Primary AUC=0.6907 vs best individual (Ic) AUC=0.6211 (gain=+0.0696, paired t p=0.0001; Secondary Accuracy=0.6307, Accuracy gain=+0.0494, best model: RandomForest). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction."
+    ],
+    "limitations": [
+      "Observational retrospective dataset requires external cohort validation.",
+      "Statistical significance in sample does not guarantee out-of-cohort generalization.",
+      "Feature combination synergy represents predictive gain, distinct from multiplicative interaction."
+    ],
+    "next_hypothesis": "Extending the combination [C, B, A, Ic, Va, Vb] with G will further enhance cross-validated classification performance.",
+    "proposed_experiment": {
+      "features": [
+        "C",
+        "B",
+        "A",
+        "Ic",
+        "Va",
+        "Vb",
+        "G"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "timestamp": "2026-11-18T18:23:50.837753+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter2_E3",
+    "experiment_id": "iter2_E3",
+    "hypothesis_id": "iter2_H4",
+    "iteration_no": 2,
+    "hypothesis_status": "supported_by_current_evidence",
+    "interpretation": "Synergy experiment iter2_E3 testing [G + C + B + A + Ib + Ic] is supported_by_current_evidence: combined Primary AUC=0.7730 vs best individual (Ic) AUC=0.6211 (gain=+0.1519, paired t p=0.0000; Secondary Accuracy=0.6787, Accuracy gain=+0.0973, best model: RandomForest). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+    "observations": [
+      "Synergy experiment iter2_E3 testing [G + C + B + A + Ib + Ic] is supported_by_current_evidence: combined Primary AUC=0.7730 vs best individual (Ic) AUC=0.6211 (gain=+0.1519, paired t p=0.0000; Secondary Accuracy=0.6787, Accuracy gain=+0.0973, best model: RandomForest). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction."
+    ],
+    "limitations": [
+      "Observational retrospective dataset requires external cohort validation.",
+      "Statistical significance in sample does not guarantee out-of-cohort generalization.",
+      "Feature combination synergy represents predictive gain, distinct from multiplicative interaction."
+    ],
+    "next_hypothesis": "Extending the combination [G, C, B, A, Ib, Ic] with Ia will further enhance cross-validated classification performance.",
+    "proposed_experiment": {
+      "features": [
+        "G",
+        "C",
+        "B",
+        "A",
+        "Ib",
+        "Ic",
+        "Ia"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "timestamp": "2026-11-18T18:23:54.918481+00:00"
+  },
+  {
+    "interpretation_id": "INT-iter2_E4",
+    "experiment_id": "iter2_E4",
+    "hypothesis_id": "iter2_H1",
+    "iteration_no": 2,
+    "hypothesis_status": "inconclusive",
+    "interpretation": "Synergy experiment iter2_E4 testing [G + B] is inconclusive: combined Primary AUC=0.5699 vs best individual (G) AUC=0.5549 (gain=+0.0150, paired t p=0.0922; Secondary Accuracy=0.5681, Accuracy gain=+0.0131, best model: LogisticRegression). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+    "observations": [
+      "Synergy experiment iter2_E4 testing [G + B] is inconclusive: combined Primary AUC=0.5699 vs best individual (G) AUC=0.5549 (gain=+0.0150, paired t p=0.0922; Secondary Accuracy=0.5681, Accuracy gain=+0.0131, best model: LogisticRegression). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction."
+    ],
+    "limitations": [
+      "Observational retrospective dataset requires external cohort validation.",
+      "Statistical significance in sample does not guarantee out-of-cohort generalization.",
+      "Feature combination synergy represents predictive gain, distinct from multiplicative interaction."
+    ],
+    "next_hypothesis": "Extending the combination [G, B] with C will further enhance cross-validated classification performance.",
+    "proposed_experiment": {
+      "features": [
+        "G",
+        "B",
+        "C"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "timestamp": "2026-11-18T18:23:58.971630+00:00"
+  }
+]

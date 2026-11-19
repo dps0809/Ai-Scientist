@@ -1,0 +1,424 @@
+[
+  {
+    "experiment_id": "iter1_E1",
+    "hypothesis_id": "iter1_H1",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "individual_dependency",
+    "configuration": {
+      "features": [
+        "G",
+        "C",
+        "A",
+        "Ia",
+        "Ic"
+      ],
+      "target": "Output (S)",
+      "model": "LogisticRegression",
+      "method": "logistic_regression"
+    },
+    "results": {
+      "coefficient": 0.2234,
+      "odds_ratio": 1.2504,
+      "confidence_interval": [
+        1.1954,
+        1.3078
+      ],
+      "mean_auc": 0.5549,
+      "std_auc": 0.017,
+      "mean_accuracy": 0.555,
+      "std_accuracy": 0.0003,
+      "best_model": "LogisticRegression",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "mean_auc": 0.5549,
+          "std_auc": 0.017,
+          "mean_accuracy": 0.555,
+          "std_accuracy": 0.0003
+        },
+        "RandomForest": {
+          "mean_auc": 0.5549,
+          "std_auc": 0.017,
+          "mean_accuracy": 0.5478,
+          "std_accuracy": 0.0145
+        },
+        "XGBoost": {
+          "mean_auc": 0.5549,
+          "std_auc": 0.017,
+          "mean_accuracy": 0.555,
+          "std_accuracy": 0.0003
+        }
+      },
+      "fold_auc": [
+        0.5265,
+        0.5637,
+        0.5622,
+        0.5758,
+        0.5463
+      ],
+      "fold_accuracy": [
+        0.555,
+        0.5547,
+        0.5547,
+        0.5553,
+        0.5553
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "inferential_logistic_regression",
+      "confidence_interval": [
+        1.1954,
+        1.3078
+      ],
+      "p_value": 0.0,
+      "permutation_p_value": 0.0
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "marginal",
+      "uncertainty_level": "low",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "best_model": "LogisticRegression",
+      "summary": "Experiment iter1_E1 testing dependency of 'G' on 'Output (S)' is supported_by_current_evidence: OR=1.25 (95% CI [1.20, 1.31]), parametric p=0.0000, permutation p=0.0000, 5-fold CV Primary ROC-AUC=0.555 +/- 0.017, Secondary Accuracy=0.555 +/- 0.000 (Best model: LogisticRegression)."
+    },
+    "timestamp": "2026-11-18T18:22:57.529791+00:00"
+  },
+  {
+    "experiment_id": "iter1_E3",
+    "hypothesis_id": "iter1_H3",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "feature_combination_synergy",
+    "configuration": {
+      "features": [
+        "G",
+        "C",
+        "B",
+        "A",
+        "Ic",
+        "Vb"
+      ],
+      "target": "Output (S)",
+      "model": "RandomForest",
+      "method": "paired_model_comparison"
+    },
+    "results": {
+      "individual_auc": {
+        "G": 0.5549,
+        "C": 0.5795,
+        "B": 0.5472,
+        "A": 0.5065,
+        "Ic": 0.6211,
+        "Vb": 0.5742
+      },
+      "individual_accuracy": {
+        "G": 0.5478,
+        "C": 0.5688,
+        "B": 0.549,
+        "A": 0.555,
+        "Ic": 0.5813,
+        "Vb": 0.5574
+      },
+      "combined_auc": 0.7536,
+      "gain": 0.1324,
+      "combined_accuracy": 0.6686,
+      "accuracy_gain": 0.0873,
+      "best_individual_feature": "Ic",
+      "best_model": "RandomForest",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "model_comparison": {
+        "LogisticRegression": {
+          "combined_mean_auc": 0.6972,
+          "best_individual_mean_auc": 0.5795,
+          "auc_gain": 0.1177,
+          "combined_mean_accuracy": 0.6362,
+          "best_individual_mean_accuracy": 0.5688,
+          "accuracy_gain": 0.0674,
+          "individual_aucs": {
+            "G": 0.5549,
+            "C": 0.5795,
+            "B": 0.5472,
+            "A": 0.5065,
+            "Ic": 0.5309,
+            "Vb": 0.5365
+          },
+          "individual_accuracies": {
+            "G": 0.555,
+            "C": 0.5688,
+            "B": 0.549,
+            "A": 0.555,
+            "Ic": 0.5387,
+            "Vb": 0.5616
+          }
+        },
+        "RandomForest": {
+          "combined_mean_auc": 0.7536,
+          "best_individual_mean_auc": 0.6211,
+          "auc_gain": 0.1324,
+          "combined_mean_accuracy": 0.6686,
+          "best_individual_mean_accuracy": 0.5813,
+          "accuracy_gain": 0.0873,
+          "individual_aucs": {
+            "G": 0.5549,
+            "C": 0.5795,
+            "B": 0.5472,
+            "A": 0.5065,
+            "Ic": 0.6211,
+            "Vb": 0.5742
+          },
+          "individual_accuracies": {
+            "G": 0.5478,
+            "C": 0.5688,
+            "B": 0.549,
+            "A": 0.555,
+            "Ic": 0.5813,
+            "Vb": 0.5574
+          }
+        },
+        "XGBoost": {
+          "combined_mean_auc": 0.7447,
+          "best_individual_mean_auc": 0.6165,
+          "auc_gain": 0.1282,
+          "combined_mean_accuracy": 0.6598,
+          "best_individual_mean_accuracy": 0.5825,
+          "accuracy_gain": 0.0773,
+          "individual_aucs": {
+            "G": 0.5549,
+            "C": 0.5795,
+            "B": 0.5472,
+            "A": 0.5065,
+            "Ic": 0.6165,
+            "Vb": 0.5755
+          },
+          "individual_accuracies": {
+            "G": 0.555,
+            "C": 0.5688,
+            "B": 0.5514,
+            "A": 0.555,
+            "Ic": 0.5825,
+            "Vb": 0.5567
+          }
+        }
+      },
+      "fold_scores": {
+        "G": [
+          0.5265,
+          0.5637,
+          0.5622,
+          0.5758,
+          0.5463
+        ],
+        "C": [
+          0.5854,
+          0.6016,
+          0.5773,
+          0.5589,
+          0.5743
+        ],
+        "B": [
+          0.5535,
+          0.5662,
+          0.548,
+          0.5294,
+          0.5387
+        ],
+        "A": [
+          0.5231,
+          0.4949,
+          0.5003,
+          0.4982,
+          0.5159
+        ],
+        "Ic": [
+          0.6153,
+          0.6389,
+          0.615,
+          0.6174,
+          0.619
+        ],
+        "Vb": [
+          0.579,
+          0.5951,
+          0.5694,
+          0.5648,
+          0.5626
+        ],
+        "G_C_B_A_Ic_Vb": [
+          0.7234,
+          0.7706,
+          0.7543,
+          0.7666,
+          0.7529
+        ]
+      },
+      "fold_accuracies": {
+        "G": [
+          0.5188,
+          0.5547,
+          0.5547,
+          0.5553,
+          0.5553
+        ],
+        "C": [
+          0.5728,
+          0.5922,
+          0.5674,
+          0.5503,
+          0.5611
+        ],
+        "B": [
+          0.555,
+          0.5547,
+          0.5547,
+          0.5375,
+          0.5433
+        ],
+        "A": [
+          0.555,
+          0.5547,
+          0.5547,
+          0.5553,
+          0.5553
+        ],
+        "Ic": [
+          0.5709,
+          0.5852,
+          0.5782,
+          0.5846,
+          0.5878
+        ],
+        "Vb": [
+          0.5658,
+          0.5674,
+          0.563,
+          0.5496,
+          0.5413
+        ],
+        "G_C_B_A_Ic_Vb": [
+          0.6408,
+          0.6845,
+          0.6686,
+          0.6858,
+          0.6635
+        ]
+      }
+    },
+    "statistical_validation": {
+      "comparison_method": "paired_cross_validation",
+      "confidence_interval": [
+        0.1174,
+        0.1474
+      ],
+      "p_value": 0.0,
+      "paired_t_stat": 19.4947
+    },
+    "evaluation": {
+      "verdict": "supported_by_current_evidence",
+      "is_statistically_significant": true,
+      "practical_significance": "meaningful",
+      "uncertainty_level": "low",
+      "primary_metric": "ROC_AUC",
+      "secondary_metric": "Accuracy",
+      "best_model": "RandomForest",
+      "distinction_note": "Feature combination synergy represents predictive gain, distinct from multiplicative interaction.",
+      "summary": "Synergy experiment iter1_E3 testing [G + C + B + A + Ic + Vb] is supported_by_current_evidence: combined Primary AUC=0.7536 vs best individual (Ic) AUC=0.6211 (gain=+0.1324, paired t p=0.0000; Secondary Accuracy=0.6686, Accuracy gain=+0.0873, best model: RandomForest). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction."
+    },
+    "timestamp": "2026-11-18T18:22:57.530041+00:00"
+  },
+  {
+    "experiment_id": "iter1_E4",
+    "hypothesis_id": "iter1_H4",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "feature_interaction_moderation",
+    "configuration": {
+      "features": [
+        "C",
+        "B",
+        "A",
+        "Ic",
+        "Va",
+        "Vb"
+      ],
+      "target": "Output (S)",
+      "model": "statsmodels.Logit",
+      "method": "interaction_regression"
+    },
+    "results": {
+      "interaction_coefficient": 0.36639,
+      "main_effects": {
+        "feat_a": 0.6814,
+        "feat_b": -0.0828
+      },
+      "bootstrap_ci": [
+        0.28774,
+        0.44364
+      ]
+    },
+    "statistical_validation": {
+      "comparison_method": "likelihood_ratio_test",
+      "chi2_statistic": 0.0,
+      "p_value": 1.0,
+      "bootstrap_confidence_interval": [
+        0.28774,
+        0.44364
+      ]
+    },
+    "evaluation": {
+      "verdict": "not_supported",
+      "is_statistically_significant": false,
+      "practical_significance": "negligible_or_negative",
+      "uncertainty_level": "moderate",
+      "summary": "Interaction experiment iter1_E4 testing [C * B * A * Ic * Va * Vb] is not_supported: LRT chi2=0.000 (p=1.0000), interaction beta=0.36639 (Wald p=nan), 95% bootstrap CI [0.28774, 0.44364]."
+    },
+    "timestamp": "2026-11-18T18:22:57.530267+00:00"
+  },
+  {
+    "experiment_id": "iter1_E5",
+    "hypothesis_id": "iter1_H5",
+    "iteration_no": 1,
+    "status": "completed",
+    "experiment_type": "comparative_or_confounding_relationship",
+    "configuration": {
+      "features": [
+        "G",
+        "C",
+        "B",
+        "A",
+        "Ib",
+        "Ic"
+      ],
+      "target": "Output (S)",
+      "model": "statsmodels.Logit",
+      "method": "adjusted_regression"
+    },
+    "results": {
+      "unadjusted_coefficient": 0.2234,
+      "adjusted_coefficient": 0.2827,
+      "delta_coefficient": 0.0592,
+      "percent_change": 26.51,
+      "unadjusted_or": 1.2504,
+      "adjusted_or": 1.3267,
+      "covariate_or": 1.4533
+    },
+    "statistical_validation": {
+      "comparison_method": "adjusted_logistic_regression",
+      "delta_threshold_percent": 10.0,
+      "covariate_p_value": 1.0
+    },
+    "evaluation": {
+      "verdict": "not_supported",
+      "is_statistically_significant": false,
+      "practical_significance": "negligible_or_negative",
+      "uncertainty_level": "moderate",
+      "causal_limitations": "Observational regression adjustment identifies statistical coefficient shifts only. It does not establish causal mediation or directionality without formal temporality and unmeasured confounding assumptions.",
+      "summary": "Adjusted regression experiment iter1_E5 testing [G adjusted for C] is not_supported: unadjusted OR=1.25 -> adjusted OR=1.33 (delta=+26.5%, covariate p=1.0000)."
+    },
+    "timestamp": "2026-11-18T18:22:57.530440+00:00"
+  }
+]

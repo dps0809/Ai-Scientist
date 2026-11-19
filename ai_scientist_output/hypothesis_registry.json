@@ -219,5 +219,102 @@
         "proposed_experiment": "{\"features\": [\"Pregnancies\", \"Glucose\"], \"model\": \"statsmodels.Logit\", \"metric\": \"ROC_AUC\"}",
         "fingerprint": "('Glucose', 'Pregnancies')-refined_follow_up",
         "timestamp": "2026-11-06T22:14:24.639484+00:00"
+    },
+    {
+        "hypothesis_id": "iter1_H3",
+        "iteration_no": 1,
+        "hypothesis_type": "feature_combination_synergy",
+        "hypothesis": "Combining BMI and Age provides greater predictive power for Outcome than either feature alone, achieving combined ROC-AUC of 0.7321 (synergy gain=+0.0440) and Joint MI of 0.1564.",
+        "features_involved": [
+            "BMI",
+            "Age"
+        ],
+        "evidence_from_data": "Score A: 0.6881, Score B: 0.6853, Combined: 0.7321, Synergy Gain: +0.0440, Joint MI: 0.1564",
+        "proposed_experiment": "Compare BMI, Age and their combination using the same cross-validation splits.",
+        "fingerprint": "('Age', 'BMI')-feature_combination_synergy",
+        "timestamp": "2026-11-17T19:47:08.766782+00:00"
+    },
+    {
+        "hypothesis_id": "iter1_H4",
+        "iteration_no": 1,
+        "hypothesis_type": "feature_interaction_moderation",
+        "hypothesis": "The relationship between BMI and Outcome is moderated by Age, with interaction delta 0.0004 and LRT p-value 0.9407.",
+        "features_involved": [
+            "BMI",
+            "Age"
+        ],
+        "evidence_from_data": "Interaction delta: 0.0004, interaction p-value: 0.9407",
+        "proposed_experiment": "Interaction logistic regression with product term BMI * Age and bootstrap confidence interval.",
+        "fingerprint": "('Age', 'BMI')-feature_interaction_moderation",
+        "timestamp": "2026-11-17T19:47:08.877315+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H1",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Combining G with Glucose will provide superior predictive discrimination for Output (S) than G alone.",
+        "features_involved": [
+            "G",
+            "Glucose"
+        ],
+        "evidence_from_data": "Experiment iter1_E1 testing dependency of 'G' on 'Output (S)' is supported_by_current_evidence: OR=1.25 (95% CI [1.20, 1.31]), parametric p=0.0000, permutation p=0.0000, 5-fold CV Primary ROC-AUC=0.555 +/- 0.017, Secondary Accuracy=0.555 +/- 0.000 (Best model: LogisticRegression).",
+        "proposed_experiment": "{\"features\": [\"G\", \"Glucose\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('G', 'Glucose')-refined_follow_up",
+        "timestamp": "2026-11-18T15:02:08.390816+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H3",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Extending the combination [G, C, B, A, Ic, Vb] with Age will further enhance cross-validated classification performance.",
+        "features_involved": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Vb",
+            "Age"
+        ],
+        "evidence_from_data": "Synergy experiment iter1_E3 testing [G + C + B + A + Ic + Vb] is supported_by_current_evidence: combined Primary AUC=0.6078 vs best individual (C) AUC=0.5795 (gain=+0.0283, paired t p=0.0036; Secondary Accuracy=0.5681, Accuracy gain=-0.0006, best model: LogisticRegression). Note: Predictive synergy indicates feature combination improvement, distinct from statistical interaction.",
+        "proposed_experiment": "{\"features\": [\"G\", \"C\", \"B\", \"A\", \"Ic\", \"Vb\", \"Age\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('A', 'Age', 'B', 'C', 'G', 'Ic', 'Vb')-refined_follow_up",
+        "timestamp": "2026-11-18T15:02:08.458369+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H4",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Multivariate model testing joint effects of ['C', 'B', 'A', 'Ic', 'Va', 'Vb'] controlling for physiological covariates.",
+        "features_involved": [
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Va",
+            "Vb"
+        ],
+        "evidence_from_data": "Interaction experiment iter1_E4 testing [C * B * A * Ic * Va * Vb] is not_supported: LRT chi2=0.000 (p=1.0000), interaction beta=0.36639 (Wald p=nan), 95% bootstrap CI [0.28774, 0.44364].",
+        "proposed_experiment": "{\"features\": [\"C\", \"B\", \"A\", \"Ic\", \"Va\", \"Vb\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('A', 'B', 'C', 'Ic', 'Va', 'Vb')-refined_follow_up",
+        "timestamp": "2026-11-18T15:02:08.514972+00:00"
+    },
+    {
+        "hypothesis_id": "iter2_H5",
+        "iteration_no": 2,
+        "hypothesis_type": "refined_follow_up",
+        "hypothesis": "Multivariate model testing joint effects of ['G', 'C', 'B', 'A', 'Ib', 'Ic'] controlling for physiological covariates.",
+        "features_involved": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ib",
+            "Ic"
+        ],
+        "evidence_from_data": "Adjusted regression experiment iter1_E5 testing [G adjusted for C] is not_supported: unadjusted OR=1.25 -> adjusted OR=1.33 (delta=+26.5%, covariate p=1.0000).",
+        "proposed_experiment": "{\"features\": [\"G\", \"C\", \"B\", \"A\", \"Ib\", \"Ic\"], \"model\": \"sklearn.linear_model.LogisticRegression\", \"metric\": \"ROC_AUC\"}",
+        "fingerprint": "('A', 'B', 'C', 'G', 'Ib', 'Ic')-refined_follow_up",
+        "timestamp": "2026-11-18T15:02:08.581636+00:00"
     }
 ]

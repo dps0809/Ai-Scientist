@@ -1,0 +1,12 @@
+,dtype,missing,missing_%,unique_values
+G,int64,0,0.0,2
+C,int64,0,0.0,2
+B,int64,0,0.0,2
+A,int64,0,0.0,2
+Ia,float64,0,0.0,7861
+Ib,float64,0,0.0,7861
+Ic,float64,0,0.0,7861
+Va,float64,0,0.0,7856
+Vb,float64,0,0.0,7861
+Vc,float64,0,0.0,7847
+Output (S),int64,0,0.0,2

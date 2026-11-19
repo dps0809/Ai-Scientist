@@ -22,6 +22,8 @@ from modules.config import (
     DATASET_PATH,
     OUTPUT_DIR,
     DATASET_PROCESSED_DIR,
+    CACHE_ROOT,
+    get_dataset_cache_dir,
     TOP_K_CANDIDATES,
     CV_FOLDS,
     VALIDATED_HYPOTHESES_PATH,
@@ -38,6 +40,12 @@ from modules.config import (
     MAX_AUTONOMOUS_EXPERIMENTS,
     MAX_AUTONOMOUS_ITERATIONS,
     MAX_RUNTIME_MINUTES
+)
+# pyrefly: ignore [missing-import]
+from modules.dataset_registry import (
+    load_registered_dataset,
+    get_cache_dir,
+    list_datasets
 )
 # pyrefly: ignore [missing-import]
 from modules.load_dataset import load_dataset_with_id
@@ -88,6 +96,12 @@ warnings.filterwarnings("ignore")
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Autonomous AI Scientist: Closed-Loop Data-Driven Hypothesis & Experiment Engine"
+    )
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        default="diabetes",
+        help="Name of dataset from configs/datasets.toml (default: diabetes)"
     )
     parser.add_argument(
         "--autonomous",
@@ -157,15 +171,19 @@ def main():
     print("=" * 70)
 
     # =========================================================================
-    # TIER 1: DATASET PROCESSING LAYER (Shared across all hypothesis runs)
-    # Stored in: ai_scientist_output/dataset_processed/
+    # TIER 1: DATASET PROCESSING LAYER (Isolated per dataset via Content Hash)
+    # Stored in: ai_scientist_output/cache/<dataset_id>/
     # Seek existing processed data first; compute and store only if not found.
     # =========================================================================
-    cleaned_csv_path = os.path.join(DATASET_PROCESSED_DIR, "cleaned_dataset.csv")
-    profile_csv_path = os.path.join(DATASET_PROCESSED_DIR, "dataset_profile.csv")
-    stage1_json_path = os.path.join(DATASET_PROCESSED_DIR, "stage1_data.json")
-    stage2_json_path = os.path.join(DATASET_PROCESSED_DIR, "stage2_data.json")
-    patterns_json_path = os.path.join(DATASET_PROCESSED_DIR, "discovered_patterns.json")
+    df_raw, dataset_id, ds_config = load_registered_dataset(args.dataset)
+    dataset_cache_dir = get_cache_dir(dataset_id)
+    target_override = ds_config.get("output_target") or ds_config.get("target_column")
+
+    cleaned_csv_path = os.path.join(dataset_cache_dir, "cleaned_dataset.csv")
+    profile_csv_path = os.path.join(dataset_cache_dir, "dataset_profile.csv")
+    stage1_json_path = os.path.join(dataset_cache_dir, "stage1_data.json")
+    stage2_json_path = os.path.join(dataset_cache_dir, "stage2_data.json")
+    patterns_json_path = os.path.join(dataset_cache_dir, "discovered_patterns.json")
 
     has_cached_dataset = (
         os.path.exists(cleaned_csv_path)
@@ -178,10 +196,11 @@ def main():
     if has_cached_dataset:
         print("\n" + "=" * 70)
         print("DATASET PROCESSING LAYER: REUSING CACHED PROCESSED DATASET")
-        print(f"Location: {DATASET_PROCESSED_DIR}")
+        print(f"Dataset ID : {dataset_id}")
+        print(f"Location   : {dataset_cache_dir}")
         print("=" * 70)
         df = pd.read_csv(cleaned_csv_path)
-        target = identify_target(df)
+        target = identify_target(df, target_column=target_override)
         with open(stage1_json_path, "r") as f:
             stage1 = json.load(f)
         with open(stage2_json_path, "r") as f:
@@ -195,21 +214,22 @@ def main():
     else:
         print("\n" + "=" * 70)
         print("DATASET PROCESSING LAYER: COMPUTING & PERSISTING FOR FUTURE RUNS")
-        print(f"Destination: {DATASET_PROCESSED_DIR}")
+        print(f"Dataset ID  : {dataset_id}")
+        print(f"Destination : {dataset_cache_dir}")
         print("=" * 70)
         # Ingestion & Profiling Layer with Unique Input Tracking
-        df_raw, input_record = load_dataset_with_id(DATASET_PATH)
-        numerical, categorical = profile_dataset(df_raw, output_dir=DATASET_PROCESSED_DIR)
-        df = clean_dataset(df_raw, output_dir=DATASET_PROCESSED_DIR)
-        generate_eda(df, output_dir=DATASET_PROCESSED_DIR)
-        target = identify_target(df)
+        df_raw, input_record = load_dataset_with_id(df_raw, source=dataset_id)
+        numerical, categorical = profile_dataset(df_raw, output_dir=dataset_cache_dir)
+        df = clean_dataset(df_raw, output_dir=dataset_cache_dir)
+        generate_eda(df, output_dir=dataset_cache_dir)
+        target = identify_target(df, target_column=target_override)
 
         print(f"\nSelected target variable: {target}")
 
         patterns = []
 
         # Stage 1: Individual Feature Dependency Analysis
-        stage1 = individual_dependency_analysis(df, target, output_dir=DATASET_PROCESSED_DIR)
+        stage1 = individual_dependency_analysis(df, target, output_dir=dataset_cache_dir)
         patterns.extend(stage1.get("patterns", []))
 
         # Stage 2: Feature Combination Discovery & Interaction Analysis
@@ -219,16 +239,16 @@ def main():
             top_candidates=stage1.get("ranked_features", []),
             max_candidates=TOP_K_CANDIDATES,
             cv_folds=CV_FOLDS,
-            output_dir=DATASET_PROCESSED_DIR
+            output_dir=dataset_cache_dir
         )
         patterns.extend(stage2.get("patterns", []))
 
         # Complementary Categorical and Tree Feature Importance signals
         patterns.extend(categorical_patterns(df, target))
-        patterns.extend(feature_importance(df, target, output_dir=DATASET_PROCESSED_DIR))
+        patterns.extend(feature_importance(df, target, output_dir=dataset_cache_dir))
 
         # Save Patterns with unique pattern IDs and link to input_id
-        patterns = save_patterns_with_ids(patterns, input_id=input_record.input_id, output_dir=DATASET_PROCESSED_DIR)
+        patterns = save_patterns_with_ids(patterns, input_id=input_record.input_id, output_dir=dataset_cache_dir)
 
     # =========================================================================
     # TIER 2: RUN HYPOTHESIS & EXPERIMENT LAYER (Timestamped Run Directory)
@@ -237,7 +257,10 @@ def main():
     run_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_output_dir = os.path.join(OUTPUT_DIR, run_timestamp)
     os.makedirs(run_output_dir, exist_ok=True)
-    registry = HypothesisRegistry(run_id=run_timestamp)
+    registry = HypothesisRegistry(
+        registry_path=os.path.join(run_output_dir, "hypothesis_registry.json"),
+        run_id=run_timestamp
+    )
 
     print("\n" + "=" * 70)
     print(f"RUN HYPOTHESIS & EXPERIMENT CYCLE")
@@ -257,7 +280,7 @@ def main():
 
     # Stage 3: LLM Hypothesis Generation & De-duplication (Iteration 1)
     iteration_no = 1
-    hypotheses = generate_hypotheses_with_llm(context, iteration_no=iteration_no, output_dir=run_output_dir)
+    hypotheses = generate_hypotheses_with_llm(context, iteration_no=iteration_no, registry=registry, output_dir=run_output_dir)
 
     # Check MongoDB cluster sync status
     cluster = MongoClusterManager()
@@ -386,15 +409,15 @@ def main():
         print(f"  - Memory DB       : {DB_MEMORY}.experiments & fingerprints")
 
     print(f"\nDataset-level processed artifacts (reused across runs):")
-    print(f"  {DATASET_PROCESSED_DIR}/")
-    print(f"  - {DATASET_PROCESSED_DIR}/cleaned_dataset.csv")
-    print(f"  - {DATASET_PROCESSED_DIR}/dataset_profile.csv")
-    print(f"  - {DATASET_PROCESSED_DIR}/correlation_matrix.csv")
-    print(f"  - {DATASET_PROCESSED_DIR}/individual_dependencies.csv")
-    print(f"  - {DATASET_PROCESSED_DIR}/feature_combinations.csv")
-    print(f"  - {DATASET_PROCESSED_DIR}/feature_importance.csv")
-    print(f"  - {DATASET_PROCESSED_DIR}/discovered_patterns.json")
-    print(f"  - {DATASET_PROCESSED_DIR}/plots/")
+    print(f"  {dataset_cache_dir}/")
+    print(f"  - {dataset_cache_dir}/cleaned_dataset.csv")
+    print(f"  - {dataset_cache_dir}/dataset_profile.csv")
+    print(f"  - {dataset_cache_dir}/correlation_matrix.csv")
+    print(f"  - {dataset_cache_dir}/individual_dependencies.csv")
+    print(f"  - {dataset_cache_dir}/feature_combinations.csv")
+    print(f"  - {dataset_cache_dir}/feature_importance.csv")
+    print(f"  - {dataset_cache_dir}/discovered_patterns.json")
+    print(f"  - {dataset_cache_dir}/plots/")
 
 
 if __name__ == "__main__":

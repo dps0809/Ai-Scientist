@@ -1,0 +1,95 @@
+[
+    {
+        "hypothesis_id": "iter1_H1",
+        "iteration_no": 1,
+        "hypothesis_type": "individual_dependency",
+        "hypothesis": "Ic has a strong positive independent association with Output (S), with Pearson r=-0.1010 and Mutual Information=0.0129.",
+        "features_involved": [
+            "G",
+            "C",
+            "A",
+            "Ia",
+            "Ic"
+        ],
+        "evidence_from_data": "Pearson r: -0.1010, Spearman rho: -0.0539, Mutual Information: 0.0129, rank: 1",
+        "proposed_experiment": "Conduct logistic regression for Ic, odds ratio, confidence interval and statistical testing.",
+        "fingerprint": "('A', 'C', 'G', 'Ia', 'Ic')-individual_dependency",
+        "timestamp": "2026-11-18T18:22:40.990008+00:00",
+        "is_novel": true
+    },
+    {
+        "hypothesis_id": "iter1_H2",
+        "iteration_no": 1,
+        "hypothesis_type": "individual_dependency",
+        "hypothesis": "G has a significant positive association with Output (S), with Pearson r=0.1101 and Mutual Information=0.0062.",
+        "features_involved": [
+            "G",
+            "C",
+            "A",
+            "Ia",
+            "Ic"
+        ],
+        "evidence_from_data": "Pearson r: 0.1101, Spearman rho: 0.1101, Mutual Information: 0.0062, rank: 2",
+        "proposed_experiment": "Conduct logistic regression for G and evaluate individual predictive performance.",
+        "fingerprint": "('A', 'C', 'G', 'Ia', 'Ic')-individual_dependency",
+        "timestamp": "2026-11-18T18:22:41.022772+00:00",
+        "is_novel": false
+    },
+    {
+        "hypothesis_id": "iter1_H3",
+        "iteration_no": 1,
+        "hypothesis_type": "feature_combination_synergy",
+        "hypothesis": "Combining Ic and Vb provides greater predictive power for Output (S) than either feature alone, achieving combined ROC-AUC of 0.5680 (synergy gain=+0.0315) and Joint MI of 0.0325.",
+        "features_involved": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Vb"
+        ],
+        "evidence_from_data": "Score A: 0.5309, Score B: 0.5365, Combined: 0.5680, Synergy Gain: +0.0315, Joint MI: 0.0325",
+        "proposed_experiment": "Compare Ic, Vb and their combination using the same cross-validation splits.",
+        "fingerprint": "('A', 'B', 'C', 'G', 'Ic', 'Vb')-feature_combination_synergy",
+        "timestamp": "2026-11-18T18:22:41.023045+00:00",
+        "is_novel": true
+    },
+    {
+        "hypothesis_id": "iter1_H4",
+        "iteration_no": 1,
+        "hypothesis_type": "feature_interaction_moderation",
+        "hypothesis": "The relationship between Ic and Output (S) is moderated by Vb, with interaction delta 0.0026 and LRT p-value < 0.0001.",
+        "features_involved": [
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Va",
+            "Vb"
+        ],
+        "evidence_from_data": "Interaction delta: 0.0026, interaction p-value: < 0.0001",
+        "proposed_experiment": "Interaction logistic regression with product term Ic * Vb and bootstrap confidence interval.",
+        "fingerprint": "('A', 'B', 'C', 'Ic', 'Va', 'Vb')-feature_interaction_moderation",
+        "timestamp": "2026-11-18T18:22:41.041762+00:00",
+        "is_novel": true
+    },
+    {
+        "hypothesis_id": "iter1_H5",
+        "iteration_no": 1,
+        "hypothesis_type": "comparative_or_confounding_relationship",
+        "hypothesis": "G and A exhibit a notable correlation (r=0.7553), indicating that A may act as a confounder in the relationship between G and Output (S).",
+        "features_involved": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ib",
+            "Ic"
+        ],
+        "evidence_from_data": "Inter-feature correlation: 0.7553",
+        "proposed_experiment": "Fit unadjusted vs adjusted logistic regression for G controlling for A to assess confounding shift.",
+        "fingerprint": "('A', 'B', 'C', 'G', 'Ib', 'Ic')-comparative_or_confounding_relationship",
+        "timestamp": "2026-11-18T18:22:41.087036+00:00",
+        "is_novel": true
+    }
+]

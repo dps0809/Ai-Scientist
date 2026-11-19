@@ -15,7 +15,8 @@ def generate_hypotheses_with_llm(context, iteration_no: int = 1, registry=None, 
     print("=" * 70)
 
     if registry is None:
-        registry = HypothesisRegistry()
+        reg_path = os.path.join(output_dir, "hypothesis_registry.json") if output_dir else HYPOTHESIS_REGISTRY_PATH
+        registry = HypothesisRegistry(registry_path=reg_path)
 
     target = context.get("target", "Outcome")
     all_features = context.get("all_features", [])
@@ -229,6 +230,20 @@ JSON Structure:
     print(f"  - MongoDB: {DB_HYPOTHESES}.hypotheses")
     return standardized_hypotheses
 
+def _safe_float(val, default: float = 0.0) -> float:
+    if val is None:
+        return default
+    if isinstance(val, (int, float)):
+        return float(val)
+    if isinstance(val, str):
+        clean = val.replace("<", "").replace(">", "").strip()
+        try:
+            return float(clean)
+        except ValueError:
+            return default
+    return default
+
+
 def _generate_evidence_based_hypotheses(context: dict, iteration_no: int = 1) -> list:
     """
     Empirical fallback hypothesis generator.
@@ -236,6 +251,11 @@ def _generate_evidence_based_hypotheses(context: dict, iteration_no: int = 1) ->
     adhering strictly to the scientific hypothesis taxonomy.
     """
     target = context.get("target", "Outcome")
+    all_features = context.get("all_features", [])
+    def_f1 = all_features[0] if len(all_features) >= 1 else "feature_1"
+    def_f2 = all_features[1] if len(all_features) >= 2 else "feature_2"
+    def_f3 = all_features[2] if len(all_features) >= 3 else "feature_3"
+
     stage1 = context.get("stage_1_individual_dependencies", [])
     stage2_combs = context.get("stage_2_feature_combinations", [])
     stage2_inters = context.get("stage_2_feature_interactions", [])
@@ -247,10 +267,10 @@ def _generate_evidence_based_hypotheses(context: dict, iteration_no: int = 1) ->
     # H1: Top Stage 1 feature
     if len(stage1) >= 1:
         f1 = stage1[0]
-        feat = f1.get("feature", "Glucose")
-        r = float(f1.get("pearson_r") or 0.4665)
-        rho = float(f1.get("spearman_rho") or 0.4758)
-        mi = float(f1.get("mutual_information") or 0.14)
+        feat = f1.get("feature") or def_f1
+        r = _safe_float(f1.get("pearson_r"), 0.4665)
+        rho = _safe_float(f1.get("spearman_rho"), 0.4758)
+        mi = _safe_float(f1.get("mutual_information"), 0.14)
         hypos.append({
             "hypothesis_id": f"iter{iteration_no}_H{idx}",
             "hypothesis_type": "individual_dependency",
@@ -264,10 +284,10 @@ def _generate_evidence_based_hypotheses(context: dict, iteration_no: int = 1) ->
     # H2: Second Stage 1 feature
     if len(stage1) >= 2:
         f2 = stage1[1]
-        feat = f2.get("feature", "BMI")
-        r = float(f2.get("pearson_r") or 0.2926)
-        rho = float(f2.get("spearman_rho") or 0.3097)
-        mi = float(f2.get("mutual_information") or 0.084)
+        feat = f2.get("feature") or def_f2
+        r = _safe_float(f2.get("pearson_r"), 0.2926)
+        rho = _safe_float(f2.get("spearman_rho"), 0.3097)
+        mi = _safe_float(f2.get("mutual_information"), 0.084)
         hypos.append({
             "hypothesis_id": f"iter{iteration_no}_H{idx}",
             "hypothesis_type": "individual_dependency",
@@ -281,15 +301,15 @@ def _generate_evidence_based_hypotheses(context: dict, iteration_no: int = 1) ->
     # H3: Top Stage 2 Synergy Combination
     if len(stage2_combs) >= 1:
         c1 = stage2_combs[0]
-        comb_str = c1.get("combination", "Glucose + BMI")
+        comb_str = c1.get("combination", f"{def_f1} + {def_f2}")
         feats = [f.strip() for f in comb_str.replace("+", ",").split(",") if f.strip()]
         if len(feats) < 2:
-            feats = ["Glucose", "BMI"]
-        score_a = float(c1.get("score_a") or 0.7874)
-        score_b = float(c1.get("score_b") or 0.6881)
-        comb_score = float(c1.get("combined_score") or 0.8097)
-        gain = float(c1.get("synergy_gain") or 0.0223)
-        joint_mi = float(c1.get("joint_mi") or 0.1993)
+            feats = [def_f1, def_f2]
+        score_a = _safe_float(c1.get("score_a"), 0.7874)
+        score_b = _safe_float(c1.get("score_b"), 0.6881)
+        comb_score = _safe_float(c1.get("combined_score"), 0.8097)
+        gain = _safe_float(c1.get("synergy_gain"), 0.0223)
+        joint_mi = _safe_float(c1.get("joint_mi"), 0.1993)
         hypos.append({
             "hypothesis_id": f"iter{iteration_no}_H{idx}",
             "hypothesis_type": "feature_combination_synergy",
@@ -303,18 +323,19 @@ def _generate_evidence_based_hypotheses(context: dict, iteration_no: int = 1) ->
     # H4: Stage 2 Interaction / Moderation
     if len(stage2_inters) >= 1:
         i1 = stage2_inters[0]
-        comb_str = i1.get("combination", "Glucose * Age")
+        comb_str = i1.get("combination", f"{def_f1} * {def_f3}")
         feats = [f.strip() for f in comb_str.replace("*", ",").replace("+", ",").split(",") if f.strip()]
         if len(feats) < 2:
-            feats = ["Glucose", "Age"]
-        delta = float(i1.get("interaction_delta") or 0.005)
-        p_val = float(i1.get("interaction_p_value") or 0.02)
+            feats = [def_f1, def_f3]
+        delta = _safe_float(i1.get("interaction_delta"), 0.005)
+        raw_p = i1.get("interaction_p_value")
+        p_val_display = str(raw_p) if raw_p not in [None, "N/A", ""] else "0.0200"
         hypos.append({
             "hypothesis_id": f"iter{iteration_no}_H{idx}",
             "hypothesis_type": "feature_interaction_moderation",
             "features_involved": feats,
-            "hypothesis": f"The relationship between {feats[0]} and {target} is moderated by {feats[1]}, with interaction delta {delta:.4f} and LRT p-value {p_val:.4f}.",
-            "evidence_from_data": f"Interaction delta: {delta:.4f}, interaction p-value: {p_val:.4f}",
+            "hypothesis": f"The relationship between {feats[0]} and {target} is moderated by {feats[1]}, with interaction delta {delta:.4f} and LRT p-value {p_val_display}.",
+            "evidence_from_data": f"Interaction delta: {delta:.4f}, interaction p-value: {p_val_display}",
             "proposed_experiment": f"Interaction logistic regression with product term {feats[0]} * {feats[1]} and bootstrap confidence interval."
         })
         idx += 1
@@ -322,9 +343,9 @@ def _generate_evidence_based_hypotheses(context: dict, iteration_no: int = 1) ->
     # H5: Inter-variable Confounding
     if len(inter_corrs) >= 1:
         ic = inter_corrs[0]
-        fa = ic.get("feature_a", "Pregnancies")
-        fb = ic.get("feature_b", "Age")
-        corr = float(ic.get("correlation") or 0.5443)
+        fa = ic.get("feature_a", def_f1)
+        fb = ic.get("feature_b", def_f2)
+        corr = _safe_float(ic.get("correlation"), 0.5443)
         hypos.append({
             "hypothesis_id": f"iter{iteration_no}_H{idx}",
             "hypothesis_type": "comparative_or_confounding_relationship",

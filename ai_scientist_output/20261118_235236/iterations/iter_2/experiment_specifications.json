@@ -1,0 +1,159 @@
+[
+    {
+        "experiment_id": "iter2_E1",
+        "hypothesis_id": "iter2_H2",
+        "iteration_no": 2,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Vb",
+            "Ia"
+        ],
+        "target": "Output (S)",
+        "comparison": [
+            [
+                "G"
+            ],
+            [
+                "C"
+            ],
+            [
+                "G",
+                "C"
+            ]
+        ],
+        "parameters": {
+            "solver": "lbfgs",
+            "max_iter": 500
+        },
+        "evaluation": {
+            "metric": "roc_auc",
+            "cross_validation": "StratifiedKFold",
+            "folds": 5
+        },
+        "routing_notes": "Multi-feature paired comparative predictive cross-validation.",
+        "timestamp": "2026-11-18T18:23:14.462880+00:00"
+    },
+    {
+        "experiment_id": "iter2_E2",
+        "hypothesis_id": "iter2_H3",
+        "iteration_no": 2,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "C",
+            "B",
+            "A",
+            "Ic",
+            "Va",
+            "Vb"
+        ],
+        "target": "Output (S)",
+        "comparison": [
+            [
+                "C"
+            ],
+            [
+                "B"
+            ],
+            [
+                "C",
+                "B"
+            ]
+        ],
+        "parameters": {
+            "solver": "lbfgs",
+            "max_iter": 500
+        },
+        "evaluation": {
+            "metric": "roc_auc",
+            "cross_validation": "StratifiedKFold",
+            "folds": 5
+        },
+        "routing_notes": "Multi-feature paired comparative predictive cross-validation.",
+        "timestamp": "2026-11-18T18:23:14.463569+00:00"
+    },
+    {
+        "experiment_id": "iter2_E3",
+        "hypothesis_id": "iter2_H4",
+        "iteration_no": 2,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "G",
+            "C",
+            "B",
+            "A",
+            "Ib",
+            "Ic"
+        ],
+        "target": "Output (S)",
+        "comparison": [
+            [
+                "G"
+            ],
+            [
+                "C"
+            ],
+            [
+                "G",
+                "C"
+            ]
+        ],
+        "parameters": {
+            "solver": "lbfgs",
+            "max_iter": 500
+        },
+        "evaluation": {
+            "metric": "roc_auc",
+            "cross_validation": "StratifiedKFold",
+            "folds": 5
+        },
+        "routing_notes": "Multi-feature paired comparative predictive cross-validation.",
+        "timestamp": "2026-11-18T18:23:14.464575+00:00"
+    },
+    {
+        "experiment_id": "iter2_E4",
+        "hypothesis_id": "iter2_H1",
+        "iteration_no": 2,
+        "experiment_type": "feature_combination_synergy",
+        "method": "paired_model_comparison",
+        "model_type": "sklearn.linear_model.LogisticRegression",
+        "features": [
+            "G",
+            "B"
+        ],
+        "target": "Output (S)",
+        "comparison": [
+            [
+                "G"
+            ],
+            [
+                "B"
+            ],
+            [
+                "G",
+                "B"
+            ]
+        ],
+        "parameters": {
+            "solver": "lbfgs",
+            "max_iter": 500
+        },
+        "evaluation": {
+            "metric": "roc_auc",
+            "cross_validation": "StratifiedKFold",
+            "folds": 5
+        },
+        "routing_notes": "Multi-feature paired comparative predictive cross-validation.",
+        "timestamp": "2026-11-18T18:23:14.464799+00:00"
+    }
+]

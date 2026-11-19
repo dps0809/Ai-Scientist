@@ -142,6 +142,48 @@ def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
     return None
 
 
+def _generate_fallback_next_hypothesis(
+    result: StandardExperimentResult,
+    available_features: Optional[List[str]] = None
+) -> Tuple[str, Dict[str, Any]]:
+    feats = result.configuration.get("features", [])
+    target = result.configuration.get("target", "Outcome")
+    candidates = [f for f in (available_features or []) if f not in feats]
+
+    if result.experiment_type == "individual_dependency" and feats:
+        other = candidates[0] if candidates else feats[0]
+        next_hypo = f"Combining {feats[0]} with {other} will provide superior predictive discrimination for {target} than {feats[0]} alone."
+        proposed_exp = {
+            "features": [feats[0], other] if other != feats[0] else [feats[0]],
+            "model": "sklearn.linear_model.LogisticRegression",
+            "metric": "ROC_AUC"
+        }
+    elif result.experiment_type == "feature_combination_synergy" and feats:
+        third = candidates[0] if candidates else None
+        if third:
+            next_hypo = f"Extending the combination [{', '.join(feats)}] with {third} will further enhance cross-validated classification performance."
+            proposed_exp = {
+                "features": feats + [third],
+                "model": "sklearn.linear_model.LogisticRegression",
+                "metric": "ROC_AUC"
+            }
+        else:
+            next_hypo = f"Evaluating higher-order interactions across [{', '.join(feats)}] for enhanced classification performance."
+            proposed_exp = {
+                "features": feats,
+                "model": "sklearn.linear_model.LogisticRegression",
+                "metric": "ROC_AUC"
+            }
+    else:
+        next_hypo = f"Multivariate model testing joint effects of {feats} controlling for available covariates."
+        proposed_exp = {
+            "features": feats,
+            "model": "sklearn.linear_model.LogisticRegression",
+            "metric": "ROC_AUC"
+        }
+    return next_hypo, proposed_exp
+
+
 def _build_empirical_fallback(
     result: StandardExperimentResult,
     hypothesis: Optional[HypothesisRecord] = None,
@@ -159,30 +201,7 @@ def _build_empirical_fallback(
     if result.evaluation.get("distinction_note") and result.evaluation.get("distinction_note") not in limitations:
         limitations.append(result.evaluation["distinction_note"])
 
-    feats = result.configuration.get("features", [])
-    if result.experiment_type == "individual_dependency" and feats:
-        other = "BMI" if feats[0] == "Glucose" else "Glucose"
-        next_hypo = f"Combining {feats[0]} with {other} will provide superior predictive discrimination for {result.configuration.get('target', 'Outcome')} than {feats[0]} alone."
-        proposed_exp = {
-            "features": [feats[0], other],
-            "model": "sklearn.linear_model.LogisticRegression",
-            "metric": "ROC_AUC"
-        }
-    elif result.experiment_type == "feature_combination_synergy" and feats:
-        third = "Age" if "Age" not in feats else "Pregnancies"
-        next_hypo = f"Extending the combination [{', '.join(feats)}] with {third} will further enhance cross-validated classification performance."
-        proposed_exp = {
-            "features": feats + [third],
-            "model": "sklearn.linear_model.LogisticRegression",
-            "metric": "ROC_AUC"
-        }
-    else:
-        next_hypo = f"Multivariate model testing joint effects of {feats} controlling for physiological covariates."
-        proposed_exp = {
-            "features": feats,
-            "model": "sklearn.linear_model.LogisticRegression",
-            "metric": "ROC_AUC"
-        }
+    next_hypo, proposed_exp = _generate_fallback_next_hypothesis(result, available_features)
 
     return LLMInterpretationRecord(
         interpretation_id=f"INT-{result.experiment_id}",
@@ -273,30 +292,7 @@ def interpret_single_experiment(
     proposed_exp = parsed.get("proposed_experiment") or {}
 
     if not next_hypo:
-        feats = result.configuration.get("features", [])
-        if result.experiment_type == "individual_dependency" and feats:
-            other = "BMI" if feats[0] == "Glucose" else "Glucose"
-            next_hypo = f"Combining {feats[0]} with {other} will provide superior predictive discrimination for {result.configuration.get('target', 'Outcome')} than {feats[0]} alone."
-            proposed_exp = {
-                "features": [feats[0], other],
-                "model": "sklearn.linear_model.LogisticRegression",
-                "metric": "ROC_AUC"
-            }
-        elif result.experiment_type == "feature_combination_synergy" and feats:
-            third = "Age" if "Age" not in feats else "Pregnancies"
-            next_hypo = f"Extending the combination [{', '.join(feats)}] with {third} will further enhance cross-validated classification performance."
-            proposed_exp = {
-                "features": feats + [third],
-                "model": "sklearn.linear_model.LogisticRegression",
-                "metric": "ROC_AUC"
-            }
-        else:
-            next_hypo = f"Multivariate model testing joint effects of {feats} controlling for physiological covariates."
-            proposed_exp = {
-                "features": feats,
-                "model": "sklearn.linear_model.LogisticRegression",
-                "metric": "ROC_AUC"
-            }
+        next_hypo, proposed_exp = _generate_fallback_next_hypothesis(result, available_features)
 
     interp_id = f"INT-{result.experiment_id}"
 
@@ -317,7 +313,8 @@ def interpret_single_experiment(
 def register_refined_hypotheses(
     interpretations: List[LLMInterpretationRecord],
     next_iteration_no: int = 2,
-    registry: Optional[HypothesisRegistry] = None
+    registry: Optional[HypothesisRegistry] = None,
+    available_features: Optional[List[str]] = None
 ) -> List[RefinedHypothesisRecord]:
     """
     Takes LLM interpretations, extracts proposed next hypotheses, formats them
@@ -339,8 +336,7 @@ def register_refined_hypotheses(
         features = proposed_exp.get("features", [])
 
         if not features:
-            known_feats = ["Glucose", "BMI", "Age", "Pregnancies", "BloodPressure", "Insulin", "SkinThickness", "DiabetesPedigreeFunction"]
-            for f in known_feats:
+            for f in (available_features or []):
                 if f.lower() in next_text.lower() and f not in features:
                     features.append(f)
 
@@ -455,7 +451,8 @@ def interpret_and_refine_all(
     refined_records = register_refined_hypotheses(
         interpretations=interpretations,
         next_iteration_no=next_iter,
-        registry=registry
+        registry=registry,
+        available_features=available_features
     )
 
     _safe_print("\n" + "-" * 70)

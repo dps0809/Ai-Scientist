@@ -1,0 +1,16 @@
+combination,feature_a,feature_b,score_a,score_b,combined_score,synergy_delta,synergy_status,joint_mi,mi_gain,interaction_score,interaction_delta,interaction_p_value,interaction_status,metric
+Ic + Vb,Ic,Vb,0.5309,0.5365,0.568,0.0315,Synergistic (Better than either alone),0.0325,0.0092,0.5706,0.0026,< 0.0001,Significant interaction,ROC_AUC
+G + C,G,C,0.5549,0.5795,0.6078,0.0283,Synergistic (Better than either alone),0.0,0.0,0.6078,0.0,< 0.0001,Significant interaction,ROC_AUC
+Ib + C,Ib,C,0.543,0.5795,0.6041,0.0246,Synergistic (Better than either alone),0.0068,0.0,0.6038,-0.0003,0.3153,No significant interaction,ROC_AUC
+G + Ib,G,Ib,0.5549,0.543,0.5766,0.0217,Synergistic (Better than either alone),0.0068,0.0,0.5767,0.0001,0.5636,No significant interaction,ROC_AUC
+Ib + B,Ib,B,0.543,0.5472,0.5687,0.0215,Synergistic (Better than either alone),0.0068,0.0,0.5682,-0.0005,0.2769,No significant interaction,ROC_AUC
+C + Vb,C,Vb,0.5795,0.5365,0.6,0.0205,Synergistic (Better than either alone),0.0107,0.0,0.5878,-0.0122,0.0803,No significant interaction,ROC_AUC
+G + Vb,G,Vb,0.5549,0.5365,0.5735,0.0186,Synergistic (Better than either alone),0.0107,0.0,0.571,-0.0025,0.0004,Significant interaction,ROC_AUC
+G + B,G,B,0.5549,0.5472,0.5698,0.0149,Synergistic (Better than either alone),0.0,0.0,0.5698,0.0,0.1043,No significant interaction,ROC_AUC
+Ib + Vb,Ib,Vb,0.543,0.5365,0.5547,0.0117,Synergistic (Better than either alone),0.0355,0.0248,0.5594,0.0047,0.0210,Significant interaction,ROC_AUC
+Ic + G,Ic,G,0.5309,0.5549,0.5662,0.0113,Synergistic (Better than either alone),0.0233,0.0,0.5618,-0.0044,0.1362,No significant interaction,ROC_AUC
+B + Vb,B,Vb,0.5472,0.5365,0.5581,0.0109,Synergistic (Better than either alone),0.0107,0.0,0.573,0.0149,< 0.0001,Significant interaction,ROC_AUC
+C + B,C,B,0.5795,0.5472,0.5871,0.0076,Synergistic (Better than either alone),0.0,0.0,0.5871,0.0,0.9861,No significant interaction,ROC_AUC
+Ic + Ib,Ic,Ib,0.5309,0.543,0.5477,0.0047,Additive,0.0418,0.0185,0.5612,0.0135,< 0.0001,Significant interaction,ROC_AUC
+Ic + B,Ic,B,0.5309,0.5472,0.5497,0.0025,Additive,0.0233,0.0,0.5895,0.0398,< 0.0001,Significant interaction,ROC_AUC
+Ic + C,Ic,C,0.5309,0.5795,0.5813,0.0018,Additive,0.0233,0.0,0.6167,0.0354,< 0.0001,Significant interaction,ROC_AUC

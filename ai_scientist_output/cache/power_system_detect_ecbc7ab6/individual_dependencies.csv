@@ -1,0 +1,11 @@
+feature,pearson_r,pearson_p_value,spearman_rho,spearman_p_value,mutual_information,direction,significance,composite_score,rank
+Ic,-0.101,< 0.0001,-0.0539,< 0.0001,0.0129,negative,significant (p < 0.05),0.5387,1
+G,0.1101,< 0.0001,0.1101,< 0.0001,0.0062,positive,significant (p < 0.05),0.2954,2
+Ib,0.075,< 0.0001,0.0749,< 0.0001,0.006,positive,significant (p < 0.05),0.27,3
+C,0.1605,< 0.0001,0.1605,< 0.0001,0.0046,positive,significant (p < 0.05),0.2585,4
+B,0.0944,< 0.0001,0.0944,< 0.0001,0.0011,positive,significant (p < 0.05),0.0898,5
+Vb,-0.0599,< 0.0001,-0.0632,< 0.0001,0.0,negative,significant (p < 0.05),0.0308,6
+Ia,0.057,< 0.0001,0.0358,0.0015,0.0,positive,significant (p < 0.05),0.0232,7
+Va,0.0408,0.0003,0.0498,< 0.0001,0.0,positive,significant (p < 0.05),0.0226,8
+Vc,0.0226,0.0447,0.0228,0.0429,0.0,positive,significant (p < 0.05),0.0113,9
+A,-0.013,0.2489,-0.013,0.2489,0.0,negative,not significant,0.0065,10

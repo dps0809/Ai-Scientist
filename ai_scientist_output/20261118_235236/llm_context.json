@@ -1,0 +1,657 @@
+{
+    "dataset_rows": 7861,
+    "dataset_columns": 11,
+    "target": "Output (S)",
+    "all_features": [
+        "G",
+        "C",
+        "B",
+        "A",
+        "Ia",
+        "Ib",
+        "Ic",
+        "Va",
+        "Vb",
+        "Vc"
+    ],
+    "stage_1_individual_dependencies": [
+        {
+            "feature": "Ic",
+            "pearson_r": -0.101,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": -0.0539,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.0129,
+            "direction": "negative",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.5387,
+            "rank": 1
+        },
+        {
+            "feature": "G",
+            "pearson_r": 0.1101,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.1101,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.0062,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.2954,
+            "rank": 2
+        },
+        {
+            "feature": "Ib",
+            "pearson_r": 0.075,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.0749,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.006,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.27,
+            "rank": 3
+        },
+        {
+            "feature": "C",
+            "pearson_r": 0.1605,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.1605,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.0046,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.2585,
+            "rank": 4
+        },
+        {
+            "feature": "B",
+            "pearson_r": 0.0944,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.0944,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.0011,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.0898,
+            "rank": 5
+        },
+        {
+            "feature": "Vb",
+            "pearson_r": -0.0599,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": -0.0632,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.0,
+            "direction": "negative",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.0308,
+            "rank": 6
+        },
+        {
+            "feature": "Ia",
+            "pearson_r": 0.057,
+            "pearson_p_value": "< 0.0001",
+            "spearman_rho": 0.0358,
+            "spearman_p_value": "0.0015",
+            "mutual_information": 0.0,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.0232,
+            "rank": 7
+        },
+        {
+            "feature": "Va",
+            "pearson_r": 0.0408,
+            "pearson_p_value": "0.0003",
+            "spearman_rho": 0.0498,
+            "spearman_p_value": "< 0.0001",
+            "mutual_information": 0.0,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.0226,
+            "rank": 8
+        },
+        {
+            "feature": "Vc",
+            "pearson_r": 0.0226,
+            "pearson_p_value": "0.0447",
+            "spearman_rho": 0.0228,
+            "spearman_p_value": "0.0429",
+            "mutual_information": 0.0,
+            "direction": "positive",
+            "significance": "significant (p < 0.05)",
+            "composite_score": 0.0113,
+            "rank": 9
+        },
+        {
+            "feature": "A",
+            "pearson_r": -0.013,
+            "pearson_p_value": "0.2489",
+            "spearman_rho": -0.013,
+            "spearman_p_value": "0.2489",
+            "mutual_information": 0.0,
+            "direction": "negative",
+            "significance": "not significant",
+            "composite_score": 0.0065,
+            "rank": 10
+        }
+    ],
+    "stage_2_feature_combinations": [
+        {
+            "combination": "Ic + Vb",
+            "score_a": 0.5309,
+            "score_b": 0.5365,
+            "combined_score": 0.568,
+            "synergy_gain": 0.0315,
+            "joint_mi": 0.0325,
+            "mi_gain": 0.0092,
+            "status": "Synergistic (Better than either alone)",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "G + C",
+            "score_a": 0.5549,
+            "score_b": 0.5795,
+            "combined_score": 0.6078,
+            "synergy_gain": 0.0283,
+            "joint_mi": 0.0,
+            "mi_gain": 0.0,
+            "status": "Synergistic (Better than either alone)",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "Ib + C",
+            "score_a": 0.543,
+            "score_b": 0.5795,
+            "combined_score": 0.6041,
+            "synergy_gain": 0.0246,
+            "joint_mi": 0.0068,
+            "mi_gain": 0.0,
+            "status": "Synergistic (Better than either alone)",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "G + Ib",
+            "score_a": 0.5549,
+            "score_b": 0.543,
+            "combined_score": 0.5766,
+            "synergy_gain": 0.0217,
+            "joint_mi": 0.0068,
+            "mi_gain": 0.0,
+            "status": "Synergistic (Better than either alone)",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "Ib + B",
+            "score_a": 0.543,
+            "score_b": 0.5472,
+            "combined_score": 0.5687,
+            "synergy_gain": 0.0215,
+            "joint_mi": 0.0068,
+            "mi_gain": 0.0,
+            "status": "Synergistic (Better than either alone)",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "C + Vb",
+            "score_a": 0.5795,
+            "score_b": 0.5365,
+            "combined_score": 0.6,
+            "synergy_gain": 0.0205,
+            "joint_mi": 0.0107,
+            "mi_gain": 0.0,
+            "status": "Synergistic (Better than either alone)",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "G + Vb",
+            "score_a": 0.5549,
+            "score_b": 0.5365,
+            "combined_score": 0.5735,
+            "synergy_gain": 0.0186,
+            "joint_mi": 0.0107,
+            "mi_gain": 0.0,
+            "status": "Synergistic (Better than either alone)",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "G + B",
+            "score_a": 0.5549,
+            "score_b": 0.5472,
+            "combined_score": 0.5698,
+            "synergy_gain": 0.0149,
+            "joint_mi": 0.0,
+            "mi_gain": 0.0,
+            "status": "Synergistic (Better than either alone)",
+            "metric": "ROC_AUC"
+        }
+    ],
+    "stage_2_feature_interactions": [
+        {
+            "combination": "Ic + Vb",
+            "additive_score": 0.568,
+            "interaction_score": 0.5706,
+            "interaction_delta": 0.0026,
+            "interaction_p_value": "< 0.0001",
+            "status": "Significant interaction",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "G + C",
+            "additive_score": 0.6078,
+            "interaction_score": 0.6078,
+            "interaction_delta": 0.0,
+            "interaction_p_value": "< 0.0001",
+            "status": "Significant interaction",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "Ib + C",
+            "additive_score": 0.6041,
+            "interaction_score": 0.6038,
+            "interaction_delta": -0.0003,
+            "interaction_p_value": "0.3153",
+            "status": "No significant interaction",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "G + Ib",
+            "additive_score": 0.5766,
+            "interaction_score": 0.5767,
+            "interaction_delta": 0.0001,
+            "interaction_p_value": "0.5636",
+            "status": "No significant interaction",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "Ib + B",
+            "additive_score": 0.5687,
+            "interaction_score": 0.5682,
+            "interaction_delta": -0.0005,
+            "interaction_p_value": "0.2769",
+            "status": "No significant interaction",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "C + Vb",
+            "additive_score": 0.6,
+            "interaction_score": 0.5878,
+            "interaction_delta": -0.0122,
+            "interaction_p_value": "0.0803",
+            "status": "No significant interaction",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "G + Vb",
+            "additive_score": 0.5735,
+            "interaction_score": 0.571,
+            "interaction_delta": -0.0025,
+            "interaction_p_value": "0.0004",
+            "status": "Significant interaction",
+            "metric": "ROC_AUC"
+        },
+        {
+            "combination": "G + B",
+            "additive_score": 0.5698,
+            "interaction_score": 0.5698,
+            "interaction_delta": 0.0,
+            "interaction_p_value": "0.1043",
+            "status": "No significant interaction",
+            "metric": "ROC_AUC"
+        }
+    ],
+    "inter_variable_correlations": [
+        {
+            "feature_a": "G",
+            "feature_b": "A",
+            "correlation": 0.7553,
+            "strength": "strong"
+        },
+        {
+            "feature_a": "C",
+            "feature_b": "B",
+            "correlation": 0.7476,
+            "strength": "strong"
+        },
+        {
+            "feature_a": "Vb",
+            "feature_b": "Vc",
+            "correlation": -0.567,
+            "strength": "strong"
+        },
+        {
+            "feature_a": "Ib",
+            "feature_b": "Ic",
+            "correlation": -0.5283,
+            "strength": "strong"
+        },
+        {
+            "feature_a": "Va",
+            "feature_b": "Vb",
+            "correlation": -0.4802,
+            "strength": "strong"
+        },
+        {
+            "feature_a": "Va",
+            "feature_b": "Vc",
+            "correlation": -0.4502,
+            "strength": "strong"
+        },
+        {
+            "feature_a": "B",
+            "feature_b": "A",
+            "correlation": 0.4488,
+            "strength": "strong"
+        },
+        {
+            "feature_a": "Ia",
+            "feature_b": "Ib",
+            "correlation": -0.3742,
+            "strength": "moderate"
+        },
+        {
+            "feature_a": "Ia",
+            "feature_b": "Ic",
+            "correlation": -0.2765,
+            "strength": "moderate"
+        },
+        {
+            "feature_a": "Ia",
+            "feature_b": "Vb",
+            "correlation": -0.2746,
+            "strength": "moderate"
+        }
+    ],
+    "summary_statistics": {
+        "G": {
+            "mean": 0.43,
+            "std": 0.5,
+            "min": 0.0,
+            "max": 1.0
+        },
+        "C": {
+            "mean": 0.41,
+            "std": 0.49,
+            "min": 0.0,
+            "max": 1.0
+        },
+        "B": {
+            "mean": 0.56,
+            "std": 0.5,
+            "min": 0.0,
+            "max": 1.0
+        },
+        "A": {
+            "mean": 0.57,
+            "std": 0.49,
+            "min": 0.0,
+            "max": 1.0
+        },
+        "Ia": {
+            "mean": 13.72,
+            "std": 464.74,
+            "min": -883.54,
+            "max": 885.74
+        },
+        "Ib": {
+            "mean": -44.85,
+            "std": 439.27,
+            "min": -900.53,
+            "max": 889.87
+        },
+        "Ic": {
+            "mean": 34.39,
+            "std": 371.11,
+            "min": -883.36,
+            "max": 901.27
+        },
+        "Va": {
+            "mean": -0.01,
+            "std": 0.29,
+            "min": -0.62,
+            "max": 0.6
+        },
+        "Vb": {
+            "mean": 0.0,
+            "std": 0.31,
+            "min": -0.61,
+            "max": 0.63
+        },
+        "Vc": {
+            "mean": 0.01,
+            "std": 0.31,
+            "min": -0.61,
+            "max": 0.6
+        }
+    },
+    "discovered_evidence": [
+        {
+            "type": "individual_dependency",
+            "feature": "Ic",
+            "target": "Output (S)",
+            "pearson_r": -0.101,
+            "spearman_rho": -0.0539,
+            "mutual_information": 0.0129,
+            "p_value": "< 0.0001",
+            "direction": "negative",
+            "rank": 1
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "G",
+            "target": "Output (S)",
+            "pearson_r": 0.1101,
+            "spearman_rho": 0.1101,
+            "mutual_information": 0.0062,
+            "p_value": "< 0.0001",
+            "direction": "positive",
+            "rank": 2
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "Ib",
+            "target": "Output (S)",
+            "pearson_r": 0.075,
+            "spearman_rho": 0.0749,
+            "mutual_information": 0.006,
+            "p_value": "< 0.0001",
+            "direction": "positive",
+            "rank": 3
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "C",
+            "target": "Output (S)",
+            "pearson_r": 0.1605,
+            "spearman_rho": 0.1605,
+            "mutual_information": 0.0046,
+            "p_value": "< 0.0001",
+            "direction": "positive",
+            "rank": 4
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "B",
+            "target": "Output (S)",
+            "pearson_r": 0.0944,
+            "spearman_rho": 0.0944,
+            "mutual_information": 0.0011,
+            "p_value": "< 0.0001",
+            "direction": "positive",
+            "rank": 5
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "Vb",
+            "target": "Output (S)",
+            "pearson_r": -0.0599,
+            "spearman_rho": -0.0632,
+            "mutual_information": 0.0,
+            "p_value": "< 0.0001",
+            "direction": "negative",
+            "rank": 6
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "Ia",
+            "target": "Output (S)",
+            "pearson_r": 0.057,
+            "spearman_rho": 0.0358,
+            "mutual_information": 0.0,
+            "p_value": "< 0.0001",
+            "direction": "positive",
+            "rank": 7
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "Va",
+            "target": "Output (S)",
+            "pearson_r": 0.0408,
+            "spearman_rho": 0.0498,
+            "mutual_information": 0.0,
+            "p_value": "0.0003",
+            "direction": "positive",
+            "rank": 8
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "Vc",
+            "target": "Output (S)",
+            "pearson_r": 0.0226,
+            "spearman_rho": 0.0228,
+            "mutual_information": 0.0,
+            "p_value": "0.0447",
+            "direction": "positive",
+            "rank": 9
+        },
+        {
+            "type": "individual_dependency",
+            "feature": "A",
+            "target": "Output (S)",
+            "pearson_r": -0.013,
+            "spearman_rho": -0.013,
+            "mutual_information": 0.0,
+            "p_value": "0.2489",
+            "direction": "negative",
+            "rank": 10
+        },
+        {
+            "type": "feature_combination_synergy",
+            "combination": "Ic + Vb",
+            "score_a": 0.5309,
+            "score_b": 0.5365,
+            "combined_score": 0.568,
+            "synergy_gain": 0.0315,
+            "joint_mi": 0.0325,
+            "interaction_delta": 0.0026,
+            "conclusion": "Synergistic (Better than either alone)"
+        },
+        {
+            "type": "feature_combination_synergy",
+            "combination": "G + C",
+            "score_a": 0.5549,
+            "score_b": 0.5795,
+            "combined_score": 0.6078,
+            "synergy_gain": 0.0283,
+            "joint_mi": 0.0,
+            "interaction_delta": 0.0,
+            "conclusion": "Synergistic (Better than either alone)"
+        },
+        {
+            "type": "feature_combination_synergy",
+            "combination": "Ib + C",
+            "score_a": 0.543,
+            "score_b": 0.5795,
+            "combined_score": 0.6041,
+            "synergy_gain": 0.0246,
+            "joint_mi": 0.0068,
+            "interaction_delta": -0.0003,
+            "conclusion": "Synergistic (Better than either alone)"
+        },
+        {
+            "type": "feature_combination_synergy",
+            "combination": "G + Ib",
+            "score_a": 0.5549,
+            "score_b": 0.543,
+            "combined_score": 0.5766,
+            "synergy_gain": 0.0217,
+            "joint_mi": 0.0068,
+            "interaction_delta": 0.0001,
+            "conclusion": "Synergistic (Better than either alone)"
+        },
+        {
+            "type": "feature_combination_synergy",
+            "combination": "Ib + B",
+            "score_a": 0.543,
+            "score_b": 0.5472,
+            "combined_score": 0.5687,
+            "synergy_gain": 0.0215,
+            "joint_mi": 0.0068,
+            "interaction_delta": -0.0005,
+            "conclusion": "Synergistic (Better than either alone)"
+        },
+        {
+            "type": "feature_combination_synergy",
+            "combination": "C + Vb",
+            "score_a": 0.5795,
+            "score_b": 0.5365,
+            "combined_score": 0.6,
+            "synergy_gain": 0.0205,
+            "joint_mi": 0.0107,
+            "interaction_delta": -0.0122,
+            "conclusion": "Synergistic (Better than either alone)"
+        },
+        {
+            "type": "feature_combination_synergy",
+            "combination": "G + Vb",
+            "score_a": 0.5549,
+            "score_b": 0.5365,
+            "combined_score": 0.5735,
+            "synergy_gain": 0.0186,
+            "joint_mi": 0.0107,
+            "interaction_delta": -0.0025,
+            "conclusion": "Synergistic (Better than either alone)"
+        },
+        {
+            "type": "feature_combination_synergy",
+            "combination": "G + B",
+            "score_a": 0.5549,
+            "score_b": 0.5472,
+            "combined_score": 0.5698,
+            "synergy_gain": 0.0149,
+            "joint_mi": 0.0,
+            "interaction_delta": 0.0,
+            "conclusion": "Synergistic (Better than either alone)"
+        },
+        {
+            "type": "feature_importance",
+            "feature": "Ic",
+            "importance": 0.2198
+        },
+        {
+            "type": "feature_importance",
+            "feature": "Ib",
+            "importance": 0.1861
+        },
+        {
+            "type": "feature_importance",
+            "feature": "Vc",
+            "importance": 0.1398
+        },
+        {
+            "type": "feature_importance",
+            "feature": "Va",
+            "importance": 0.1393
+        },
+        {
+            "type": "feature_importance",
+            "feature": "Ia",
+            "importance": 0.1318
+        },
+        {
+            "type": "feature_importance",
+            "feature": "Vb",
+            "importance": 0.0884
+        }
+    ]
+}

@@ -285,17 +285,19 @@ def run_feature_combination_synergy_experiment(
     if len(spec.features) < 2:
         raise ValueError(f"Synergy experiment {spec.experiment_id} requires at least 2 features, got {spec.features}")
 
-    feat_a, feat_b = spec.features[0], spec.features[1]
-    combined_name = f"{feat_a}_{feat_b}"
+    combined_features = [f for f in dict.fromkeys(spec.features) if f in df.columns]
+    if len(combined_features) < 2:
+        raise ValueError(f"Synergy experiment {spec.experiment_id} requires at least 2 valid features in dataframe, got {spec.features}")
+
+    feat_a, feat_b = combined_features[0], combined_features[1]
+    combined_name = "_".join(combined_features)
     target = spec.target
 
-    feature_sets = {
-        feat_a: [feat_a],
-        feat_b: [feat_b],
-        combined_name: [feat_a, feat_b]
-    }
+    feature_sets = {f: [f] for f in combined_features}
+    feature_sets[combined_name] = combined_features
 
-    valid_df = df[[feat_a, feat_b, target]].dropna(subset=[target]).copy()
+    valid_cols = list(dict.fromkeys(combined_features + [target]))
+    valid_df = df[valid_cols].dropna(subset=[target]).copy()
     if len(valid_df) < 15 or valid_df[target].nunique() < 2:
         return ExperimentResultRecord(
             result_id=f"RES-{spec.experiment_id}",
@@ -309,7 +311,7 @@ def run_feature_combination_synergy_experiment(
             target=target,
             metrics={"error": "Insufficient valid observations"},
             verdict="INCONCLUSIVE",
-            summary=f"Insufficient data for synergy comparison of {feat_a} + {feat_b}."
+            summary=f"Insufficient data for synergy comparison of {' + '.join(combined_features)}."
         )
 
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
@@ -348,11 +350,15 @@ def run_feature_combination_synergy_experiment(
         m_scores = {name: float(np.mean(scores)) for name, scores in fold_results.items()}
         m_accs = {name: float(np.mean(accs)) for name, accs in fold_acc_results.items()}
 
-        s_a, s_b, s_c = m_scores[feat_a], m_scores[feat_b], m_scores[combined_name]
-        ac_a, ac_b, ac_c = m_accs[feat_a], m_accs[feat_b], m_accs[combined_name]
+        individual_scores = {f: m_scores[f] for f in combined_features}
+        individual_accs = {f: m_accs[f] for f in combined_features}
+        best_indiv_feat = max(individual_scores, key=individual_scores.get)
+        best_indiv_s = individual_scores[best_indiv_feat]
+        best_indiv_ac = individual_accs[best_indiv_feat]
 
-        best_indiv_s = max(s_a, s_b)
-        best_indiv_ac = max(ac_a, ac_b)
+        s_c = m_scores[combined_name]
+        ac_c = m_accs[combined_name]
+
         g_auc = s_c - best_indiv_s
         g_acc = ac_c - best_indiv_ac
 
@@ -365,8 +371,8 @@ def run_feature_combination_synergy_experiment(
             "combined_mean_accuracy": round(ac_c, 4),
             "best_individual_mean_accuracy": round(best_indiv_ac, 4),
             "accuracy_gain": round(g_acc, 4),
-            "individual_aucs": {feat_a: round(s_a, 4), feat_b: round(s_b, 4)},
-            "individual_accuracies": {feat_a: round(ac_a, 4), feat_b: round(ac_b, 4)}
+            "individual_aucs": {f: round(s, 4) for f, s in individual_scores.items()},
+            "individual_accuracies": {f: round(a, 4) for f, a in individual_accs.items()}
         }
 
     # Select winning model based on combined ROC-AUC (primary metric), breaking ties with Accuracy (secondary metric)
@@ -382,11 +388,7 @@ def run_feature_combination_synergy_experiment(
     best_indiv_acc = best_comp["best_individual_mean_accuracy"]
     acc_gain = best_comp["accuracy_gain"]
 
-    score_a = best_comp["individual_aucs"][feat_a]
-    score_b = best_comp["individual_aucs"][feat_b]
-    acc_a = best_comp["individual_accuracies"][feat_a]
-    acc_b = best_comp["individual_accuracies"][feat_b]
-    best_indiv_name = feat_a if score_a >= score_b else feat_b
+    best_indiv_name = max(best_comp["individual_aucs"], key=best_comp["individual_aucs"].get)
 
     fold_results = model_fold_results[best_model_name]
     fold_acc_results = model_fold_acc_results[best_model_name]
@@ -408,11 +410,12 @@ def run_feature_combination_synergy_experiment(
             paired_stat = 0.0
             paired_p = 1.0
 
+    comb_display = " + ".join(combined_features)
     # Verdict determination
     if gain > 0 and paired_p < 0.05:
         verdict = "SUPPORTED"
         verdict_text = (
-            f"strongly supported: combining {feat_a} and {feat_b} yields significant synergy "
+            f"strongly supported: combining [{comb_display}] yields significant synergy "
             f"(Primary AUC gain={gain:+.4f}, Secondary Accuracy gain={acc_gain:+.4f}, paired t p={paired_p:.4f}, best model: {best_model_name})"
         )
     elif gain > 0:
@@ -428,7 +431,7 @@ def run_feature_combination_synergy_experiment(
             f"({best_indiv_score:.4f}) under {best_model_name}"
         )
 
-    summary = f"Synergy experiment {spec.experiment_id} testing [{feat_a} + {feat_b}] is {verdict_text}."
+    summary = f"Synergy experiment {spec.experiment_id} testing [{comb_display}] is {verdict_text}."
 
     return ExperimentResultRecord(
         result_id=f"RES-{spec.experiment_id}",
@@ -455,14 +458,8 @@ def run_feature_combination_synergy_experiment(
             "model_comparison": model_comparison
         },
         details={
-            "individual_scores": {
-                feat_a: round(score_a, 4),
-                feat_b: round(score_b, 4)
-            },
-            "individual_accuracies": {
-                feat_a: round(acc_a, 4),
-                feat_b: round(acc_b, 4)
-            },
+            "individual_scores": best_comp["individual_aucs"],
+            "individual_accuracies": best_comp["individual_accuracies"],
             "best_individual_feature": best_indiv_name,
             "fold_scores": fold_results,
             "fold_accuracies": fold_acc_results,

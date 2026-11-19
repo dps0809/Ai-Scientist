@@ -1,0 +1,108 @@
+[
+  {
+    "hypothesis_id": "iter2_H1",
+    "parent_hypothesis_id": "iter1_H1",
+    "iteration_no": 2,
+    "hypothesis": "Combining G with B will provide superior predictive discrimination for Output (S) than G alone.",
+    "rationale": "Derived from iter1_E1 (iter1_H1) outcome: Experiment iter1_E1 testing dependency of 'G' on 'Output (S)' is supported_by_current_evidence: OR=1.25 (95% CI [1.20, 1.31]), parametric p=0.0000, pe",
+    "proposed_experiment": {
+      "features": [
+        "G",
+        "B"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "G",
+      "B"
+    ],
+    "timestamp": "2026-11-18T18:23:14.283071+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H2",
+    "parent_hypothesis_id": "iter1_H3",
+    "iteration_no": 2,
+    "hypothesis": "Extending the combination [G, C, B, A, Ic, Vb] with Ia will further enhance cross-validated classification performance.",
+    "rationale": "Derived from iter1_E3 (iter1_H3) outcome: Synergy experiment iter1_E3 testing [G + C + B + A + Ic + Vb] is supported_by_current_evidence: combined Primary AUC=0.7536 vs best individual (Ic) AU",
+    "proposed_experiment": {
+      "features": [
+        "G",
+        "C",
+        "B",
+        "A",
+        "Ic",
+        "Vb",
+        "Ia"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "G",
+      "C",
+      "B",
+      "A",
+      "Ic",
+      "Vb",
+      "Ia"
+    ],
+    "timestamp": "2026-11-18T18:23:14.293366+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H3",
+    "parent_hypothesis_id": "iter1_H4",
+    "iteration_no": 2,
+    "hypothesis": "Multivariate model testing joint effects of ['C', 'B', 'A', 'Ic', 'Va', 'Vb'] controlling for available covariates.",
+    "rationale": "Derived from iter1_E4 (iter1_H4) outcome: Interaction experiment iter1_E4 testing [C * B * A * Ic * Va * Vb] is not_supported: LRT chi2=0.000 (p=1.0000), interaction beta=0.36639 (Wald p=nan),",
+    "proposed_experiment": {
+      "features": [
+        "C",
+        "B",
+        "A",
+        "Ic",
+        "Va",
+        "Vb"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "C",
+      "B",
+      "A",
+      "Ic",
+      "Va",
+      "Vb"
+    ],
+    "timestamp": "2026-11-18T18:23:14.303029+00:00"
+  },
+  {
+    "hypothesis_id": "iter2_H4",
+    "parent_hypothesis_id": "iter1_H5",
+    "iteration_no": 2,
+    "hypothesis": "Multivariate model testing joint effects of ['G', 'C', 'B', 'A', 'Ib', 'Ic'] controlling for available covariates.",
+    "rationale": "Derived from iter1_E5 (iter1_H5) outcome: Adjusted regression experiment iter1_E5 testing [G adjusted for C] is not_supported: unadjusted OR=1.25 -> adjusted OR=1.33 (delta=+26.5%, covariate p",
+    "proposed_experiment": {
+      "features": [
+        "G",
+        "C",
+        "B",
+        "A",
+        "Ib",
+        "Ic"
+      ],
+      "model": "sklearn.linear_model.LogisticRegression",
+      "metric": "ROC_AUC"
+    },
+    "features_involved": [
+      "G",
+      "C",
+      "B",
+      "A",
+      "Ib",
+      "Ic"
+    ],
+    "timestamp": "2026-11-18T18:23:14.315013+00:00"
+  }
+]
